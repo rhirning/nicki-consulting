@@ -1,0 +1,39 @@
+{
+	"chapters": [
+		{
+			"chapter": "Administration",
+			"views": [
+				{
+					"title": "Kunden",
+					"view": "org.mgnl.nicki.consulting.views.CustomersView"
+				},
+				{
+					"title": "Personen",
+					"view": "org.mgnl.nicki.consulting.views.PersonsView"
+				},
+				{
+					"title": "Personen LDAP",
+					"view": "org.mgnl.nicki.consulting.app.UserEditorComponent"
+				}
+			]
+		},
+		{
+			"chapter": "Zeiterfassung",
+			"views": [
+				{
+					"title": "Zeiterfassung",
+					"view": "org.mgnl.nicki.consulting.views.TimeSheetView"
+				}
+			]
+		},
+		{
+			"chapter": "Reports",
+			"views": [
+				{
+					"title": "Zeit Report",
+					"view": "org.mgnl.nicki.consulting.views.ReportsView"
+				}
+			]
+		}
+	]
+}
