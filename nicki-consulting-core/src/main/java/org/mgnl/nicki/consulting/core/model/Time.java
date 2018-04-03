@@ -87,4 +87,15 @@ public class Time {
 		this.pause = pause;
 	}
 
+	public int getUniqueHash() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(memberId == null ? "null" : memberId);
+		sb.append(start == null ? "null" : start.getTime());
+		sb.append(end == null ? "null" : end.getTime());
+		sb.append(pause == null ? "null" : pause);
+		sb.append(hours == null ? "null" : hours);
+		sb.append(text == null ? "null" : text);
+		return sb.toString().hashCode();
+	}
+
 }

@@ -22,6 +22,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.mgnl.nicki</groupId>
+			<artifactId>nicki-editor-templates</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mgnl.nicki</groupId>
 			<artifactId>nicki-ldap</artifactId>
 		</dependency>
 		<dependency>

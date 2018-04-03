@@ -18,6 +18,7 @@ import com.vaadin.ui.TextField;
 public class TimeWrapper {
 
 	private Time time;
+	private int uniqueHash;
 	private List<Member> members;
 	
 	private ComboBox memberComboBox;
@@ -26,10 +27,11 @@ public class TimeWrapper {
 	private TextField endTextField;
 	private ComboBox pauseComboBox;
 	private TextField textTextField;
-
+	
 	public TimeWrapper(Time time, List<Member> members) {
 		super();
 		this.time = time;
+		uniqueHash = time.getUniqueHash();
 		this.members = members;
 	}
 	
@@ -189,5 +191,33 @@ public class TimeWrapper {
 
 	public Time getTime() {
 		return time;
+	}
+	
+	public boolean isModified() {
+		return time.getUniqueHash() != uniqueHash;
+	}
+
+	public void setMessages(List<String> messages) {
+		String html = getHtml(messages);
+		this.memberComboBox.setDescription(html);
+		this.dayDateField.setDescription(html);
+		this.startTextField.setDescription(html);
+		this.endTextField.setDescription(html);
+		this.textTextField.setDescription(html);
+	}
+
+	private String getHtml(List<String> messages) {
+		if (messages != null && messages.size() > 0) {
+			StringBuilder sb = new StringBuilder();
+			for (String message : messages) {
+				if (sb.length() > 0) {
+					sb.append("<br/>");
+				}
+				sb.append(message);
+			}
+			return sb.toString();
+		} else {
+			return null;
+		}
 	}
 }

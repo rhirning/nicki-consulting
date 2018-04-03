@@ -3,25 +3,18 @@ package org.mgnl.nicki.consulting.objects;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.mgnl.nicki.core.annotation.AdditionalObjectClass;
 import org.mgnl.nicki.core.annotation.DynamicAttribute;
 import org.mgnl.nicki.core.annotation.DynamicObject;
-import org.mgnl.nicki.core.annotation.DynamicReferenceAttribute;
 import org.mgnl.nicki.core.annotation.RemoveAdditionalObjectClass;
 import org.mgnl.nicki.core.annotation.RemoveDynamicAttribute;
-import org.mgnl.nicki.core.config.Config;
 import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.dynamic.objects.objects.Group;
 import org.mgnl.nicki.dynamic.objects.objects.Person;
-import org.mgnl.nicki.ldap.helper.LdapHelper;
-import org.mgnl.nicki.ldap.helper.LdapHelper.LOGIC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import freemarker.template.TemplateMethodModel;
+import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
 
 @DynamicObject
@@ -115,7 +108,7 @@ public class LdapPersonImpl extends Person implements LdapPerson {
 	@Override
 	public Collection<Group> getGroups() {
 		if (groups == null) {
-			TemplateMethodModel method = (TemplateMethodModel) get("getGroups");
+			TemplateMethodModelEx method = (TemplateMethodModelEx) get("getGroups");
 			if (method != null) {
 				try {
 					groups = (Collection<Group>) method.exec(null);

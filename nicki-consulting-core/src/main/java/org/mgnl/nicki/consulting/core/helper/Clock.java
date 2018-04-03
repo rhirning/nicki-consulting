@@ -19,8 +19,8 @@ public class Clock {
 			if (StringUtils.contains(data, ":")) {
 				String hoursString = StringUtils.stripToEmpty(StringUtils.substringBefore(data, ":"));
 				String minutesString = StringUtils.stripToEmpty(StringUtils.substringAfter(data, ":"));
-				hours = Integer.parseInt(StringUtils.substringBefore(data, ":"));
-				minutes = Integer.parseInt(StringUtils.substringAfter(data, ":"));
+				hours = Integer.parseInt(hoursString);
+				minutes = Integer.parseInt(minutesString);
 			} else {
 				hours = Integer.parseInt(StringUtils.stripToEmpty(data));
 			}

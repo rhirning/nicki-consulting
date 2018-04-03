@@ -1,7 +1,7 @@
 package org.mgnl.nicki.consulting.core.helper;
 
 import java.sql.SQLException;
-import java.text.ParseException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,7 +10,9 @@ import java.util.List;
 
 import org.mgnl.nicki.consulting.core.model.Customer;
 import org.mgnl.nicki.consulting.core.model.Member;
+import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.core.model.Project;
+import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.profile.InitProfileException;
@@ -42,6 +44,48 @@ public class TimeHelper {
 		project.setId(id);
 		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			return dbContext.loadObject(project, false);
+		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
+			LOG.error("Could not load project", e);
+		}
+		return null;
+	}
+	
+	public static float getHours(List<Time> times) {
+		float hours = 0;
+		for (Time time : times) {
+			hours += time.getHours();
+		}
+		return hours;
+	}
+	
+	public static String formatHours(float hours) {
+
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        return decimalFormat.format(hours);
+	}
+
+	public static Project getProjectFromMemberId(Long memberId) {
+		Member member = new Member();
+		member.setId(memberId);
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			member = dbContext.loadObject(member, false);
+			Project project = new Project();
+			project.setId(member.getProjectId());
+			return dbContext.loadObject(project, false);
+		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
+			LOG.error("Could not load project", e);
+		}
+		return null;
+	}
+
+	public static Person getPersonFromMemberId(Long memberId) {
+		Member member = new Member();
+		member.setId(memberId);
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			member = dbContext.loadObject(member, false);
+			Person person = new Person();
+			person.setId(member.getPersonId());
+			return dbContext.loadObject(person, false);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			LOG.error("Could not load project", e);
 		}

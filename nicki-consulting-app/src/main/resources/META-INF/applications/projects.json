@@ -14,6 +14,10 @@
 				{
 					"title": "Personen LDAP",
 					"view": "org.mgnl.nicki.consulting.app.UserEditorComponent"
+				},
+				{
+					"title": "Templates",
+					"view": "org.mgnl.nicki.consulting.views.TemplateEditorView"
 				}
 			]
 		},

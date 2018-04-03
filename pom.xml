@@ -12,7 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-		<nicki.version>7.94-SNAPSHOT</nicki.version>
+		<nicki.version>7.97</nicki.version>
 		<vertx.version>3.4.1</vertx.version>
 	</properties>
 	<modules>
