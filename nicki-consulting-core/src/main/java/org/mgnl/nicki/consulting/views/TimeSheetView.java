@@ -7,8 +7,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.Constants;
 import org.mgnl.nicki.consulting.core.helper.VerifyException;
-import org.mgnl.nicki.consulting.core.model.Customer;
-import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.data.BeanContainerDataSource;
 import org.mgnl.nicki.consulting.data.TimeWrapper;
@@ -230,7 +228,7 @@ public class TimeSheetView extends BaseView implements View {
 	private void loadTimes() {
 		timeContainerDataSource.removeAllItems();
 		try {
-			timeContainerDataSource.addAll(getTimeWrappers(getPerson(), (PERIOD) timeComboBox.getValue(), null, null, 10));
+			timeContainerDataSource.addAll(getTimeWrappers(getPerson(), (PERIOD) timeComboBox.getValue(), null, null, READONLY.FALSE, 10));
 		} catch (IllegalStateException | IllegalArgumentException | TimeSelectException | NoValidPersonException
 				| NoApplicationContextException e) {
 			// TODO Auto-generated catch block

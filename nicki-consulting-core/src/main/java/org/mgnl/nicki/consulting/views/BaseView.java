@@ -4,11 +4,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.model.Customer;
 import org.mgnl.nicki.consulting.core.model.Member;
@@ -144,15 +141,17 @@ public abstract class BaseView extends CustomComponent implements View {
 		}
 		return new ArrayList<>();
 	}
+	
+	public enum READONLY {TRUE, FALSE};
 
-	protected List<TimeWrapper> getTimeWrappers(Person person, PERIOD period, Customer customer, Project project, int emptyCount) throws TimeSelectException {
+	protected List<TimeWrapper> getTimeWrappers(Person person, PERIOD period, Customer customer, Project project, READONLY readonly, int emptyCount) throws TimeSelectException {
 		List<TimeWrapper> timeWrappers = new ArrayList<>();
 		List<Member> members = getMembers(person);
 		for (Time time : getTimes(person, period, customer, project)) {
-			timeWrappers.add(new TimeWrapper(time, members));
+			timeWrappers.add(new TimeWrapper(time, members, readonly));
 		}
 		for (int i = 0; i < emptyCount; i++) {
-			timeWrappers.add(new TimeWrapper(new Time(), members));
+			timeWrappers.add(new TimeWrapper(new Time(), members, readonly));
 		}
 		
 		return timeWrappers;

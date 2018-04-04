@@ -79,7 +79,7 @@ public class TimeSelectHandler extends NonLoggingSelectHandler implements Select
 			sb.append(" )");
 			
 		} else {
-			sb.append("SELECT ID FROM ").append(memberTableName).append(" WHERE PERSON_ID = ").append(person.getId()).append(" )");
+			sb.append("SELECT ID FROM ").append(memberTableName).append(" WHERE PERSON_ID = ").append(person.getId());
 		}
 		sb.append(" )");
 		if (this.period != null) {
@@ -90,6 +90,7 @@ public class TimeSelectHandler extends NonLoggingSelectHandler implements Select
 				throw new TimeSelectException(e);
 			}
 		}
+		sb.append(" ORDER BY START_TIME ASC");
 		LOG.debug(sb.toString());
 		return sb.toString();
 	}

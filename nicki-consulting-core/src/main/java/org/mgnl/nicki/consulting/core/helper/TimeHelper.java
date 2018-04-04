@@ -1,7 +1,6 @@
 package org.mgnl.nicki.consulting.core.helper;
 
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +12,7 @@ import org.mgnl.nicki.consulting.core.model.Member;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.core.model.Time;
+import org.mgnl.nicki.consulting.data.TimeWrapper;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.profile.InitProfileException;
@@ -50,7 +50,7 @@ public class TimeHelper {
 		return null;
 	}
 	
-	public static float getHours(List<Time> times) {
+	public static float getHoursFromTimeList(List<Time> times) {
 		float hours = 0;
 		for (Time time : times) {
 			hours += time.getHours();
@@ -58,10 +58,17 @@ public class TimeHelper {
 		return hours;
 	}
 	
+	public static float getHoursFromTimeWrapperList(List<TimeWrapper> timeWrappers) {
+		float hours = 0;
+		for (TimeWrapper timeWrapper : timeWrappers) {
+			hours += timeWrapper.getTime().getHours();
+		}
+		return hours;
+	}
+	
 	public static String formatHours(float hours) {
 
-        DecimalFormat decimalFormat = new DecimalFormat("#.00");
-        return decimalFormat.format(hours);
+        return String.format("%.2f",hours);
 	}
 
 	public static Project getProjectFromMemberId(Long memberId) {

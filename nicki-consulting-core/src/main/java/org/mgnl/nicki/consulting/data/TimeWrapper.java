@@ -8,6 +8,7 @@ import org.mgnl.nicki.consulting.core.helper.DateFormatException;
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.model.Member;
 import org.mgnl.nicki.consulting.core.model.Time;
+import org.mgnl.nicki.consulting.views.BaseView.READONLY;
 
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
@@ -27,12 +28,14 @@ public class TimeWrapper {
 	private TextField endTextField;
 	private ComboBox pauseComboBox;
 	private TextField textTextField;
+	private boolean readOnly;
 	
-	public TimeWrapper(Time time, List<Member> members) {
+	public TimeWrapper(Time time, List<Member> members, READONLY readonly) {
 		super();
 		this.time = time;
 		uniqueHash = time.getUniqueHash();
 		this.members = members;
+		this.readOnly = (readonly == READONLY.TRUE);
 	}
 	
 	public ComboBox getMember() {
@@ -57,6 +60,7 @@ public class TimeWrapper {
 				time.setMemberId(null);
 			}
 		});
+		memberComboBox.setReadOnly(readOnly);
 		return memberComboBox;
 	}
 	
@@ -76,6 +80,7 @@ public class TimeWrapper {
 			}
 		});
 		
+		dayDateField.setReadOnly(readOnly);
 		return dayDateField;
 	}
 
@@ -96,6 +101,7 @@ public class TimeWrapper {
 			}
 		});
 		
+		startTextField.setReadOnly(readOnly);
 		return startTextField;
 	}
 	
@@ -137,6 +143,7 @@ public class TimeWrapper {
 			}
 		});
 		
+		endTextField.setReadOnly(readOnly);
 		return endTextField;
 	}
 
@@ -166,6 +173,7 @@ public class TimeWrapper {
 			}
 		});
 		
+		pauseComboBox.setReadOnly(readOnly);
 		return pauseComboBox;
 	}
 
@@ -186,6 +194,7 @@ public class TimeWrapper {
 			}
 		});
 		
+		textTextField.setReadOnly(readOnly);
 		return textTextField;
 	}
 
