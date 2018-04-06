@@ -1,6 +1,7 @@
 package org.mgnl.nicki.consulting.views;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mgnl.nicki.consulting.core.model.Customer;
@@ -8,6 +9,7 @@ import org.mgnl.nicki.consulting.core.model.Member;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.data.BeanContainerDataSource;
+import org.mgnl.nicki.consulting.data.MemberWrapper;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.profile.InitProfileException;
@@ -73,7 +75,7 @@ public class CustomersView extends BaseView implements View {
 	private boolean isInit;
 	private BeanContainerDataSource<Customer> customersContainerDataSource;
 	private BeanContainerDataSource<Project> projectsContainerDataSource;
-	private BeanContainerDataSource<Member> membersContainerDataSource;
+	private BeanContainerDataSource<MemberWrapper> membersContainerDataSource;
 	
 	private Window newCustomerWindow;
 	private Window newProjectWindow;
@@ -114,7 +116,7 @@ public class CustomersView extends BaseView implements View {
 		membersTable.setSelectable(true);
 		membersTable.addValueChangeListener(event -> {
 			if (event.getProperty().getValue() != null) {
-				showMember((Member) event.getProperty().getValue());
+				showMember((MemberWrapper) event.getProperty().getValue());
 			} else {
 				hideMember();
 			}
@@ -139,6 +141,7 @@ public class CustomersView extends BaseView implements View {
 			}
 		});
 		beanViewer.setDbContextName("projects");
+		beanViewer.setWidth("400px");
 		beanViewer.setDbBean(customer);
 		customerLayout.removeAllComponents();
 		customerLayout.addComponent(beanViewer);
@@ -161,6 +164,7 @@ public class CustomersView extends BaseView implements View {
 			}
 		});
 		beanViewer.setDbContextName("projects");
+		beanViewer.setWidth("400px");
 		try {
 			beanViewer.init(Customer.class);
 		} catch (InstantiationException | IllegalAccessException e) {
@@ -188,6 +192,7 @@ public class CustomersView extends BaseView implements View {
 			}
 		});
 		beanViewer.setDbContextName("projects");
+		beanViewer.setWidth("400px");
 		beanViewer.setDbBean(project);
 		
 		projectLayout.removeAllComponents();
@@ -211,6 +216,7 @@ public class CustomersView extends BaseView implements View {
 			}
 		});
 		beanViewer.setDbContextName("projects");
+		beanViewer.setWidth("400px");
 		try {
 			beanViewer.init(Project.class, customersTable.getValue());
 		} catch (InstantiationException | IllegalAccessException e) {
@@ -260,7 +266,7 @@ public class CustomersView extends BaseView implements View {
 		memberLayout.removeAllComponents();
 	}
 
-	private void showMember(Member member) {
+	private void showMember(MemberWrapper memberWrapper) {
 		DbBeanViewer beanViewer = new DbBeanViewer(new DbBeanCloseListener() {
 			
 			@Override
@@ -270,7 +276,8 @@ public class CustomersView extends BaseView implements View {
 			}
 		});
 		beanViewer.setDbContextName("projects");
-		beanViewer.setDbBean(member);
+		beanViewer.setWidth("400px");
+		beanViewer.setDbBean(memberWrapper.getMember());
 		
 		memberLayout.removeAllComponents();
 		memberLayout.addComponent(beanViewer);
@@ -283,7 +290,7 @@ public class CustomersView extends BaseView implements View {
 			customersTable.setContainerDataSource(customersContainerDataSource);
 			projectsContainerDataSource = new BeanContainerDataSource<Project>(Project.class);
 			projectsTable.setContainerDataSource(projectsContainerDataSource);
-			membersContainerDataSource = new BeanContainerDataSource<Member>(Member.class);
+			membersContainerDataSource = new BeanContainerDataSource<MemberWrapper>(MemberWrapper.class);
 			membersTable.setContainerDataSource(membersContainerDataSource);
 			loadCustomers();
 			isInit = true;
@@ -347,10 +354,15 @@ public class CustomersView extends BaseView implements View {
 		Member member= new Member();
 		member.setProjectId(project.getId());
 		try (DBContext dbContext = DBContextManager.getContext("projects")) {
-			List<Member> members= dbContext.loadObjects(member, true);
 			membersContainerDataSource.removeAllItems();
-			membersContainerDataSource.addAll(members);
-			membersTable.setVisibleColumns("personId");
+			List<Member> members= dbContext.loadObjects(member, true);
+			List<MemberWrapper> memberWrappers = new ArrayList<>();
+			for (Member m : members) {
+				memberWrappers.add(new MemberWrapper(m));
+			}
+			membersContainerDataSource.addAll(memberWrappers);
+			membersTable.setVisibleColumns("personName");
+			membersTable.setColumnHeaders("Mitglied");
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			LOG.error("Could not load members", e);
 		}		
