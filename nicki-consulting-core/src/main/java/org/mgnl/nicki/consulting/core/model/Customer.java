@@ -15,6 +15,9 @@ public class Customer {
 	@Attribute(name = "NAME")
 	private String name;
 
+	@Attribute(name = "ALIAS")
+	private String alias;
+
 	@Attribute(name = "STREET")
 	private String street;
 
@@ -88,5 +91,15 @@ public class Customer {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+
+	public String getAlias() {
+		return alias;
+	}
+
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 }

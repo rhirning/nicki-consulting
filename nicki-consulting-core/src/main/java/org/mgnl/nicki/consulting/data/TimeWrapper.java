@@ -10,6 +10,8 @@ import org.mgnl.nicki.consulting.core.model.Member;
 import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.views.BaseView.READONLY;
 
+import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Notification;
@@ -23,6 +25,7 @@ public class TimeWrapper {
 	private List<Member> members;
 	
 	private ComboBox memberComboBox;
+	private CheckBox deleteCheckBox;
 	private DateField dayDateField;
 	private TextField startTextField;
 	private TextField endTextField;
@@ -36,6 +39,11 @@ public class TimeWrapper {
 		uniqueHash = time.getUniqueHash();
 		this.members = members;
 		this.readOnly = (readonly == READONLY.TRUE);
+	}
+	
+	public CheckBox getDelete() {
+		this.deleteCheckBox = new CheckBox();
+		return this.deleteCheckBox;
 	}
 	
 	public ComboBox getMember() {
@@ -179,7 +187,7 @@ public class TimeWrapper {
 
 	public TextField getText() {
 		textTextField = new TextField();
-		textTextField.setWidth("200px");
+		textTextField.setWidth("400px");
 		textTextField.setImmediate(true);
 		
 		if (time.getText() != null) {
@@ -205,14 +213,25 @@ public class TimeWrapper {
 	public boolean isModified() {
 		return time.getUniqueHash() != uniqueHash;
 	}
+	
+	public boolean isMarkedDelete() {
+		return deleteCheckBox != null && deleteCheckBox.getValue();
+	}
 
 	public void setMessages(List<String> messages) {
 		String html = getHtml(messages);
-		this.memberComboBox.setDescription(html);
-		this.dayDateField.setDescription(html);
-		this.startTextField.setDescription(html);
-		this.endTextField.setDescription(html);
-		this.textTextField.setDescription(html);
+		setErrorMessage(this.memberComboBox, html);
+		setErrorMessage(this.dayDateField, html);
+		setErrorMessage(this.startTextField, html);
+		setErrorMessage(this.endTextField, html);
+		setErrorMessage(this.textTextField, html);
+		setErrorMessage(this.pauseComboBox, html);
+		
+	}
+
+	private void setErrorMessage(AbstractComponent component, String errorMessage) {
+		component.setDescription(errorMessage);
+		component.addStyleName("error");
 	}
 
 	private String getHtml(List<String> messages) {

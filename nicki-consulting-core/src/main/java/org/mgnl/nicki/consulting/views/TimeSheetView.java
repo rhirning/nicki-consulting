@@ -73,8 +73,8 @@ public class TimeSheetView extends BaseView implements View {
 			timeComboBox.addValueChangeListener(event -> { timeValueChanged(); });
 			timeContainerDataSource = new BeanContainerDataSource<>(TimeWrapper.class);
 			timeTable.setContainerDataSource(timeContainerDataSource);
-			timeTable.setVisibleColumns("member", "day", "start", "end", "pause", "text");
-			timeTable.setColumnHeaders("Projekt", "Datum", "von", "bis", "Pause", "Tätigkeit");
+			timeTable.setVisibleColumns("delete", "member", "day", "start", "end", "pause", "text");
+			timeTable.setColumnHeaders("Löschen", "Projekt", "Datum", "von", "bis", "Pause", "Tätigkeit");
 //			timeTable.setColumnWidth("member", 400);
 //			timeTable.setColumnWidth("day", 100);
 //			timeTable.setColumnWidth("start", 100);
@@ -129,20 +129,31 @@ public class TimeSheetView extends BaseView implements View {
 
 	private void save() {
 		if (!verify()) {
-			LOG.debug("Es gibt noch Fehler. Bitte suchen ;-)");
-			Notification.show("Es gibt noch Fehler. Bitte suchen ;-)", Type.ERROR_MESSAGE);
+			Notification.show("Es gibt noch Fehler in den markierten Zeilen. Mehr Information bei Mouse-Over", Type.ERROR_MESSAGE);
 			timeComboBox.setValue(getTimeComboBoxValue());
 			return;
 		}
 
 		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			for (TimeWrapper timeWrapper : timeContainerDataSource.getItemIds()) {
-				saveOrIgnore(dbContext, timeWrapper.getTime());
+				if (timeWrapper.isMarkedDelete()) {
+					deleteOrIgnore(dbContext, timeWrapper.getTime());
+				} else {
+					saveOrIgnore(dbContext, timeWrapper.getTime());
+				}
 			}
 			setTimeComboBoxValue((PERIOD) timeComboBox.getValue());
 			loadTimes();
+			Notification.show("Die Daten wurden gespeichert", Type.HUMANIZED_MESSAGE);
 		} catch (SQLException | InitProfileException | NotSupportedException e) {
 			LOG.error("Could not save times", e);
+			Notification.show("Die Daten konnten nicht gespeichert werden: " + e.getMessage(), Type.ERROR_MESSAGE);
+		}
+	}
+
+	private void deleteOrIgnore(DBContext dbContext, Time time) throws NotSupportedException, SQLException, InitProfileException {
+		if (time.getId() != null) {
+			dbContext.delete(time);
 		}
 	}
 
@@ -170,7 +181,7 @@ public class TimeSheetView extends BaseView implements View {
 		boolean ok = true;
 		for (TimeWrapper timeWrapper : timeContainerDataSource.getItemIds()) {
 			try {
-				ok &= verify(timeWrapper.getTime());
+				ok &= verify(timeWrapper);
 			} catch (VerifyException e) {
 				timeWrapper.setMessages(e.getMessages());
 				ok = false;
@@ -179,7 +190,11 @@ public class TimeSheetView extends BaseView implements View {
 		return ok;
 	}
 
-	private boolean verify(Time time) throws VerifyException {
+	private boolean verify(TimeWrapper timeWrapper) throws VerifyException {
+		Time time = timeWrapper.getTime();
+		if (timeWrapper.isMarkedDelete()) {
+			return true;
+		}
 		boolean empty = true;
 		boolean ok = true;
 		List<String> messages = new ArrayList<>();

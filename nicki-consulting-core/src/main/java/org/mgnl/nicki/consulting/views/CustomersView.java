@@ -329,7 +329,7 @@ public class CustomersView extends BaseView implements View {
 			List<Customer> customers = dbContext.loadObjects(customer, false);
 			customersContainerDataSource.removeAllItems();
 			customersContainerDataSource.addAll(customers);
-			customersTable.setVisibleColumns("name", "city");
+			customersTable.setVisibleColumns("name", "alias", "city");
 
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			LOG.error("Could not load customers", e);
