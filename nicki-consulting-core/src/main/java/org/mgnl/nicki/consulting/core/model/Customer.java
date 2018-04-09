@@ -3,6 +3,7 @@ package org.mgnl.nicki.consulting.core.model;
 import java.util.List;
 
 import org.mgnl.nicki.db.annotation.Attribute;
+import org.mgnl.nicki.db.annotation.ForeignKey;
 import org.mgnl.nicki.db.annotation.SubTable;
 import org.mgnl.nicki.db.annotation.Table;
 
@@ -12,8 +13,12 @@ public class Customer {
 	@Attribute(name = "ID", autogen=true, primaryKey=true)
 	private Long id;
 
-	@Attribute(name = "NAME")
+	@Attribute(name = "NAME", mandatory = true)
 	private String name;
+	
+	@Attribute(name = "PARENT_ID")
+	@ForeignKey(columnName = "ID", foreignKeyClass=Customer.class, display="name")
+	private Long parentId;
 
 	@Attribute(name = "ALIAS")
 	private String alias;
@@ -101,5 +106,15 @@ public class Customer {
 
 	public void setAlias(String alias) {
 		this.alias = alias;
+	}
+
+
+	public Long getParentId() {
+		return parentId;
+	}
+
+
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
 	}
 }

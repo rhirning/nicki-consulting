@@ -15,7 +15,7 @@ public class Person {
 	@Attribute(name = "ID", autogen=true, primaryKey=true)
 	private Long id;
 	
-	@Attribute(name = "USER_ID")
+	@Attribute(name = "USER_ID", mandatory = true)
 	private String userId;
 	
 	@SubTable(foreignKey = "personId")

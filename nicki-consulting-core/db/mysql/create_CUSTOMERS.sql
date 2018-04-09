@@ -3,6 +3,7 @@ DROP TABLE CUSTOMERS;
 CREATE TABLE CUSTOMERS (
   ID bigint NOT NULL AUTO_INCREMENT,
   NAME varchar(1000) NOT NULL,
+  PARENT_ID bigint,
   ALIAS varchar(1000),
   STREET varchar(1000),
   ZIP varchar(1000),

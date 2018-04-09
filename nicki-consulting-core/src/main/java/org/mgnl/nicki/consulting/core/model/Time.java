@@ -12,11 +12,11 @@ public class Time {
 	@Attribute(name = "ID", autogen=true, primaryKey=true)
 	private Long id;
 	
-	@Attribute(name = "MEMBER_ID")
+	@Attribute(name = "MEMBER_ID", mandatory = true)
 	@ForeignKey(columnName = "ID", foreignKeyClass=Member.class)
 	private Long memberId;
 
-	@Attribute(name = "TEXT")
+	@Attribute(name = "TEXT", mandatory = true)
 	private String text;
 
 	@Attribute(name = "START_TIME", type=DataType.TIMESTAMP)

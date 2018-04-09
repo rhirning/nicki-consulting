@@ -13,17 +13,17 @@ public class Project {
 	@Attribute(name = "ID", autogen=true, primaryKey=true)
 	private Long id;
 	
-	@Attribute(name = "CUSTOMER_ID")
+	@Attribute(name = "CUSTOMER_ID", mandatory = true)
 	@ForeignKey(columnName = "ID", foreignKeyClass=Customer.class, display="name")
 	private Long customerId;
 
-	@Attribute(name = "NAME")
+	@Attribute(name = "NAME", mandatory = true)
 	private String name;
 
-	@Attribute(name = "CUSTOMER_REFERENCE")
+	@Attribute(name = "CUSTOMER_REFERENCE", mandatory = true)
 	private String reference;
 
-	@Attribute(name = "CONTACT")
+	@Attribute(name = "CONTACT", mandatory = true)
 	private String contact;
 
 	@Attribute(name = "PHONE")

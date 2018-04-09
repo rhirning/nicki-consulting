@@ -15,11 +15,11 @@ public class Member {
 	@Attribute(name = "ID", autogen=true, primaryKey=true)
 	private Long id;
 	
-	@Attribute(name = "PROJECT_ID")
+	@Attribute(name = "PROJECT_ID", mandatory = true)
 	@ForeignKey(columnName = "ID", foreignKeyClass=Project.class, display="name")
 	private Long projectId;
 	
-	@Attribute(name = "PERSON_ID")
+	@Attribute(name = "PERSON_ID", mandatory = true)
 	@ForeignKey(columnName = "ID", foreignKeyClass=Person.class, display="name")
 	private Long personId;
 
