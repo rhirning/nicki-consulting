@@ -1,5 +1,6 @@
 package org.mgnl.nicki.consulting.core.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.mgnl.nicki.db.annotation.Attribute;
@@ -8,8 +9,10 @@ import org.mgnl.nicki.db.annotation.Table;
 import org.mgnl.nicki.db.data.DataType;
 
 @Table(name = "PROJECTS")
-public class Project {
-	
+public class Project implements Serializable {
+
+	private static final long serialVersionUID = -8633682220401303041L;
+
 	@Attribute(name = "ID", autogen=true, primaryKey=true)
 	private Long id;
 	
