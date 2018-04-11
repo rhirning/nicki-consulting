@@ -84,8 +84,8 @@ public class TimeSelectHandler extends NonLoggingSelectHandler implements Select
 		sb.append(" )");
 		if (this.period != null) {
 			try (DBContext dbContext = DBContextManager.getContext(dbContextName)) {
-				sb.append(" AND START_TIME >= ").append(dbContext.getDateAsDbString(period.getStart()));
-				sb.append(" AND END_TIME < ").append(dbContext.getDateAsDbString(period.getEnd()));
+				sb.append(" AND START_TIME >= ").append(dbContext.getDateAsDbString(period.getStart().getTime()));
+				sb.append(" AND END_TIME < ").append(dbContext.getDateAsDbString(period.getEnd().getTime()));
 			} catch (SQLException e) {
 				throw new TimeSelectException(e);
 			}

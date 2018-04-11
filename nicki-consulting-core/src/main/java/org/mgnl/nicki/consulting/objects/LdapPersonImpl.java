@@ -9,6 +9,7 @@ import org.mgnl.nicki.core.annotation.DynamicAttribute;
 import org.mgnl.nicki.core.annotation.DynamicObject;
 import org.mgnl.nicki.core.annotation.RemoveAdditionalObjectClass;
 import org.mgnl.nicki.core.annotation.RemoveDynamicAttribute;
+import org.mgnl.nicki.core.config.Config;
 import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.dynamic.objects.objects.Group;
 import org.mgnl.nicki.dynamic.objects.objects.Person;
@@ -104,18 +105,14 @@ public class LdapPersonImpl extends Person implements LdapPerson {
 	}
 
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<Group> getGroups() {
 		if (groups == null) {
-			TemplateMethodModelEx method = (TemplateMethodModelEx) get("getGroups");
-			if (method != null) {
-				try {
-					groups = (Collection<Group>) method.exec(null);
-				} catch (TemplateModelException e) {
-					LOG.error("Error", e);
-					groups = new ArrayList<Group>();
-				}
+			try {
+				this.groups = getContext().loadObjects(Group.class, Config.getString("nicki.groups.basedn"), "(member=" + getPath() + ")");
+			} catch (Exception e) {
+				LOG.error("Error", e);
+				groups = new ArrayList<Group>();
 			}
 		}
 		return groups;

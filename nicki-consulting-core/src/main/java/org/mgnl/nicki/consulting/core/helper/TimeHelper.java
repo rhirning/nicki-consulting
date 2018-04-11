@@ -13,6 +13,7 @@ import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.data.TimeWrapper;
+import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.profile.InitProfileException;
@@ -156,6 +157,32 @@ public class TimeHelper {
 		Date result = new Date(date.getTime());
 		setClock(result, clock);
 		return result;
+	}
+	
+	public static Period getMemberPeriod(Member member) {
+		Calendar start = Period.getFirstDayOfYear();
+		Calendar end = Period.getLastDayOfYear();
+		
+		Project project = null;
+		if (member.getStart() != null) {
+			start.setTime(member.getStart());
+		} else {
+			project = getProjectFromMemberId(member.getId());
+			if (project.getStart() != null) {
+				start.setTime(project.getStart());
+			}
+		}
+		if (member.getEnd() != null) {
+			end.setTime(member.getEnd());
+		} else {
+			if (project == null) {
+				project = getProjectFromMemberId(member.getId());
+			}
+			if (project.getEnd() != null) {
+				end.setTime(project.getEnd());
+			}
+		}
+		return new Period(start, end);
 	}
 
 }

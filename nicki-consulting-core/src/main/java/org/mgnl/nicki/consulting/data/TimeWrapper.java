@@ -1,6 +1,8 @@
 package org.mgnl.nicki.consulting.data;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.Clock;
@@ -23,6 +25,7 @@ public class TimeWrapper {
 	private Time time;
 	private int uniqueHash;
 	private List<Member> members;
+	private Map<Long, Member> membersMap = new HashMap<>();
 	
 	private ComboBox memberComboBox;
 	private CheckBox deleteCheckBox;
@@ -38,6 +41,11 @@ public class TimeWrapper {
 		this.time = time;
 		uniqueHash = time.getUniqueHash();
 		this.members = members;
+		if (members != null) {
+			for (Member member: members) {
+				membersMap.put(member.getId(), member);
+			}
+		}
 		this.readOnly = (readonly == READONLY.TRUE);
 	}
 	
@@ -247,5 +255,9 @@ public class TimeWrapper {
 		} else {
 			return null;
 		}
+	}
+	
+	public Member getMember(Long memberId) {
+		return this.membersMap.get(memberId);
 	}
 }

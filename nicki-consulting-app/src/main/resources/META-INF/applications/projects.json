@@ -1,7 +1,17 @@
 {
+	"start" : {
+				"title": "Info",
+				"view": "org.mgnl.nicki.vaadin.base.views.InfoView",
+				"configuration" : {
+					"editorGroup" : "time-administrators",
+					"storeClass" : "org.mgnl.nicki.vaadin.base.views.TemplateInfo",
+					"configPath" : "nicki.consulting.projects.info.path"
+				}
+			},
 	"chapters": [
 		{
 			"chapter": "Administration",
+			"groups" : ["time-administrators"],
 			"views": [
 				{
 					"title": "Kunden",

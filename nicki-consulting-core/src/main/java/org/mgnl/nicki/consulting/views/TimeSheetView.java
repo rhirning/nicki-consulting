@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.Constants;
+import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.helper.VerifyException;
 import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.data.BeanContainerDataSource;
@@ -233,6 +234,13 @@ public class TimeSheetView extends BaseView implements View {
 		if (time.getStart() != null && time.getEnd() != null &&  time.getStart().after(time.getEnd())) {
 			messages.add(I18n.getText("nicki.consulting.time.error.start.end.invalid"));
 			ok = false;
+		}
+		
+		if (time.getMemberId() != null && time.getStart() != null) {
+			if (!TimeHelper.getMemberPeriod(timeWrapper.getMember(time.getMemberId())).matches(time.getStart())) {
+				messages.add(I18n.getText("nicki.consulting.time.error.period.invalid"));
+				ok = false;
+			}
 		}
 		if  (!empty && !ok) {
 			throw new VerifyException(messages);
