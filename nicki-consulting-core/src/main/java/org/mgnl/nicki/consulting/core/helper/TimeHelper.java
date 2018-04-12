@@ -13,6 +13,9 @@ import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.data.TimeWrapper;
+import org.mgnl.nicki.consulting.db.HoursOfMemberSelectHandler;
+import org.mgnl.nicki.consulting.db.HoursOfProjectSelectHandler;
+import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
@@ -49,6 +52,28 @@ public class TimeHelper {
 			LOG.error("Could not load project", e);
 		}
 		return null;
+	}
+	
+	public static float getHoursForMember(Member member) {
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			HoursOfMemberSelectHandler handler = new HoursOfMemberSelectHandler(member, Constants.DB_CONTEXT_NAME);
+			dbContext.select(handler);
+			return handler.getHours();
+		} catch (SQLException | InitProfileException | TimeSelectException e) {
+			LOG.error("Could not get hours for member", e);
+		}
+		return -1;
+	}
+	
+	public static float getHoursForProject(Project project) {
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			HoursOfProjectSelectHandler handler = new HoursOfProjectSelectHandler(project, Constants.DB_CONTEXT_NAME);
+			dbContext.select(handler);
+			return handler.getHours();
+		} catch (SQLException | InitProfileException | TimeSelectException e) {
+			LOG.error("Could not get hours for member", e);
+		}
+		return -1;
 	}
 	
 	public static float getHoursFromTimeList(List<Time> times) {
