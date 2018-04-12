@@ -153,7 +153,10 @@ public class ReportsView extends BaseView implements View  {
 	private void loadTimes() {
 		timeContainerDataSource.removeAllItems();
 		try {
-			timeContainerDataSource.addAll(getTimeWrappers(getPerson(), (PERIOD) timeComboBox.getValue(), (Customer) customerComboBox.getValue(), (Project) projectComboBox.getValue(), READONLY.TRUE, 0));
+			PERIOD period = (PERIOD) timeComboBox.getValue();
+			if (period != null) {
+				timeContainerDataSource.addAll(getTimeWrappers(getPerson(), period.getPeriod(), (Customer) customerComboBox.getValue(), (Project) projectComboBox.getValue(), READONLY.TRUE, 0));
+			}
 		} catch (IllegalStateException | IllegalArgumentException | TimeSelectException | NoValidPersonException
 				| NoApplicationContextException e) {
 			// TODO Auto-generated catch block

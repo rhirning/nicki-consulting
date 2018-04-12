@@ -13,6 +13,7 @@ import org.mgnl.nicki.consulting.data.BeanContainerDataSource;
 import org.mgnl.nicki.consulting.data.TimeWrapper;
 import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.consulting.views.SaveOrIgnoreDialog.DECISION;
+import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.core.i18n.I18n;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
@@ -251,7 +252,10 @@ public class TimeSheetView extends BaseView implements View {
 	private void loadTimes() {
 		timeContainerDataSource.removeAllItems();
 		try {
-			timeContainerDataSource.addAll(getTimeWrappers(getPerson(), (PERIOD) timeComboBox.getValue(), null, null, READONLY.FALSE, 10));
+			PERIOD period = (PERIOD) timeComboBox.getValue();
+			if (period != null) {
+				timeContainerDataSource.addAll(getTimeWrappers(getPerson(), period.getPeriod(), null, null, READONLY.FALSE, 10));
+			}
 		} catch (IllegalStateException | IllegalArgumentException | TimeSelectException | NoValidPersonException
 				| NoApplicationContextException e) {
 			// TODO Auto-generated catch block

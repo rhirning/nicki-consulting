@@ -63,4 +63,8 @@ public enum PERIOD {
 		return this.period.matches(start);
 	}
 
+	public Period getPeriod() {
+		return period;
+	}
+
 }

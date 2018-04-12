@@ -16,6 +16,7 @@ import org.mgnl.nicki.consulting.data.TimeWrapper;
 import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.consulting.db.TimeSelectHandler;
 import org.mgnl.nicki.consulting.objects.LdapPerson;
+import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.profile.InitProfileException;
@@ -122,7 +123,7 @@ public abstract class BaseView extends CustomComponent implements View {
 	
 
 
-	protected List<Time> getTimes(Person person, PERIOD period, Customer customer, Project project) throws TimeSelectException {
+	protected List<Time> getTimes(Person person, Period period, Customer customer, Project project) throws TimeSelectException {
 		TimeSelectHandler selectHandler = new TimeSelectHandler(person, "projects");
 		selectHandler.setPeriod(period);
 		if (customer != null) {
@@ -144,7 +145,7 @@ public abstract class BaseView extends CustomComponent implements View {
 	
 	public enum READONLY {TRUE, FALSE};
 
-	protected List<TimeWrapper> getTimeWrappers(Person person, PERIOD period, Customer customer, Project project, READONLY readonly, int emptyCount) throws TimeSelectException {
+	protected List<TimeWrapper> getTimeWrappers(Person person, Period period, Customer customer, Project project, READONLY readonly, int emptyCount) throws TimeSelectException {
 		List<TimeWrapper> timeWrappers = new ArrayList<>();
 		List<Member> members = getMembers(person);
 		for (Time time : getTimes(person, period, customer, project)) {

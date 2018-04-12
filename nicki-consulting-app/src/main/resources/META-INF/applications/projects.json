@@ -37,6 +37,10 @@
 				{
 					"title": "Zeiterfassung",
 					"view": "org.mgnl.nicki.consulting.views.TimeSheetView"
+				},
+				{
+					"title": "Meine Projekte",
+					"view": "org.mgnl.nicki.consulting.views.MyProjectsView"
 				}
 			]
 		},

@@ -10,7 +10,7 @@ import org.mgnl.nicki.consulting.core.model.Member;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.core.model.Time;
-import org.mgnl.nicki.consulting.views.PERIOD;
+import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.context.NotSupportedException;
@@ -26,7 +26,7 @@ public class TimeSelectHandler extends NonLoggingSelectHandler implements Select
 	
 	private TYPE type ;
 	private Person person;
-	private PERIOD period;
+	private Period period;
 	private Customer customer;
 	private Project project;
 	
@@ -111,7 +111,7 @@ public class TimeSelectHandler extends NonLoggingSelectHandler implements Select
 		return list;
 	}
 
-	public void setPeriod(PERIOD period) {
+	public void setPeriod(Period period) {
 		this.period = period;
 	}
 
