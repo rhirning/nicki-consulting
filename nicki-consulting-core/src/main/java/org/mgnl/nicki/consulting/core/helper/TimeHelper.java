@@ -210,4 +210,34 @@ public class TimeHelper {
 		return new Period(start, end);
 	}
 
+	public static boolean hasTimeEntries(Member member) throws SQLException, InitProfileException {
+		Time time = new Time();
+		time.setMemberId(member.getId());
+		return isExist(time);
+	}
+
+	public static boolean isExist(Object bean) throws SQLException, InitProfileException {
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			return dbContext.exists(bean);
+		}
+	}
+
+	public static void delete(Object bean) throws SQLException, InitProfileException {
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			dbContext.delete(bean);
+		}
+	}
+
+	public static boolean hasMembers(Project project) throws SQLException, InitProfileException {
+		Member member = new Member();
+		member.setProjectId(project.getId());
+		return isExist(member);
+	}
+
+	public static boolean hasProjects(Customer customer) throws SQLException, InitProfileException {
+		Project project = new Project();
+		project.setCustomerId(customer.getId());
+		return isExist(project);
+	}
+
 }
