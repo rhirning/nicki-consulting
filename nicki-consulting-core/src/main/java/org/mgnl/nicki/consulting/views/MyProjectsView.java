@@ -59,14 +59,14 @@ public class MyProjectsView extends BaseView implements View {
 			Project project = TimeHelper.getProject(member.getProjectId());
 			Customer customer = TimeHelper.getCustomer(project.getCustomerId());
 			addComponent(dataLayout, customer);
-			addComponent(dataLayout, project);
-			addComponent(dataLayout, member);
+			addComponent(dataLayout, project, "rate");
+			addComponent(dataLayout, member, "rate");
 		}
 	}
 	
 	
 
-	private void addComponent(HorizontalLayout dataLayout, Object bean) {
+	private void addComponent(HorizontalLayout dataLayout, Object bean, String...hiddenAttributes) {
 
 		DbBeanViewer beanViewer = new DbBeanViewer(new DbBeanCloseListener() {
 			
@@ -77,7 +77,7 @@ public class MyProjectsView extends BaseView implements View {
 		beanViewer.setReadOnly(true);
 		beanViewer.setDbContextName("projects");
 		beanViewer.setWidth("400px");
-		beanViewer.setDbBean(bean);
+		beanViewer.setDbBean(bean, hiddenAttributes);
 		dataLayout.addComponent(beanViewer);
 	}
 

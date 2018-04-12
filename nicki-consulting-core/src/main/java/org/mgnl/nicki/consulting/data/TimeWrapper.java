@@ -1,5 +1,6 @@
 package org.mgnl.nicki.consulting.data;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +21,9 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TextField;
 
-public class TimeWrapper {
+public class TimeWrapper implements Serializable {
 
+	private static final long serialVersionUID = -3445248806029063825L;
 	private Time time;
 	private int uniqueHash;
 	private List<Member> members;
