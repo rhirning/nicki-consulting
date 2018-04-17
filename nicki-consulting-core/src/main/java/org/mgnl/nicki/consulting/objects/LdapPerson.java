@@ -16,4 +16,5 @@ public interface LdapPerson extends DynamicObject {
 	void setMobile(String mobile);
 	void setUserPassword(String userpassword);
 
+	boolean isMemberOf(String groupName);
 }

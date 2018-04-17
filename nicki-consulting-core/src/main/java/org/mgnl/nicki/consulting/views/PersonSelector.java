@@ -3,6 +3,7 @@ package org.mgnl.nicki.consulting.views;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.mgnl.nicki.consulting.core.helper.PersonHelper;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.data.BeanContainerDataSource;
 import org.mgnl.nicki.db.context.DBContext;
@@ -56,17 +57,11 @@ public class PersonSelector extends CustomComponent implements View {
 	}
 
 	private void LoadPersons() {
-		Person person = new Person();
-		try (DBContext dbContext = DBContextManager.getContext("projects")) {
-			List<Person> persons = dbContext.loadObjects(person, false);
-			personsContainerDataSource.removeAllItems();
-			personsContainerDataSource.addAll(persons);
-			personsTable.setVisibleColumns("name");
-
-		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
-			LOG.error("Could not load customers", e);
-		}
 		
+		List<Person> persons = PersonHelper.getPersons();
+		personsContainerDataSource.removeAllItems();
+		personsContainerDataSource.addAll(persons);
+		personsTable.setVisibleColumns("name");
 	}
 
 	@Override

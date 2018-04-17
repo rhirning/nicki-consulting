@@ -68,18 +68,27 @@ public class TimeSelectHandler extends NonLoggingSelectHandler implements Select
 		sb.append("SELECT * FROM ").append(timeTableName).append(" WHERE MEMBER_ID IN ( ");
 		if (this.project != null) {
 			sb.append("SELECT ID FROM ").append(memberTableName);
-			sb.append(" WHERE PERSON_ID = ").append(person.getId());
-			sb.append(" AND PROJECT_ID = ").append(this.project.getId());
+			sb.append(" WHERE ");
+			if (person.getId() > 0) {
+				sb.append("PERSON_ID = ").append(person.getId()).append(" AND");
+			}
+			sb.append("PROJECT_ID = ").append(this.project.getId());
 		} else if (this.customer != null) {
 			sb.append("SELECT ID FROM ").append(memberTableName);
-			sb.append(" WHERE PERSON_ID = ").append(person.getId());
-			sb.append(" AND PROJECT_ID IN (");
+			sb.append(" WHERE ");
+			if (person.getId() > 0) {
+				sb.append("PERSON_ID = ").append(person.getId()).append(" AND");
+			}
+			sb.append("PROJECT_ID IN (");
 			sb.append("SELECT ID FROM ").append(projectTableName);
 			sb.append(" WHERE CUSTOMER_ID = ").append(customer.getId());
 			sb.append(" )");
 			
 		} else {
-			sb.append("SELECT ID FROM ").append(memberTableName).append(" WHERE PERSON_ID = ").append(person.getId());
+			sb.append("SELECT ID FROM ").append(memberTableName);
+			if (person.getId() > 0) {
+				sb.append(" WHERE PERSON_ID = ").append(person.getId());
+			}
 		}
 		sb.append(" )");
 		if (this.period != null) {

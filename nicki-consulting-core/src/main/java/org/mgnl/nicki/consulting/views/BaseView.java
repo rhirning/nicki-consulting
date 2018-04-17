@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.mgnl.nicki.consulting.core.helper.PersonHelper;
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.model.Customer;
 import org.mgnl.nicki.consulting.core.model.Member;
@@ -16,6 +18,7 @@ import org.mgnl.nicki.consulting.data.TimeWrapper;
 import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.consulting.db.TimeSelectHandler;
 import org.mgnl.nicki.consulting.objects.LdapPerson;
+import org.mgnl.nicki.core.config.Config;
 import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
@@ -34,6 +37,7 @@ public abstract class BaseView extends CustomComponent implements View {
 	private NickiApplication application;
 	private Person person;
 	private PERIOD timeComboBoxValue;
+	private Person personComboBoxValue;
 	
 	public NickiApplication getApplication() {
 		return application;
@@ -73,6 +77,11 @@ public abstract class BaseView extends CustomComponent implements View {
 		}
 		
 	}
+	
+	public boolean isAdmin() {
+		LdapPerson ldapPerson = (LdapPerson) application.getContext().getLoginContext().getUser();
+		return ldapPerson.isMemberOf(Config.getString("nicki.consulting.group.admin"));
+	}
 
 	protected List<Member> getMembers(Project project) {
 		Member member= new Member();
@@ -87,7 +96,9 @@ public abstract class BaseView extends CustomComponent implements View {
 
 	protected List<Member> getMembers(Person person) {
 		Member member= new Member();
-		member.setPersonId(person.getId());
+		if (person.getId() > 0) {
+			member.setPersonId(person.getId());
+		}
 		try (DBContext dbContext = DBContextManager.getContext("projects")) {
 			return dbContext.loadObjects(member, true);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
@@ -169,12 +180,50 @@ public abstract class BaseView extends CustomComponent implements View {
 		timeComboBox.setNullSelectionAllowed(false);
 	}
 
+	protected enum ALL {TRUE, FALSE}
+
+	protected void initPersonComboBox(ComboBox personComboBox, ALL withAllEntry) throws NoValidPersonException, NoApplicationContextException {
+		Person self = getPerson();
+		if (isAdmin()) {
+			for(Person person : PersonHelper.getPersons()) {
+				personComboBox.addItem(person);
+				personComboBox.setItemCaption(person, person.getName());
+				if (self.getId() == person.getId()) {
+					personComboBox.setValue(person);
+					setPersonComboBoxValue(person);
+				}
+			}
+			if (withAllEntry == ALL.TRUE) {
+				// ALL
+				Person all = new Person();
+				all.setId(-1L);
+				personComboBox.addItem(all);
+				personComboBox.setItemCaption(all, "Alle");
+			}
+		} else {
+			personComboBox.addItem(self);
+			personComboBox.setItemCaption(self, self.getName());
+			personComboBox.setValue(self);
+			setPersonComboBoxValue(self);
+			personComboBox.setEnabled(false);
+		}
+		personComboBox.setNullSelectionAllowed(false);
+	}
+
 	public PERIOD getTimeComboBoxValue() {
 		return timeComboBoxValue;
 	}
 
 	public void setTimeComboBoxValue(PERIOD timeComboBoxValue) {
 		this.timeComboBoxValue = timeComboBoxValue;
+	}
+
+	public Person getPersonComboBoxValue() {
+		return personComboBoxValue;
+	}
+
+	public void setPersonComboBoxValue(Person personComboBoxValue) {
+		this.personComboBoxValue = personComboBoxValue;
 	}
 
 }
