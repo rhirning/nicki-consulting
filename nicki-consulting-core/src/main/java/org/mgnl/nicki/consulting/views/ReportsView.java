@@ -98,12 +98,6 @@ public class ReportsView extends BaseView implements View  {
 
 	@Override
 	public void init() {
-		try {
-			initPersonData();
-		} catch (NoValidPersonException | NoApplicationContextException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		if (!isInit) {
 
 			initTimeComboBox(this.timeComboBox);
@@ -129,6 +123,12 @@ public class ReportsView extends BaseView implements View  {
 			timeComboBoxChanged();
 			isInit = true;
 		}
+		try {
+			initPersonData();
+		} catch (NoValidPersonException | NoApplicationContextException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		initCustomerComboBox();
 		initProjectComboBox();
 		loadTimes();
@@ -136,6 +136,14 @@ public class ReportsView extends BaseView implements View  {
 
 	private void timeComboBoxChanged() {
 		setPersonComboBoxValue((Person) this.personComboBox.getValue());
+		try {
+			initPersonData();
+		} catch (NoValidPersonException | NoApplicationContextException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		initCustomerComboBox();
+		initProjectComboBox();
 		loadTimes();
 		generate();
 	}
@@ -207,17 +215,9 @@ public class ReportsView extends BaseView implements View  {
 
 	private void initPersonData() throws NoValidPersonException, NoApplicationContextException {
 		
-		if (members == null) {
-			members = getMembers(getPerson());
-		}
-		
-		if (customers == null) {
-			customers = getCustomers(members);
-		}
-		
-		if (projects == null) {
-			projects = getProjects(members);
-		}
+		members = getMembers(getPersonComboBoxValue());
+		customers = getCustomers(members);
+		projects = getProjects(members);
 	}
 
 
