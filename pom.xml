@@ -4,7 +4,7 @@
 
 	<groupId>org.mgnl.nicki.consulting</groupId>
 	<artifactId>nicki-consulting</artifactId>
-	<version>0.18-SNAPSHOT</version>
+	<version>0.18</version>
 	<packaging>pom</packaging>
 
 	<name>nicki-consulting</name>
@@ -33,7 +33,7 @@
 		<connection>scm:git:https://github.com/rhirning/nicki-consulting</connection>
 		<developerConnection>scm:git:https://github.com/rhirning/nicki-consulting</developerConnection>
 		<url>scm:git:https://github.com/rhirning/nicki-consulting</url>
-		<tag>HEAD</tag>
+		<tag>nicki-consulting-0.18</tag>
 	</scm>
 	<build>
 		<plugins>

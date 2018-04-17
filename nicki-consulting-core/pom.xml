@@ -7,7 +7,7 @@
 	<parent>
 		<artifactId>nicki-consulting</artifactId>
 		<groupId>org.mgnl.nicki.consulting</groupId>
-		<version>0.18-SNAPSHOT</version>
+		<version>0.18</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<packaging>jar</packaging>
