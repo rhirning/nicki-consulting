@@ -10,6 +10,7 @@ import org.mgnl.nicki.consulting.core.helper.Clock;
 import org.mgnl.nicki.consulting.core.helper.DateFormatException;
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.model.Member;
+import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.views.BaseView.READONLY;
 
@@ -17,6 +18,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TextField;
@@ -24,6 +26,7 @@ import com.vaadin.ui.TextField;
 public class TimeWrapper implements Serializable {
 
 	private static final long serialVersionUID = -3445248806029063825L;
+	private Person person;
 	private Time time;
 	private int uniqueHash;
 	private List<Member> members;
@@ -36,10 +39,12 @@ public class TimeWrapper implements Serializable {
 	private TextField endTextField;
 	private ComboBox pauseComboBox;
 	private TextField textTextField;
+	private Label personLabel;
 	private boolean readOnly;
 	
-	public TimeWrapper(Time time, List<Member> members, READONLY readonly) {
+	public TimeWrapper(Person person, Time time, List<Member> members, READONLY readonly) {
 		super();
+		this.person = person;
 		this.time = time;
 		uniqueHash = time.getUniqueHash();
 		this.members = members;
@@ -214,6 +219,15 @@ public class TimeWrapper implements Serializable {
 		
 		textTextField.setReadOnly(readOnly);
 		return textTextField;
+	}
+
+	public Label getPerson() {
+		personLabel = new Label();
+		
+		if (time.getText() != null) {
+			personLabel.setValue(person.getName());
+		}
+		return personLabel;
 	}
 
 	public Time getTime() {

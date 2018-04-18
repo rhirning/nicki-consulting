@@ -121,12 +121,14 @@ public abstract class BaseView extends CustomComponent implements View {
 	}
 
 
-	protected Collection<Project> getProjects(Collection<Member> members) {
+	protected Collection<Project> getProjects(Customer customer, Collection<Member> members) {
 		Map<Long, Project> projects = new HashMap<>();
 		if (members != null) {
 			for (Member member : members) {
 				Project project = TimeHelper.getProject(member.getProjectId());
-				projects.put(project.getId(), project);
+				if (customer == null || customer.getId() == project.getCustomerId()) {
+					projects.put(project.getId(), project);
+				}
 			}
 		}
 		return projects.values();
@@ -160,10 +162,11 @@ public abstract class BaseView extends CustomComponent implements View {
 		List<TimeWrapper> timeWrappers = new ArrayList<>();
 		List<Member> members = getMembers(person);
 		for (Time time : getTimes(person, period, customer, project)) {
-			timeWrappers.add(new TimeWrapper(time, members, readonly));
+			Person timePerson = TimeHelper.getPersonFromMemberId(time.getMemberId());
+			timeWrappers.add(new TimeWrapper(timePerson, time, members, readonly));
 		}
 		for (int i = 0; i < emptyCount; i++) {
-			timeWrappers.add(new TimeWrapper(new Time(), members, readonly));
+			timeWrappers.add(new TimeWrapper(person, new Time(), members, readonly));
 		}
 		
 		return timeWrappers;
