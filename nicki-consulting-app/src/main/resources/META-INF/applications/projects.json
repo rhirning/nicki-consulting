@@ -28,6 +28,14 @@
 				{
 					"title": "Templates",
 					"view": "org.mgnl.nicki.consulting.views.TemplateEditorView"
+				},
+				{
+					"title": "Reports",
+					"view": "org.mgnl.nicki.consulting.views.ReportsView",
+					"configuration" : {
+						"type" : "GROUP_OF_TEMPLATES",
+						"path" : "reports/reports"
+					}
 				}
 			]
 		},
@@ -49,7 +57,11 @@
 			"views": [
 				{
 					"title": "Zeit Report",
-					"view": "org.mgnl.nicki.consulting.views.ReportsView"
+					"view": "org.mgnl.nicki.consulting.views.ReportsView",
+					"configuration" : {
+						"type" : "TEMPLATE",
+						"path" : "reports/reports/TimeReport"
+					}
 				}
 			]
 		}
