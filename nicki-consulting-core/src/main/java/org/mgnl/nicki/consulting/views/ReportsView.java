@@ -21,6 +21,7 @@ import org.mgnl.nicki.consulting.data.TimeWrapper;
 import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.core.auth.InvalidPrincipalException;
 import org.mgnl.nicki.core.config.Config;
+import org.mgnl.nicki.core.context.AppContext;
 import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.dynamic.objects.objects.Template;
 import org.mgnl.nicki.template.engine.ConfigurationFactory.TYPE;
@@ -116,7 +117,11 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	@Override
 	public void init() {
 		if (!isInit) {
-			initReportComboBox();
+			try {
+				initReportComboBox();
+			} catch (InvalidPrincipalException e) {
+				LOG.error("Error init reportComboBox", e);
+			}
 
 			reportComboBox.addValueChangeListener(event -> { timeComboBoxChanged(); });
 			initTimeComboBox(this.timeComboBox);
@@ -153,7 +158,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		loadTimes();
 	}
 
-	private void initReportComboBox() {
+	private void initReportComboBox() throws InvalidPrincipalException {
 		reportComboBox.removeAllItems();
 		if (getTemplateType() == TEMPLATE_TYPE.TEMPLATE)  {
 			Template template = loadTemplate(getTemplatePath());
@@ -180,7 +185,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	}
 
 
-	private Template loadTemplate(String templatePath) {
+	private Template loadTemplate(String templatePath) throws InvalidPrincipalException {
 		String parts[] = StringUtils.split(templatePath, "/");
 		StringBuilder sb = new StringBuilder();
 		sb.insert(0, getTemplateBaseDn());
@@ -188,7 +193,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 			sb.insert(0, ",");
 			sb.insert(0, part).insert(0, "ou=");
 		}
-		return getApplication().getContext().getContext().loadObject(Template.class, getTemplateDn(templatePath));
+		return AppContext.getSystemContext().loadObject(Template.class, getTemplateDn(templatePath));
 	}
 	
 	private String getTemplateDn(String templatePath) {
@@ -208,8 +213,8 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	}
 
 
-	private List<Template> loadTemplates(String templatePath) {
-		return getApplication().getContext().getContext().loadChildObjects(Template.class, getTemplateDn(templatePath), null);
+	private List<Template> loadTemplates(String templatePath) throws InvalidPrincipalException {
+		return AppContext.getSystemContext().loadChildObjects(Template.class, getTemplateDn(templatePath), null);
 	}
 
 
