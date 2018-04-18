@@ -146,4 +146,11 @@ public class Project implements Serializable {
 		this.reference = reference;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(name).append(" (").append(id).append(")");
+		return sb.toString();
+	}
+
 }
