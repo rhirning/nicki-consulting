@@ -172,7 +172,6 @@ public abstract class BaseView extends CustomComponent implements View {
 		return timeWrappers;
 	}
 
-
 	protected void initTimeComboBox(ComboBox timeComboBox) {
 		for(PERIOD period : PERIOD.values()) {
 			timeComboBox.addItem(period);

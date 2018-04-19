@@ -29,6 +29,7 @@ public class TimeWrapper implements Serializable {
 	private Person person;
 	private Time time;
 	private int uniqueHash;
+	
 	private List<Member> members;
 	private Map<Long, Member> membersMap = new HashMap<>();
 	

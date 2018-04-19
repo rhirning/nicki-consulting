@@ -5,7 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mgnl.nicki.consulting.core.model.Customer;
 import org.mgnl.nicki.consulting.core.model.Member;
@@ -127,7 +129,9 @@ public class TimeHelper {
 	
 	public static Customer getCustomer(Long id) {
 		Customer customer = new Customer();
-		customer.setId(id);
+		if (id != null) {
+			customer.setId(id);
+		}
 		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			return dbContext.loadObject(customer, false);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
@@ -136,17 +140,94 @@ public class TimeHelper {
 		return null;
 	}
 	
-
+	public static List<Customer> getAllCustomers() {
+		Customer customer = new Customer();
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			return dbContext.loadObjects(customer, false);
+		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
+			LOG.error("Could not load customer", e);
+		}
+		return new ArrayList<>();
+	}
+	
+	public static List<Person> getAllPersons() {
+		Person person = new Person();
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			return dbContext.loadObjects(person, false);
+		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
+			LOG.error("Could not load customer", e);
+		}
+		return new ArrayList<>();
+	}
+	
+	public static List<Member> getAllMembers() {
+		return getMembers(null);
+	}
+	
+	public static List<Project> getAllProjects() {
+		return getProjects(null);
+	}
 
 	public static List<Member> getMembers(Project project) {
 		Member member= new Member();
-		member.setProjectId(project.getId());
+		if (project != null) {
+			member.setProjectId(project.getId());
+		}
 		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			return dbContext.loadObjects(member, true);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			LOG.error("Could not load members", e);
 		}
 		return new ArrayList<>();
+	}
+	
+	public static List<Project> getProjects(Customer customer) {
+		Project project = new Project();
+		if (customer != null) {
+			project.setCustomerId(customer.getId());
+		}
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			return dbContext.loadObjects(project, true);
+		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
+			LOG.error("Could not load members", e);
+		}
+		return new ArrayList<>();
+	}
+
+	public static Map<Long, Member> getAllMembersMap() {
+		Map<Long, Member> map = new HashMap<>();
+		List<Member> members = TimeHelper.getAllMembers();
+		for (Member member : members) {
+			map.put(member.getId(), member);
+		}
+		return map;
+	}
+
+	public static Map<Long, Person> getAllPersonsMap() {
+		Map<Long, Person> map = new HashMap<>();
+		List<Person> persons = TimeHelper.getAllPersons();
+		for (Person person : persons) {
+			map.put(person.getId(), person);
+		}
+		return map;
+	}
+
+	public static Map<Long, Customer> getAllCustomersMap() {
+		Map<Long, Customer> map = new HashMap<>();
+		List<Customer> customers = TimeHelper.getAllCustomers();
+		for (Customer customer : customers) {
+			map.put(customer.getId(), customer);
+		}
+		return map;
+	}
+
+	public static Map<Long, Project> getAllProjectsMap() {
+		Map<Long, Project> map = new HashMap<>();
+		List<Project> projects = TimeHelper.getAllProjects();
+		for (Project project : projects) {
+			map.put(project.getId(), project);
+		}
+		return map;
 	}
 
 	public static void setDay(Date date, Calendar newDay) {
