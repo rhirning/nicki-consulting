@@ -170,6 +170,14 @@ public class TimeWrapper implements Serializable {
 		endTextField.setReadOnly(readOnly);
 		return endTextField;
 	}
+	
+	public String getHours() {
+		if (time.getHours() != null) {
+			return TimeHelper.formatHours(time.getHours());
+		} else {
+			return "";
+		}
+	}
 
 	public ComboBox getPause() {
 		pauseComboBox = new ComboBox();
