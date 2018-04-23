@@ -21,6 +21,11 @@ public class Clock {
 				String minutesString = StringUtils.stripToEmpty(StringUtils.substringAfter(data, ":"));
 				hours = Integer.parseInt(hoursString);
 				minutes = Integer.parseInt(minutesString);
+			} else if (StringUtils.isNumeric(data) && data.length() == 4) {
+				String hoursString = StringUtils.stripToEmpty(StringUtils.substring(data, 0, 2));
+				String minutesString = StringUtils.stripToEmpty(StringUtils.substring(data, 2, 4));
+				hours = Integer.parseInt(hoursString);
+				minutes = Integer.parseInt(minutesString);
 			} else {
 				hours = Integer.parseInt(StringUtils.stripToEmpty(data));
 			}
