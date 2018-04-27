@@ -62,7 +62,11 @@ public class TimeWrapper implements Serializable {
 	
 	public CheckBox getDelete() {
 		this.deleteCheckBox = new CheckBox();
+		if (this.readOnly) {
+			this.deleteCheckBox.setEnabled(false);
+		}
 		return this.deleteCheckBox;
+
 	}
 	
 	public ComboBox getMember() {
