@@ -7,14 +7,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mgnl.nicki.consulting.core.helper.Constants;
 import org.mgnl.nicki.consulting.core.helper.PersonHelper;
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.model.Customer;
+import org.mgnl.nicki.consulting.core.model.Invoice;
 import org.mgnl.nicki.consulting.core.model.Member;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.core.model.Time;
+import org.mgnl.nicki.consulting.data.InvoiceWrapper;
 import org.mgnl.nicki.consulting.data.TimeWrapper;
+import org.mgnl.nicki.consulting.db.InvoiceSelectHandler;
 import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.consulting.db.TimeSelectHandler;
 import org.mgnl.nicki.consulting.objects.LdapPerson;
@@ -69,7 +73,7 @@ public abstract class BaseView extends CustomComponent implements View {
 		Person person = new Person();
 		person.setUserId(ldapPerson.getName());
 
-		try (DBContext dbContext = DBContextManager.getContext("projects")) {
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			this.person = dbContext.loadObject(person, false);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			LOG.error("Could not load person", e);
@@ -86,7 +90,7 @@ public abstract class BaseView extends CustomComponent implements View {
 	protected List<Member> getMembers(Project project) {
 		Member member= new Member();
 		member.setProjectId(project.getId());
-		try (DBContext dbContext = DBContextManager.getContext("projects")) {
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			return dbContext.loadObjects(member, true);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			LOG.error("Could not load members", e);
@@ -99,7 +103,7 @@ public abstract class BaseView extends CustomComponent implements View {
 		if (person.getId() > 0) {
 			member.setPersonId(person.getId());
 		}
-		try (DBContext dbContext = DBContextManager.getContext("projects")) {
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			return dbContext.loadObjects(member, true);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			LOG.error("Could not load members", e);
@@ -137,7 +141,7 @@ public abstract class BaseView extends CustomComponent implements View {
 
 
 	protected List<Time> getTimes(Person person, Period period, Customer customer, Project project) throws TimeSelectException {
-		TimeSelectHandler selectHandler = new TimeSelectHandler(person, "projects");
+		TimeSelectHandler selectHandler = new TimeSelectHandler(person, Constants.DB_CONTEXT_NAME);
 		selectHandler.setPeriod(period);
 		if (customer != null) {
 			selectHandler.setCustomer(customer);
@@ -147,7 +151,29 @@ public abstract class BaseView extends CustomComponent implements View {
 		}
 		
 
-		try (DBContext dbContext = DBContextManager.getContext("projects")) {
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			dbContext.select(selectHandler);
+			return selectHandler.getList();
+		} catch (SQLException | InitProfileException e) {
+			LOG.error("Could not load members", e);
+		}
+		return new ArrayList<>();
+	}
+
+	protected List<Invoice> getInvoices(Period period, Customer customer, Project project) throws TimeSelectException {
+		InvoiceSelectHandler selectHandler = new InvoiceSelectHandler(Constants.DB_CONTEXT_NAME);
+		if (period != null) {
+			selectHandler.setPeriod(period);
+		}
+		if (customer != null) {
+			selectHandler.setCustomer(customer);
+		}
+		if (project != null) {
+			selectHandler.setProject(project);
+		}
+		
+
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			dbContext.select(selectHandler);
 			return selectHandler.getList();
 		} catch (SQLException | InitProfileException e) {
@@ -170,6 +196,15 @@ public abstract class BaseView extends CustomComponent implements View {
 		}
 		
 		return timeWrappers;
+	}
+
+	protected List<InvoiceWrapper> getInvoiceWrappers(Period period, Customer customer, Project project) throws TimeSelectException {
+		List<InvoiceWrapper> invoiceWrappers = new ArrayList<>();
+		for (Invoice invoice: getInvoices(period, customer, project)) {
+			invoiceWrappers.add(new InvoiceWrapper(invoice));
+		}
+		
+		return invoiceWrappers;
 	}
 
 	protected void initTimeComboBox(ComboBox timeComboBox) {

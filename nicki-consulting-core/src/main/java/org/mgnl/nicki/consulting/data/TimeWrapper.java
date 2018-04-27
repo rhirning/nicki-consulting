@@ -55,6 +55,9 @@ public class TimeWrapper implements Serializable {
 			}
 		}
 		this.readOnly = (readonly == READONLY.TRUE);
+		if (time.getInvoiceId() != null) {
+			this.readOnly = true;
+		}
 	}
 	
 	public CheckBox getDelete() {

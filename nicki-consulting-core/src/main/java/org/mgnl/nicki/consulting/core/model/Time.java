@@ -19,6 +19,10 @@ public class Time implements Serializable {
 	@Attribute(name = "MEMBER_ID", mandatory = true)
 	@ForeignKey(columnName = "ID", foreignKeyClass=Member.class)
 	private Long memberId;
+	
+	@Attribute(name = "INVOICE_ID")
+	@ForeignKey(columnName = "ID", foreignKeyClass=Invoice.class)
+	private Long invoiceId;
 
 	@Attribute(name = "TEXT", mandatory = true)
 	private String text;
@@ -100,6 +104,14 @@ public class Time implements Serializable {
 		sb.append(hours == null ? "null" : hours);
 		sb.append(text == null ? "null" : text);
 		return sb.toString().hashCode();
+	}
+
+	public Long getInvoiceId() {
+		return invoiceId;
+	}
+
+	public void setInvoiceId(Long invoiceId) {
+		this.invoiceId = invoiceId;
 	}
 
 }

@@ -8,5 +8,6 @@ CREATE TABLE APP.TIME (
   END_TIME timestamp,
   PAUSE int,
   HOURS float not null,
+  INVOICE_ID bigint,
   CONSTRAINT TIME_PK PRIMARY KEY (ID)
 );

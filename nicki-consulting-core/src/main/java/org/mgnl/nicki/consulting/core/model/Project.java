@@ -50,6 +50,15 @@ public class Project implements Serializable {
 	@Attribute(name = "END_DATE", type=DataType.DATE)
 	private Date end;
 
+	@Attribute(name = "OPEN_DATE", type=DataType.DATE)
+	private Date open;
+
+	@Attribute(name = "INVOICE_TEMPLATE")
+	private String invoiceTemplate;
+
+	@Attribute(name = "TIMESHEET_TEMPLATE")
+	private String timeSheetTemplate;
+
 	public Long getId() {
 		return id;
 	}
@@ -151,6 +160,30 @@ public class Project implements Serializable {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name).append(" (").append(id).append(")");
 		return sb.toString();
+	}
+
+	public Date getOpen() {
+		return open;
+	}
+
+	public void setOpen(Date open) {
+		this.open = open;
+	}
+
+	public String getInvoiceTemplate() {
+		return invoiceTemplate;
+	}
+
+	public void setInvoiceTemplate(String invoiceTemplate) {
+		this.invoiceTemplate = invoiceTemplate;
+	}
+
+	public String getTimeSheetTemplate() {
+		return timeSheetTemplate;
+	}
+
+	public void setTimeSheetTemplate(String timeSheetTemplate) {
+		this.timeSheetTemplate = timeSheetTemplate;
 	}
 
 }

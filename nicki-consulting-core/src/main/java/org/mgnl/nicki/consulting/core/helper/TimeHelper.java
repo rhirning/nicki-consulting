@@ -17,6 +17,8 @@ import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.data.TimeWrapper;
 import org.mgnl.nicki.consulting.db.HoursOfMemberSelectHandler;
 import org.mgnl.nicki.consulting.db.HoursOfProjectSelectHandler;
+import org.mgnl.nicki.consulting.db.OpenProject;
+import org.mgnl.nicki.consulting.db.OpenProjectsSelectHandler;
 import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.db.context.DBContext;
@@ -76,6 +78,17 @@ public class TimeHelper {
 			LOG.error("Could not get hours for member", e);
 		}
 		return -1;
+	}
+	
+	public static List<OpenProject> getOpenProjects(Date before) {
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			OpenProjectsSelectHandler handler = new OpenProjectsSelectHandler(before, Constants.DB_CONTEXT_NAME);
+			dbContext.select(handler);
+			return handler.getProjects();
+		} catch (SQLException | InitProfileException | TimeSelectException e) {
+			LOG.error("Could not get hours for member", e);
+		}
+		return new ArrayList<>();
 	}
 	
 	public static float getHoursFromTimeList(List<Time> times) {

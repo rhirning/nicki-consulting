@@ -34,6 +34,12 @@ public class Customer implements Serializable {
 
 	@Attribute(name = "CITY")
 	private String city;
+
+	@Attribute(name = "INVOICE_TEMPLATE")
+	private String invoiceTemplate;
+
+	@Attribute(name = "TIMESHEET_TEMPLATE")
+	private String timeSheetTemplate;
 	
 	@SubTable(foreignKey = "customerId")
 	private List<Project> projects;
@@ -126,5 +132,25 @@ public class Customer implements Serializable {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name).append(" (").append(id).append(")");
 		return sb.toString();
+	}
+
+
+	public String getInvoiceTemplate() {
+		return invoiceTemplate;
+	}
+
+
+	public void setInvoiceTemplate(String invoiceTemplate) {
+		this.invoiceTemplate = invoiceTemplate;
+	}
+
+
+	public String getTimeSheetTemplate() {
+		return timeSheetTemplate;
+	}
+
+
+	public void setTimeSheetTemplate(String timeSheetTemplate) {
+		this.timeSheetTemplate = timeSheetTemplate;
 	}
 }
