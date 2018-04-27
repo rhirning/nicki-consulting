@@ -49,7 +49,7 @@ public class OpenProjectsSelectHandler extends NonLoggingSelectHandler implement
 		sb.append("SELECT M.PROJECT_ID, SUM(T.HOURS) FROM ");
 		sb.append(timeTableName).append(" T , " ).append(memberTableName).append(" M, ").append(projectTableName).append(" P ");
 		sb.append(" WHERE T.MEMBER_ID = M.ID AND M.PROJECT_ID = P.ID");
-		sb.append(" AND DATE(T.START_TIME) >= P.OPEN_DATE");
+		sb.append(" AND ( P.OPEN_DATE IS NULL OR DATE(T.START_TIME) >= P.OPEN_DATE)");
 		sb.append(" AND T.INVOICE_ID IS NULL ");
 		if (before != null) {
 			sb.append(" AND ").append(beforeClause).append(" ");
