@@ -141,10 +141,12 @@ public class TimeSheetView extends BaseView implements View {
 
 		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			for (TimeWrapper timeWrapper : timeContainerDataSource.getItemIds()) {
-				if (timeWrapper.isMarkedDelete()) {
-					deleteOrIgnore(dbContext, timeWrapper.getTime());
-				} else {
-					saveOrIgnore(dbContext, timeWrapper.getTime());
+				if (!timeWrapper.isReadOnly()) {
+					if (timeWrapper.isMarkedDelete()) {
+						deleteOrIgnore(dbContext, timeWrapper.getTime());
+					} else {
+						saveOrIgnore(dbContext, timeWrapper.getTime());
+					}
 				}
 			}
 			setTimeComboBoxValue((PERIOD) timeComboBox.getValue());
@@ -185,11 +187,13 @@ public class TimeSheetView extends BaseView implements View {
 	private boolean verify() {
 		boolean ok = true;
 		for (TimeWrapper timeWrapper : timeContainerDataSource.getItemIds()) {
-			try {
-				ok &= verify(timeWrapper);
-			} catch (VerifyException e) {
-				timeWrapper.setMessages(e.getMessages());
-				ok = false;
+			if (!timeWrapper.isReadOnly()) {
+				try {
+					ok &= verify(timeWrapper);
+				} catch (VerifyException e) {
+					timeWrapper.setMessages(e.getMessages());
+					ok = false;
+				}
 			}
 		}
 		return ok;

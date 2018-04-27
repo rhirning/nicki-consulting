@@ -292,4 +292,8 @@ public class TimeWrapper implements Serializable {
 	public Member getMember(Long memberId) {
 		return this.membersMap.get(memberId);
 	}
+
+	public boolean isReadOnly() {
+		return readOnly;
+	}
 }
