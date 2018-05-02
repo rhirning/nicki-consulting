@@ -237,6 +237,10 @@ public class TimeWrapper implements Serializable {
 		return textTextField;
 	}
 
+	public String getTextString() {
+		return time.getText();
+	}
+
 	public Label getPerson() {
 		personLabel = new Label();
 		
