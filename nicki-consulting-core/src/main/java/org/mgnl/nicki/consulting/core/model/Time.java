@@ -39,6 +39,9 @@ public class Time implements Serializable {
 	@Attribute(name = "HOURS")
 	private Float hours;
 
+	@Attribute(name = "CUSTOMER_REPORT")
+	private Boolean customerReport;
+
 	public Long getId() {
 		return id;
 	}
@@ -112,6 +115,14 @@ public class Time implements Serializable {
 
 	public void setInvoiceId(Long invoiceId) {
 		this.invoiceId = invoiceId;
+	}
+
+	public Boolean getCustomerReport() {
+		return customerReport;
+	}
+
+	public void setCustomerReport(Boolean customerReport) {
+		this.customerReport = customerReport;
 	}
 
 }

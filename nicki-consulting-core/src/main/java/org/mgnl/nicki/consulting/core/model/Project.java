@@ -44,6 +44,9 @@ public class Project implements Serializable {
 	@Attribute(name = "ACTIVE")
 	private Boolean active;
 
+	@Attribute(name = "CUSTOMER_REPORT")
+	private Boolean customerReport;
+
 	@Attribute(name = "START_DATE", type=DataType.DATE)
 	private Date start;
 
@@ -184,6 +187,14 @@ public class Project implements Serializable {
 
 	public void setTimeSheetTemplate(String timeSheetTemplate) {
 		this.timeSheetTemplate = timeSheetTemplate;
+	}
+
+	public Boolean getCustomerReport() {
+		return customerReport;
+	}
+
+	public void setCustomerReport(Boolean customerReport) {
+		this.customerReport = customerReport;
 	}
 
 }

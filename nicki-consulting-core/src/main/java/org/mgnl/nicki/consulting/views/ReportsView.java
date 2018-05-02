@@ -128,8 +128,8 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 			
 			timeContainerDataSource = new BeanContainerDataSource<>(TimeWrapper.class);
 			timeTable.setContainerDataSource(timeContainerDataSource);
-			timeTable.setVisibleColumns("person", "member", "day", "start", "end", "pause", "hours", "textString");
-			timeTable.setColumnHeaders("Person", "Projekt", "Datum", "von", "bis", "Pause", "Stunden", "Tätigkeit");
+			timeTable.setVisibleColumns("person", "member", "day", "start", "end", "pause", "hours", "customerReport", "textString");
+			timeTable.setColumnHeaders("Person", "Projekt", "Datum", "von", "bis", "Pause", "Stunden", "Bei Kunde erfasst", "Tätigkeit");
 			
 			timeComboBox.addValueChangeListener(event -> {timeComboBoxChanged();});
 			customerComboBox.addValueChangeListener(event -> {customerComboBoxChanged();});

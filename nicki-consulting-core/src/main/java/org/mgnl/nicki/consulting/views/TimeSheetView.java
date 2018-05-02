@@ -77,8 +77,8 @@ public class TimeSheetView extends BaseView implements View {
 			personComboBox.addValueChangeListener(event -> { timeValueChanged(); });
 			timeContainerDataSource = new BeanContainerDataSource<>(TimeWrapper.class);
 			timeTable.setContainerDataSource(timeContainerDataSource);
-			timeTable.setVisibleColumns("delete", "member", "day", "start", "end", "pause", "hours", "text");
-			timeTable.setColumnHeaders("Löschen", "Projekt", "Datum", "von", "bis", "Pause", "Stunden", "Tätigkeit");
+			timeTable.setVisibleColumns("delete", "member", "day", "start", "end", "pause", "hours", "customerReport", "text");
+			timeTable.setColumnHeaders("Löschen", "Projekt", "Datum", "von", "bis", "Pause", "Stunden", "Bei Kunde erfasst", "Tätigkeit");
 //			timeTable.setColumnWidth("member", 400);
 //			timeTable.setColumnWidth("day", 100);
 //			timeTable.setColumnWidth("start", 100);

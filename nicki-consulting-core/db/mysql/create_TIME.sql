@@ -9,5 +9,6 @@ CREATE TABLE TIME (
   PAUSE int,
   HOURS float not null,
   INVOICE_ID bigint,
+  CUSTOMER_REPORT int,
   CONSTRAINT TIME_PK PRIMARY KEY (ID)
 );

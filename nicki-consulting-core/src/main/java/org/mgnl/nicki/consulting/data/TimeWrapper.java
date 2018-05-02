@@ -11,6 +11,7 @@ import org.mgnl.nicki.consulting.core.helper.DateFormatException;
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.model.Member;
 import org.mgnl.nicki.consulting.core.model.Person;
+import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.views.BaseView.READONLY;
 
@@ -35,6 +36,7 @@ public class TimeWrapper implements Serializable {
 	
 	private ComboBox memberComboBox;
 	private CheckBox deleteCheckBox;
+	private CheckBox customerReportCheckBox;
 	private DateField dayDateField;
 	private TextField startTextField;
 	private TextField endTextField;
@@ -67,6 +69,50 @@ public class TimeWrapper implements Serializable {
 		}
 		return this.deleteCheckBox;
 
+	}
+	
+	public CheckBox getCustomerReport() {
+		customerReportCheckBox = new CheckBox();
+		customerReportCheckBox.setImmediate(true);
+		customerReportCheckBox.setValue(false);
+		customerReportCheckBox.addValueChangeListener(
+				event -> time.setCustomerReport(customerReportCheckBox.getValue()));
+		if (time.getCustomerReport() != null) {
+			this.customerReportCheckBox.setValue(time.getCustomerReport());
+		} else {
+			time.setCustomerReport(false);
+		}
+		if (disableCustomerReport()) {
+			this.customerReportCheckBox.setValue(false);
+			this.customerReportCheckBox.setReadOnly(true);
+		}
+		if (this.readOnly) {
+			this.customerReportCheckBox.setReadOnly(true);
+		}
+		return this.customerReportCheckBox;
+
+	}
+	
+	public boolean disableCustomerReport() {
+		Project project = getProject();
+		if (project == null) {
+			return false;
+		}
+		if (project.getCustomerReport() == null) {
+			return true;
+		}
+		if (project.getCustomerReport() == Boolean.TRUE) {
+			return false;
+		}
+		return true;
+	}
+
+	public Project getProject() {
+		if (memberComboBox.getValue() != null) {
+			Member member = (Member) memberComboBox.getValue();
+			return TimeHelper.getProject(member.getProjectId());
+		}
+		return null;
 	}
 	
 	public ComboBox getMember() {
