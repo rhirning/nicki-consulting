@@ -225,20 +225,20 @@ public class TimeSheetView extends BaseView implements View {
 		} else {
 			empty = false;
 		}
-		if (time.getStart() != null && !getTimeComboBoxValue().matches(time.getStart())) {
-			messages.add(I18n.getText("nicki.consulting.time.error.start.invalid"));
-			ok = false;
-		}
+//		if (time.getStart() != null && !getTimeComboBoxValue().matches(time.getStart())) {
+//			messages.add(I18n.getText("nicki.consulting.time.error.start.invalid"));
+//			ok = false;
+//		}
 		if (time.getEnd() == null) {
 			messages.add(I18n.getText("nicki.consulting.time.error.end.missing"));
 			ok = false;
 		} else {
 			empty = false;
 		}
-		if (time.getEnd() != null && !getTimeComboBoxValue().matches(time.getEnd())) {
-			messages.add(I18n.getText("nicki.consulting.time.error.end.invalid"));
-			ok = false;
-		}
+//		if (time.getEnd() != null && !getTimeComboBoxValue().matches(time.getEnd())) {
+//			messages.add(I18n.getText("nicki.consulting.time.error.end.invalid"));
+//			ok = false;
+//		}
 		if (time.getStart() != null && time.getEnd() != null &&  time.getStart().after(time.getEnd())) {
 			messages.add(I18n.getText("nicki.consulting.time.error.start.end.invalid"));
 			ok = false;
