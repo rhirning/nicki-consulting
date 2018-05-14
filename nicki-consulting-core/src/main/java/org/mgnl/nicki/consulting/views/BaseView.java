@@ -201,10 +201,13 @@ public abstract class BaseView extends CustomComponent implements View {
 	protected List<InvoiceWrapper> getInvoiceWrappers(Period period, Customer customer, Project project) throws TimeSelectException {
 		List<InvoiceWrapper> invoiceWrappers = new ArrayList<>();
 		for (Invoice invoice: getInvoices(period, customer, project)) {
-			invoiceWrappers.add(new InvoiceWrapper(invoice));
+			invoiceWrappers.add(new InvoiceWrapper(invoice, () -> reload()));
 		}
 		
 		return invoiceWrappers;
+	}
+
+	protected void reload() {
 	}
 
 	protected void initTimeComboBox(ComboBox timeComboBox) {

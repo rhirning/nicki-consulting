@@ -161,7 +161,7 @@ public class PerformClosingView extends CustomComponent {
 			dbContext.update(project, "open");
 		} catch (SQLException | InitProfileException | NotSupportedException e) {
 			LOG.error("Could not close the project", e);
-			Notification.show("Proejkt konnte nicht abgeschlossen werden", Type.ERROR_MESSAGE);
+			Notification.show("Projekt konnte nicht abgeschlossen werden", Type.ERROR_MESSAGE);
 			return;
 		}
 

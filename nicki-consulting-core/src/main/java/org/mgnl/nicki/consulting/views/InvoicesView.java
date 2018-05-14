@@ -67,8 +67,8 @@ public class InvoicesView extends BaseView implements ConfigurableView  {
 			
 			invoiceContainerDataSource = new BeanContainerDataSource<>(InvoiceWrapper.class);
 			timeTable.setContainerDataSource(invoiceContainerDataSource);
-			timeTable.setVisibleColumns("customerName", "projectName", "start", "end", "invoiceDate", "invoiceNumber", "invoiceDocument", "timeSheetDocument");
-			timeTable.setColumnHeaders("Kunde", "Projekt", "von", "bis", "Rechnungsdatum", "Rechnungsnummer", "Rechnung", "Zeitnachweis");
+			timeTable.setVisibleColumns("customerName", "projectName", "start", "end", "invoiceDate", "invoiceNumber", "invoiceDocument", "timeSheetDocument", "undoButton");
+			timeTable.setColumnHeaders("Kunde", "Projekt", "von", "bis", "Rechnungsdatum", "Rechnungsnummer", "Rechnung", "Zeitnachweis", "Storno");
 			
 			timeComboBox.addValueChangeListener(event -> {timeComboBoxChanged();});
 			customerComboBox.addValueChangeListener(event -> {customerComboBoxChanged();});
@@ -78,6 +78,11 @@ public class InvoicesView extends BaseView implements ConfigurableView  {
 		}
 		initCustomerComboBox();
 		initProjectComboBox();
+		loadInvoices();
+	}
+	
+	@Override
+	protected void reload() {
 		loadInvoices();
 	}
 

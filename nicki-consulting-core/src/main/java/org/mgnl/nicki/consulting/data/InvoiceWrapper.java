@@ -14,12 +14,15 @@ import org.mgnl.nicki.consulting.core.model.Customer;
 import org.mgnl.nicki.consulting.core.model.Invoice;
 import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.core.model.Time;
+import org.mgnl.nicki.consulting.db.CheckForLatestInvoiceSelectHandler;
 import org.mgnl.nicki.consulting.db.InvoiceTimeSelectHandler;
 import org.mgnl.nicki.consulting.db.TimeSelectException;
+import org.mgnl.nicki.consulting.db.UndoCommand;
 import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.profile.InitProfileException;
+import org.mgnl.nicki.vaadin.base.components.ConfirmDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,16 +30,22 @@ import com.vaadin.server.FileDownloader;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.UI;
 
 public class InvoiceWrapper {
 	private static final Logger LOG = LoggerFactory.getLogger(InvoiceWrapper.class);
 
 	private Invoice invoice;
+	private Reloader reloader;
 	private FileDownloader invoicePdfFileDownloader;
 	private FileDownloader timeSheetPdfFileDownloader;
+	private Button undoButton;
 	
-	public InvoiceWrapper(Invoice invoice) {
+	public InvoiceWrapper(Invoice invoice, Reloader reloader) {
 		this.setInvoice(invoice);
+		this.reloader = reloader;
 	}
 
 	public Invoice getInvoice() {
@@ -111,6 +120,30 @@ public class InvoiceWrapper {
 		return params;
 	}
 	
+	public Component getUndoButton() {
+		undoButton  = new Button("Storno");
+		undoButton.addClickListener(event -> showUndo());
+		return undoButton;
+	}
+	
+	private void showUndo() {
+		// check for latest project invoice
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			CheckForLatestInvoiceSelectHandler handler = new CheckForLatestInvoiceSelectHandler(invoice, Constants.DB_CONTEXT_NAME);
+			dbContext.select(handler);
+			if (!handler.isLatest()) {
+				Notification.show("Es kann nur die letzte Rechnung eines Projekts storniert werden", Type.ERROR_MESSAGE);
+				return;
+			}
+		} catch (SQLException | InitProfileException | TimeSelectException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		UndoCommand undoCommand = new UndoCommand(invoice, reloader);
+		UI.getCurrent().addWindow(new ConfirmDialog(undoCommand));
+	}
+
 	public Component getTimeSheetDocument() {
 		Button downloadButton  = new Button("Download");
 		StreamResource pdfSource = createTimeSheetPDFStream();
