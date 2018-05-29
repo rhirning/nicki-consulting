@@ -19,6 +19,7 @@ import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.data.BeanContainerDataSource;
 import org.mgnl.nicki.consulting.data.TimeWrapper;
+import org.mgnl.nicki.consulting.data.TimeWrapperItemSorter;
 import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.core.auth.InvalidPrincipalException;
 import org.mgnl.nicki.core.config.Config;
@@ -127,6 +128,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 			downloadButton.setEnabled(false);
 			
 			timeContainerDataSource = new BeanContainerDataSource<>(TimeWrapper.class);
+			timeContainerDataSource.setItemSorter(new TimeWrapperItemSorter());
 			timeTable.setContainerDataSource(timeContainerDataSource);
 			timeTable.setVisibleColumns("person", "member", "day", "start", "end", "pause", "hours", "customerReport", "textString");
 			timeTable.setColumnHeaders("Person", "Projekt", "Datum", "von", "bis", "Pause", "Stunden", "Bei Kunde erfasst", "Tätigkeit");

@@ -26,4 +26,8 @@ public class BeanContainerDataSource<T> extends AbstractBeanContainer<T, T> impl
 		super.addAll(collection);
 	}
 	
+	@Override
+	public Collection<?> getSortableContainerPropertyIds() {
+		return super.getContainerPropertyIds();
+	}
 }

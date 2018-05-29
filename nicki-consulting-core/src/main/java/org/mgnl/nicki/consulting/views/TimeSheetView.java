@@ -12,6 +12,7 @@ import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.data.BeanContainerDataSource;
 import org.mgnl.nicki.consulting.data.TimeWrapper;
+import org.mgnl.nicki.consulting.data.TimeWrapperItemSorter;
 import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.consulting.views.SaveOrIgnoreDialog.DECISION;
 import org.mgnl.nicki.core.i18n.I18n;
@@ -76,6 +77,7 @@ public class TimeSheetView extends BaseView implements View {
 			}
 			personComboBox.addValueChangeListener(event -> { timeValueChanged(); });
 			timeContainerDataSource = new BeanContainerDataSource<>(TimeWrapper.class);
+			timeContainerDataSource.setItemSorter(new TimeWrapperItemSorter());
 			timeTable.setContainerDataSource(timeContainerDataSource);
 			timeTable.setVisibleColumns("delete", "member", "day", "start", "end", "pause", "hours", "customerReport", "text");
 			timeTable.setColumnHeaders("Löschen", "Projekt", "Datum", "von", "bis", "Pause", "Stunden", "Bei Kunde erfasst", "Tätigkeit");

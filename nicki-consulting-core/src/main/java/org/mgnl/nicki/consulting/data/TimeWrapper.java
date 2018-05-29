@@ -63,31 +63,35 @@ public class TimeWrapper implements Serializable {
 	}
 	
 	public CheckBox getDelete() {
-		this.deleteCheckBox = new CheckBox();
-		if (this.readOnly) {
-			this.deleteCheckBox.setEnabled(false);
+		if (this.deleteCheckBox == null) {
+			this.deleteCheckBox = new CheckBox();
+			if (this.readOnly) {
+				this.deleteCheckBox.setEnabled(false);
+			}
 		}
 		return this.deleteCheckBox;
 
 	}
 	
 	public CheckBox getCustomerReport() {
-		customerReportCheckBox = new CheckBox();
-		customerReportCheckBox.setImmediate(true);
-		customerReportCheckBox.setValue(false);
-		customerReportCheckBox.addValueChangeListener(
-				event -> time.setCustomerReport(customerReportCheckBox.getValue()));
-		if (time.getCustomerReport() != null) {
-			this.customerReportCheckBox.setValue(time.getCustomerReport());
-		} else {
-			time.setCustomerReport(false);
-		}
-		if (disableCustomerReport()) {
-			this.customerReportCheckBox.setValue(false);
-			this.customerReportCheckBox.setReadOnly(true);
-		}
-		if (this.readOnly) {
-			this.customerReportCheckBox.setReadOnly(true);
+		if (this.customerReportCheckBox == null) {
+			customerReportCheckBox = new CheckBox();
+			customerReportCheckBox.setImmediate(true);
+			customerReportCheckBox.setValue(false);
+			customerReportCheckBox.addValueChangeListener(
+					event -> time.setCustomerReport(customerReportCheckBox.getValue()));
+			if (time.getCustomerReport() != null) {
+				this.customerReportCheckBox.setValue(time.getCustomerReport());
+			} else {
+				time.setCustomerReport(false);
+			}
+			if (disableCustomerReport()) {
+				this.customerReportCheckBox.setValue(false);
+				this.customerReportCheckBox.setReadOnly(true);
+			}
+			if (this.readOnly) {
+				this.customerReportCheckBox.setReadOnly(true);
+			}
 		}
 		return this.customerReportCheckBox;
 
@@ -116,69 +120,75 @@ public class TimeWrapper implements Serializable {
 	}
 	
 	public ComboBox getMember() {
-		memberComboBox = new ComboBox();
-		for (Member member : members) {
-			memberComboBox.addItem(member);
-			memberComboBox.setItemCaption(member, member.getDisplayName());
-		}
-		
-		if (time.getMemberId() != null) {
+		if (this.memberComboBox == null) {
+			memberComboBox = new ComboBox();
 			for (Member member : members) {
-				if (time.getMemberId() == member.getId()) {
-					memberComboBox.select(member);
+				memberComboBox.addItem(member);
+				memberComboBox.setItemCaption(member, member.getDisplayName());
+			}
+			
+			if (time.getMemberId() != null) {
+				for (Member member : members) {
+					if (time.getMemberId() == member.getId()) {
+						memberComboBox.select(member);
+					}
 				}
 			}
+			memberComboBox.addValueChangeListener(event -> {
+				Member m = (Member) event.getProperty().getValue();
+				if (m != null) {
+					time.setMemberId(m.getId());
+				} else {
+					time.setMemberId(null);
+				}
+			});
+			memberComboBox.setReadOnly(readOnly);
 		}
-		memberComboBox.addValueChangeListener(event -> {
-			Member m = (Member) event.getProperty().getValue();
-			if (m != null) {
-				time.setMemberId(m.getId());
-			} else {
-				time.setMemberId(null);
-			}
-		});
-		memberComboBox.setReadOnly(readOnly);
 		return memberComboBox;
 	}
 	
 	public DateField getDay() {
-		dayDateField = new DateField();
-		dayDateField.setDateFormat("dd.MM.yy");
-		
-		if (time.getStart() != null) {
-			dayDateField.setValue(time.getStart());
-		}
-		dayDateField.setImmediate(true);
-		dayDateField.addValueChangeListener(event -> {
-			try {
-				timeChanged();
-			} catch (DateFormatException e) {
-				Notification.show("Invalid time: " + e.getMessage(), Type.ERROR_MESSAGE);
+		if (this.dayDateField == null) {
+			dayDateField = new DateField();
+			dayDateField.setDateFormat("dd.MM.yy");
+			
+			if (time.getStart() != null) {
+				dayDateField.setValue(time.getStart());
 			}
-		});
-		
-		dayDateField.setReadOnly(readOnly);
+			dayDateField.setImmediate(true);
+			dayDateField.addValueChangeListener(event -> {
+				try {
+					timeChanged();
+				} catch (DateFormatException e) {
+					Notification.show("Invalid time: " + e.getMessage(), Type.ERROR_MESSAGE);
+				}
+			});
+			
+			dayDateField.setReadOnly(readOnly);
+		}
 		return dayDateField;
 	}
 
 	public TextField getStart() {
-		startTextField = new TextField();
-		startTextField.setWidth("50px");
-		startTextField.setImmediate(true);
-		
-		if (time.getStart() != null) {
-			startTextField.setValue(TimeHelper.getTimeString(time.getStart()));
-		}
-		
-		startTextField.addValueChangeListener(event -> {
-			try {
-				timeChanged();
-			} catch (DateFormatException e) {
-				Notification.show("Invalid time: " + e.getMessage(), Type.ERROR_MESSAGE);
+		if (this.startTextField == null) {
+			startTextField = new TextField();
+			startTextField.setWidth("50px");
+			startTextField.setImmediate(true);
+			
+			if (time.getStart() != null) {
+				startTextField.setValue(TimeHelper.getTimeString(time.getStart()));
 			}
-		});
-		
-		startTextField.setReadOnly(readOnly);
+			
+			startTextField.addValueChangeListener(event -> {
+				try {
+					timeChanged();
+				} catch (DateFormatException e) {
+					Notification.show("Invalid time: " + e.getMessage(), Type.ERROR_MESSAGE);
+				}
+			});
+			
+			startTextField.setReadOnly(readOnly);
+		}
 		return startTextField;
 	}
 	
@@ -204,23 +214,25 @@ public class TimeWrapper implements Serializable {
 	}
 
 	public TextField getEnd() {
-		endTextField = new TextField();
-		endTextField.setWidth("50px");
-		endTextField.setImmediate(true);
-		
-		if (time.getEnd() != null) {
-			endTextField.setValue(TimeHelper.getTimeString(time.getEnd()));
-		}
-		
-		endTextField.addValueChangeListener(event -> {
-			try {
-				timeChanged();
-			} catch (DateFormatException e) {
-				Notification.show("Invalid time: " + e.getMessage(), Type.ERROR_MESSAGE);
+		if (this.endTextField == null) {
+			endTextField = new TextField();
+			endTextField.setWidth("50px");
+			endTextField.setImmediate(true);
+			
+			if (time.getEnd() != null) {
+				endTextField.setValue(TimeHelper.getTimeString(time.getEnd()));
 			}
-		});
-		
-		endTextField.setReadOnly(readOnly);
+			
+			endTextField.addValueChangeListener(event -> {
+				try {
+					timeChanged();
+				} catch (DateFormatException e) {
+					Notification.show("Invalid time: " + e.getMessage(), Type.ERROR_MESSAGE);
+				}
+			});
+			
+			endTextField.setReadOnly(readOnly);
+		}
 		return endTextField;
 	}
 	
@@ -233,53 +245,57 @@ public class TimeWrapper implements Serializable {
 	}
 
 	public ComboBox getPause() {
-		pauseComboBox = new ComboBox();
-		pauseComboBox.setWidth("100px");
-		pauseComboBox.setImmediate(true);
-		pauseComboBox.addItem(30);
-		pauseComboBox.setItemCaption(30, "30 Min.");
-		pauseComboBox.addItem(60);
-		pauseComboBox.setItemCaption(60, "60 Min.");
-		
-		if (time.getPause() != null) {
-			pauseComboBox.setValue(time.getPause());
+		if (this.pauseComboBox == null) {
+			pauseComboBox = new ComboBox();
+			pauseComboBox.setWidth("100px");
+			pauseComboBox.setImmediate(true);
+			pauseComboBox.addItem(30);
+			pauseComboBox.setItemCaption(30, "30 Min.");
+			pauseComboBox.addItem(60);
+			pauseComboBox.setItemCaption(60, "60 Min.");
+			
+			if (time.getPause() != null) {
+				pauseComboBox.setValue(time.getPause());
+			}
+			
+			pauseComboBox.addValueChangeListener(event -> {
+				if (pauseComboBox.getValue() != null) {
+					this.time.setPause((Integer) pauseComboBox.getValue());
+				} else {
+					this.time.setPause(null);
+				}
+				try {
+					timeChanged();
+				} catch (DateFormatException e) {
+					Notification.show("Invalid time: " + e.getMessage(), Type.ERROR_MESSAGE);
+				}
+			});
+			
+			pauseComboBox.setReadOnly(readOnly);
 		}
-		
-		pauseComboBox.addValueChangeListener(event -> {
-			if (pauseComboBox.getValue() != null) {
-				this.time.setPause((Integer) pauseComboBox.getValue());
-			} else {
-				this.time.setPause(null);
-			}
-			try {
-				timeChanged();
-			} catch (DateFormatException e) {
-				Notification.show("Invalid time: " + e.getMessage(), Type.ERROR_MESSAGE);
-			}
-		});
-		
-		pauseComboBox.setReadOnly(readOnly);
 		return pauseComboBox;
 	}
 
 	public TextField getText() {
-		textTextField = new TextField();
-		textTextField.setWidth("400px");
-		textTextField.setImmediate(true);
-		
-		if (time.getText() != null) {
-			textTextField.setValue(time.getText());
-		}
-		
-		textTextField.addValueChangeListener(event -> {
-			if (textTextField.getValue() != null) {
-				this.time.setText(StringUtils.stripToNull(textTextField.getValue()));
-			} else {
-				this.time.setText(null);
+		if (this.textTextField == null) {
+			textTextField = new TextField();
+			textTextField.setWidth("400px");
+			textTextField.setImmediate(true);
+			
+			if (time.getText() != null) {
+				textTextField.setValue(time.getText());
 			}
-		});
-		
-		textTextField.setReadOnly(readOnly);
+			
+			textTextField.addValueChangeListener(event -> {
+				if (textTextField.getValue() != null) {
+					this.time.setText(StringUtils.stripToNull(textTextField.getValue()));
+				} else {
+					this.time.setText(null);
+				}
+			});
+			
+			textTextField.setReadOnly(readOnly);
+		}
 		return textTextField;
 	}
 
@@ -288,10 +304,12 @@ public class TimeWrapper implements Serializable {
 	}
 
 	public Label getPerson() {
-		personLabel = new Label();
-		
-		if (time.getText() != null) {
-			personLabel.setValue(person.getName());
+		if (this.person != null) {
+			personLabel = new Label();
+			
+			if (time.getText() != null) {
+				personLabel.setValue(person.getName());
+			}
 		}
 		return personLabel;
 	}
