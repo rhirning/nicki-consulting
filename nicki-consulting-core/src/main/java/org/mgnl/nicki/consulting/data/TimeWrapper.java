@@ -18,6 +18,7 @@ import org.mgnl.nicki.consulting.views.BaseView.READONLY;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -36,7 +37,7 @@ public class TimeWrapper implements Serializable {
 	
 	private ComboBox memberComboBox;
 	private CheckBox deleteCheckBox;
-	private CheckBox customerReportCheckBox;
+	private Component customerReportComponent;
 	private DateField dayDateField;
 	private TextField startTextField;
 	private TextField endTextField;
@@ -73,27 +74,32 @@ public class TimeWrapper implements Serializable {
 
 	}
 	
-	public CheckBox getCustomerReport() {
-		if (this.customerReportCheckBox == null) {
-			customerReportCheckBox = new CheckBox();
-			customerReportCheckBox.setImmediate(true);
-			customerReportCheckBox.setValue(false);
-			customerReportCheckBox.addValueChangeListener(
-					event -> time.setCustomerReport(customerReportCheckBox.getValue()));
-			if (time.getCustomerReport() != null) {
-				this.customerReportCheckBox.setValue(time.getCustomerReport());
-			} else {
-				time.setCustomerReport(false);
-			}
+	public Component getCustomerReport() {
+		if (this.customerReportComponent == null) {
 			if (disableCustomerReport()) {
-				this.customerReportCheckBox.setValue(false);
-				this.customerReportCheckBox.setReadOnly(true);
-			}
-			if (this.readOnly) {
-				this.customerReportCheckBox.setReadOnly(true);
+				this.customerReportComponent = new Label(" ");
+			} else {
+				CheckBox customerReportCheckBox = new CheckBox();
+				customerReportCheckBox.setImmediate(true);
+				customerReportCheckBox.setValue(false);
+				customerReportCheckBox.addValueChangeListener(
+						event -> time.setCustomerReport(customerReportCheckBox.getValue()));
+				if (time.getCustomerReport() != null) {
+					customerReportCheckBox.setValue(time.getCustomerReport());
+				} else {
+					time.setCustomerReport(false);
+				}
+				if (disableCustomerReport()) {
+					customerReportCheckBox.setValue(false);
+					customerReportCheckBox.setReadOnly(true);
+				}
+				if (this.readOnly) {
+					customerReportCheckBox.setReadOnly(true);
+				}
+				this.customerReportComponent = customerReportCheckBox;
 			}
 		}
-		return this.customerReportCheckBox;
+		return this.customerReportComponent;
 
 	}
 	

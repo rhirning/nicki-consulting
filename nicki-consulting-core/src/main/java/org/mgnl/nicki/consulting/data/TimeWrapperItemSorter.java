@@ -5,6 +5,7 @@ import org.mgnl.nicki.consulting.core.model.Member;
 
 import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.util.ItemSorter;
+import com.vaadin.ui.CheckBox;
 
 public class TimeWrapperItemSorter implements ItemSorter {
 	enum PROPERTY {
@@ -64,7 +65,11 @@ public class TimeWrapperItemSorter implements ItemSorter {
 		CUSTOMER_REPORT("customerReport") {
 			@Override
 			Object getValue(TimeWrapper timeWrapper) {
-				return timeWrapper.getCustomerReport().getValue();
+				if (timeWrapper.getCustomerReport() instanceof CheckBox) {
+					return ((CheckBox) timeWrapper.getCustomerReport()).getValue();
+				} else {
+					return false;
+				}
 			}
 		},
 		TEXT("text") {
