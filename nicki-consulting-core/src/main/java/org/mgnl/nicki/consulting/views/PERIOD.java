@@ -9,62 +9,52 @@ import org.mgnl.nicki.core.i18n.I18n;
 public enum PERIOD {
 	LAST_MONTH {
 		@Override
-		public void init() {
+		public Period getPeriod() {
 			Calendar start = Period.getFirstDayOfMonth();
 			start.add(Calendar.MONTH, -1);
 
-			this.period = new Period(start, Period.getFirstDayOfMonth());
+			return new Period(start, Period.getFirstDayOfMonth());
 		}
 	},
 	THIS_MONTH {
 		@Override
-		public void init() {
-			this.period = new Period(Period.getFirstDayOfMonth(), Period.getLastDayOfMonth());
+		public Period getPeriod() {
+			return new Period(Period.getFirstDayOfMonth(), Period.getLastDayOfMonth());
 		}
 	},
 	LAST_YEAR {
 		@Override
-		public void init() {
+		public Period getPeriod() {
 			Calendar start = Period.getFirstDayOfYear();
 			start.add(Calendar.YEAR, -1);
 
 			
-			this.period = new Period(start, Period.getFirstDayOfYear());
+			return new Period(start, Period.getFirstDayOfYear());
 		}
 	},
 	THIS_YEAR {
 		@Override
-		public void init() {
-			this.period = new Period(Period.getFirstDayOfYear(), Period.getLastDayOfYear());
+		public Period getPeriod() {
+			return new Period(Period.getFirstDayOfYear(), Period.getLastDayOfYear());
 		}
 	};
 	
-	Period period;
-	
-	PERIOD() {
-		init();
-	}
-	
 	public Calendar getStart() {
-		return this.period.getStart();
+		return this.getPeriod().getStart();
 	}
 
 	public Calendar getEnd() {
-		return this.period.getEnd();
+		return this.getPeriod().getEnd();
 	}
 
 	public String getName() {
 		return I18n.getText("nicki.consulting.period." + name());
 	}
 
-	public abstract void init();
-
 	public boolean matches(Date start) {
-		return this.period.matches(start);
+		return this.getPeriod().matches(start);
 	}
 
-	public Period getPeriod() {
-		return period;
-	}
+	public abstract Period getPeriod();
 
 }
