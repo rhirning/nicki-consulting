@@ -370,4 +370,9 @@ public class TimeWrapper implements Serializable {
 	public boolean isReadOnly() {
 		return readOnly;
 	}
+
+	public boolean isVacation() {
+		Project project = getProject();
+		return project != null && project.getVacation() != null && project.getVacation();
+	}
 }

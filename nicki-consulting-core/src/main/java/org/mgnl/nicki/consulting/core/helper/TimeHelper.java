@@ -107,6 +107,16 @@ public class TimeHelper {
 		return hours;
 	}
 	
+	public static float getVacationHoursFromTimeWrapperList(List<TimeWrapper> timeWrappers) {
+		float hours = 0;
+		for (TimeWrapper timeWrapper : timeWrappers) {
+			if (timeWrapper.isVacation()) {
+				hours += timeWrapper.getTime().getHours();
+			}
+		}
+		return hours;
+	}
+	
 	public static String formatHours(float hours) {
 
         return String.format("%.2f",hours);
