@@ -11,6 +11,7 @@ CREATE TABLE PROJECTS (
   DAYS int,
   RATE float,
   ACTIVE int,
+  VACATION int,
   START_DATE date,
   END_DATE date,
   OPEN_DATE date,

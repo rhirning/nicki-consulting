@@ -44,6 +44,17 @@ public class Project implements Serializable {
 	@Attribute(name = "ACTIVE")
 	private Boolean active;
 
+	@Attribute(name = "VACATION")
+	private Boolean vacation;
+
+	public Boolean getVacation() {
+		return vacation;
+	}
+
+	public void setVacation(Boolean vacation) {
+		this.vacation = vacation;
+	}
+
 	@Attribute(name = "CUSTOMER_REPORT")
 	private Boolean customerReport;
 
