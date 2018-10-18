@@ -13,7 +13,6 @@
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
 		<nicki.version>7.114</nicki.version>
-		<vertx.version>3.4.1</vertx.version>
 	</properties>
 	<modules>
 		<module>nicki-consulting-app</module>
@@ -105,29 +104,6 @@
 				<groupId>commons-lang</groupId>
 				<artifactId>commons-lang</artifactId>
 				<version>2.4</version>
-			</dependency>
-			<dependency>
-				<groupId>io.vertx</groupId>
-				<artifactId>vertx-dependencies</artifactId>
-				<version>${vertx.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>io.vertx</groupId>
-				<artifactId>vertx-core</artifactId>
-				<version>${vertx.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.vertx</groupId>
-				<artifactId>vertx-unit</artifactId>
-				<version>${vertx.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>io.vertx</groupId>
-				<artifactId>vertx-web</artifactId>
-				<version>${vertx.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.json</groupId>
