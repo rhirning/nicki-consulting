@@ -107,6 +107,30 @@ public class TimeHelper {
 		return hours;
 	}
 	
+	public static float getDaysFromTimeWrapperList(List<TimeWrapper> timeWrappers) {
+		return getHoursFromTimeWrapperList(timeWrappers) / 8.0f;
+	}
+	
+	public static List<TimeWrapper> filter(List<TimeWrapper> timeWrappers, Member member) {
+		List<TimeWrapper> list = new ArrayList<>();
+		for (TimeWrapper timeWrapper : timeWrappers) {
+			if (timeWrapper.getTime().getMemberId() == member.getId()) {
+				list.add(timeWrapper);
+			}
+		}
+		return list;
+	}
+	
+	public static List<Long> getMemberIds(List<TimeWrapper> timeWrappers) {
+		List<Long> list = new ArrayList<>();
+		for (TimeWrapper timeWrapper : timeWrappers) {
+			if (!list.contains(timeWrapper.getTime().getMemberId())) {
+				list.add(timeWrapper.getTime().getMemberId());
+			}
+		}
+		return list;
+	}
+	
 	public static float getVacationHoursFromTimeWrapperList(List<TimeWrapper> timeWrappers) {
 		float hours = 0;
 		for (TimeWrapper timeWrapper : timeWrappers) {
