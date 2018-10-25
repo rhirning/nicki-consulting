@@ -111,6 +111,10 @@ public class TimeHelper {
 		return getHoursFromTimeWrapperList(timeWrappers) / 8.0f;
 	}
 	
+	public static float getDaysFromTimeList(List<Time> times) {
+		return getHoursFromTimeList(times) / 8.0f;
+	}
+	
 	public static List<TimeWrapper> filter(List<TimeWrapper> timeWrappers, Member member) {
 		List<TimeWrapper> list = new ArrayList<>();
 		for (TimeWrapper timeWrapper : timeWrappers) {
