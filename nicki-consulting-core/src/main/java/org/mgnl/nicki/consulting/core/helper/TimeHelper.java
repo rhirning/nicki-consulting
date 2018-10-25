@@ -121,6 +121,16 @@ public class TimeHelper {
 		return list;
 	}
 	
+	public static List<TimeWrapper> filter(List<TimeWrapper> timeWrappers, long memberId) {
+		List<TimeWrapper> list = new ArrayList<>();
+		for (TimeWrapper timeWrapper : timeWrappers) {
+			if (timeWrapper.getTime().getMemberId() == memberId) {
+				list.add(timeWrapper);
+			}
+		}
+		return list;
+	}
+	
 	public static List<Long> getMemberIds(List<TimeWrapper> timeWrappers) {
 		List<Long> list = new ArrayList<>();
 		for (TimeWrapper timeWrapper : timeWrappers) {
