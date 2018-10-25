@@ -121,7 +121,7 @@ public class TimeHelper {
 		return list;
 	}
 	
-	public static List<TimeWrapper> filter(List<TimeWrapper> timeWrappers, long memberId) {
+	public static List<TimeWrapper> filterTimeWrappers(List<TimeWrapper> timeWrappers, long memberId) {
 		List<TimeWrapper> list = new ArrayList<>();
 		for (TimeWrapper timeWrapper : timeWrappers) {
 			if (timeWrapper.getTime().getMemberId() == memberId) {
@@ -131,11 +131,31 @@ public class TimeHelper {
 		return list;
 	}
 	
-	public static List<Long> getMemberIds(List<TimeWrapper> timeWrappers) {
+	public static List<Time> filterTimes(List<Time> times, long memberId) {
+		List<Time> list = new ArrayList<>();
+		for (Time time : times) {
+			if (time.getMemberId() == memberId) {
+				list.add(time);
+			}
+		}
+		return list;
+	}
+	
+	public static List<Long> getMemberIdsFromTimeWrappers(List<TimeWrapper> timeWrappers) {
 		List<Long> list = new ArrayList<>();
 		for (TimeWrapper timeWrapper : timeWrappers) {
 			if (!list.contains(timeWrapper.getTime().getMemberId())) {
 				list.add(timeWrapper.getTime().getMemberId());
+			}
+		}
+		return list;
+	}
+	
+	public static List<Long> getMemberIdsFromTimes(List<Time> times) {
+		List<Long> list = new ArrayList<>();
+		for (Time time : times) {
+			if (!list.contains(time.getMemberId())) {
+				list.add(time.getMemberId());
 			}
 		}
 		return list;
