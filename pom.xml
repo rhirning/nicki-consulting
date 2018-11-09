@@ -12,7 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-		<nicki.version>7.132</nicki.version>
+		<nicki.version>7.136</nicki.version>
 	</properties>
 	<modules>
 		<module>nicki-consulting-app</module>
@@ -223,6 +223,11 @@
 			<dependency>
 				<groupId>org.mgnl.nicki</groupId>
 				<artifactId>nicki-pdf</artifactId>
+				<version>${nicki.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mgnl.nicki</groupId>
+				<artifactId>nicki-reports</artifactId>
 				<version>${nicki.version}</version>
 			</dependency>
 			<dependency>
