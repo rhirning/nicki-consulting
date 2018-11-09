@@ -7,7 +7,7 @@
 	<parent>
 		<artifactId>nicki-consulting</artifactId>
 		<groupId>org.mgnl.nicki.consulting</groupId>
-		<version>0.31</version>
+		<version>0.32-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<packaging>jar</packaging>
@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>org.mgnl.nicki.consulting</groupId>
 			<artifactId>nicki-consulting-core</artifactId>
-			<version>0.31</version>
+			<version>0.32-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
