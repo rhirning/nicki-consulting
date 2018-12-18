@@ -21,11 +21,11 @@
 	<distributionManagement>
 		<repository>
 			<id>releases</id>
-			<url>https://nexus.myrd.de/repository/maven-releases/</url>
+			<url>https://nexus.myrd.de/nexus/content/repositories/releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshots</id>
-			<url>https://nexus.myrd.de/repository/maven-snapshots/</url>
+			<url>https://nexus.myrd.de/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 	<scm>
