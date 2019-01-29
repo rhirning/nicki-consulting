@@ -201,7 +201,7 @@ public class InvoicesView extends BaseView implements ConfigurableView  {
 		// timeTable
 		timeTable = new Table();
 		timeTable.setImmediate(false);
-		timeTable.setWidth("-1px");
+		timeTable.setWidth("100%");
 		timeTable.setHeight("100.0%");
 		mainLayout.addComponent(timeTable);
 		mainLayout.setExpandRatio(timeTable, 1.0f);

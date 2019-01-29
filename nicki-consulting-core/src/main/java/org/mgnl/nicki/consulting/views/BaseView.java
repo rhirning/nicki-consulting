@@ -26,6 +26,7 @@ import org.mgnl.nicki.core.config.Config;
 import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
+import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
@@ -98,17 +99,36 @@ public abstract class BaseView extends CustomComponent implements View {
 		return new ArrayList<>();
 	}
 
-	protected List<Member> getMembers(Person person) {
+	protected List<Member> getMembers(Person person, Period period) {
 		Member member= new Member();
 		if (person.getId() > 0) {
 			member.setPersonId(person.getId());
 		}
 		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
-			return dbContext.loadObjects(member, true);
-		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
+			String filter = getMemberPeriodFilter(dbContext, period);
+			String orderBy = null;
+			return dbContext.loadObjects(member, true, filter, orderBy);
+		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException | NotSupportedException e) {
 			LOG.error("Could not load members", e);
 		}
 		return new ArrayList<>();
+	}
+	
+	public String getMemberPeriodFilter(DBContext dbContext, Period period) throws NotSupportedException {
+
+		String memberTableName = dbContext.getQualifiedTableName(Member.class);
+		String projectTableName = dbContext.getQualifiedTableName(Project.class);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("ID IN (");
+		sb.append("select m.id from ").append(memberTableName).append(" m, ").append(projectTableName).append(" p");
+		sb.append(" where m.PROJECT_ID = p.ID");
+		sb.append(" AND (m.START_DATE IS NULL OR m.START_DATE < ").append(dbContext.toDate(period.getEnd().getTime())).append(")");
+		sb.append(" AND (p.START_DATE IS NULL OR p.START_DATE < ").append(dbContext.toDate(period.getEnd().getTime())).append(")");
+		sb.append(" AND (m.END_DATE IS NULL OR m.END_DATE >= ").append(dbContext.toDate(period.getStart().getTime())).append(")");
+		sb.append(" AND (p.END_DATE IS NULL OR p.END_DATE >= ").append(dbContext.toDate(period.getStart().getTime())).append(")");
+		sb.append(")");
+		return sb.toString();
 	}
 
 
@@ -186,7 +206,7 @@ public abstract class BaseView extends CustomComponent implements View {
 
 	protected List<TimeWrapper> getTimeWrappers(Person person, Period period, Customer customer, Project project, READONLY readonly, int emptyCount) throws TimeSelectException {
 		List<TimeWrapper> timeWrappers = new ArrayList<>();
-		List<Member> members = getMembers(person);
+		List<Member> members = getMembers(person, period);
 		for (Time time : getTimes(person, period, customer, project)) {
 			Person timePerson = TimeHelper.getPersonFromMemberId(time.getMemberId());
 			timeWrappers.add(new TimeWrapper(timePerson, time, members, readonly));

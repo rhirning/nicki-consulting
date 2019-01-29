@@ -24,6 +24,7 @@ import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.core.auth.InvalidPrincipalException;
 import org.mgnl.nicki.core.config.Config;
 import org.mgnl.nicki.core.context.AppContext;
+import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.dynamic.objects.objects.Template;
 import org.mgnl.nicki.report.XlsDocuHelper;
@@ -320,7 +321,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 
 	private void initPersonData() throws NoValidPersonException, NoApplicationContextException {
 		
-		members = getMembers(getPersonComboBoxValue());
+		members = getMembers(getPersonComboBoxValue(), ((PERIOD) timeComboBox.getValue()).getPeriod());
 		customers = getCustomers(members);
 		projects = getProjects((Customer) customerComboBox.getValue(), members);
 	}
@@ -453,7 +454,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		// timeTable
 		timeTable = new Table();
 		timeTable.setImmediate(false);
-		timeTable.setWidth("-1px");
+		timeTable.setWidth("100%");
 		timeTable.setHeight("100.0%");
 		mainLayout.addComponent(timeTable);
 		mainLayout.setExpandRatio(timeTable, 1.0f);
