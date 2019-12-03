@@ -369,6 +369,9 @@ public class TimeHelper {
 				end.setTime(project.getEnd());
 			}
 		}
+		Period.setToBeginOfDay(start);;
+		Period.setToBeginOfDay(end);
+		end.add(Calendar.DAY_OF_MONTH, 1);
 		return new Period(start, end);
 	}
 
