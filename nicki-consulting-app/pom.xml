@@ -21,12 +21,12 @@
 			<artifactId>nicki-db</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.mgnl.nicki</groupId>
-			<artifactId>nicki-editor-log4j</artifactId>
+			<groupId>org.mgnl.nicki.vaadin7</groupId>
+			<artifactId>nicki-vaadin7-editor-log4j</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.mgnl.nicki</groupId>
-			<artifactId>nicki-vaadin-base</artifactId>
+			<groupId>org.mgnl.nicki.vaadin7</groupId>
+			<artifactId>nicki-vaadin7-base</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.mgnl.nicki.consulting</groupId>

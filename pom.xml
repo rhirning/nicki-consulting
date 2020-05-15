@@ -12,7 +12,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-		<nicki.version>7.169</nicki.version>
+		<nicki.version>8.0</nicki.version>
+		<nicki-vaadin7.version>7.2</nicki-vaadin7.version>
 	</properties>
 	<modules>
 		<module>nicki-consulting-app</module>
@@ -177,11 +178,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.mgnl.nicki</groupId>
-				<artifactId>nicki-app-menu</artifactId>
-				<version>${nicki.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mgnl.nicki</groupId>
 				<artifactId>nicki-core</artifactId>
 				<version>${nicki.version}</version>
 			</dependency>
@@ -196,19 +192,19 @@
 				<version>${nicki.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.mgnl.nicki</groupId>
-				<artifactId>nicki-editor-log4j</artifactId>
-				<version>${nicki.version}</version>
+				<groupId>org.mgnl.nicki.vaadin7</groupId>
+				<artifactId>nicki-vaadin7-editor-log4j</artifactId>
+				<version>${nicki-vaadin7.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.mgnl.nicki</groupId>
-				<artifactId>nicki-editor-scripts</artifactId>
-				<version>${nicki.version}</version>
+				<groupId>org.mgnl.nicki.vaadin7</groupId>
+				<artifactId>nicki-vaadin7-editor-scripts</artifactId>
+				<version>${nicki-vaadin7.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.mgnl.nicki</groupId>
-				<artifactId>nicki-editor-templates</artifactId>
-				<version>${nicki.version}</version>
+				<groupId>org.mgnl.nicki.vaadin7</groupId>
+				<artifactId>nicki-vaadin7-editor-templates</artifactId>
+				<version>${nicki-vaadin7.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mgnl.nicki</groupId>
@@ -226,9 +222,9 @@
 				<version>${nicki.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.mgnl.nicki</groupId>
-				<artifactId>nicki-reports</artifactId>
-				<version>${nicki.version}</version>
+				<groupId>org.mgnl.nicki.vaadin7</groupId>
+				<artifactId>nicki-vaadin7-reports</artifactId>
+				<version>${nicki-vaadin7.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mgnl.nicki</groupId>
@@ -246,14 +242,14 @@
 				<version>${nicki.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.mgnl.nicki</groupId>
-				<artifactId>nicki-vaadin-base</artifactId>
-				<version>${nicki.version}</version>
+				<groupId>org.mgnl.nicki.vaadin7</groupId>
+				<artifactId>nicki-vaadin7-base</artifactId>
+				<version>${nicki-vaadin7.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.mgnl.nicki</groupId>
-				<artifactId>nicki-vaadin-db</artifactId>
-				<version>${nicki.version}</version>
+				<groupId>org.mgnl.nicki.vaadin7</groupId>
+				<artifactId>nicki-vaadin7-db</artifactId>
+				<version>${nicki-vaadin7.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mgnl.nicki</groupId>
