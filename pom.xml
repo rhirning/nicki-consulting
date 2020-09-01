@@ -77,104 +77,9 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>com.oracle</groupId>
-				<artifactId>ojdbc</artifactId>
-				<version>7</version>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.codemodel</groupId>
-				<artifactId>codemodel</artifactId>
-				<version>2.6</version>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.xml.ws</groupId>
-				<artifactId>jaxws-rt</artifactId>
-				<version>2.2.8</version>
-			</dependency>
-			<dependency>
-				<groupId>com.unboundid</groupId>
-				<artifactId>unboundid-ldapsdk</artifactId>
-				<version>3.1.0</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-beanutils</groupId>
-				<artifactId>commons-beanutils</artifactId>
-				<version>1.6</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-lang</groupId>
-				<artifactId>commons-lang</artifactId>
-				<version>2.4</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.json</groupId>
-				<artifactId>javax.json-api</artifactId>
-				<version>1.0</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-				<version>2.5</version>
-			</dependency>
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.12</version>
-			</dependency>
-			<dependency>
-				<groupId>mysql</groupId>
-				<artifactId>mysql-connector-java</artifactId>
-				<version>5.1.37</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.activemq</groupId>
-				<artifactId>activemq-all</artifactId>
-				<version>5.14.5</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.activemq</groupId>
-				<artifactId>activemq-jaas</artifactId>
-				<version>5.14.5</version>
-			</dependency>
-			<dependency>
 				<groupId>org.apache.derby</groupId>
 				<artifactId>derbyclient</artifactId>
 				<version>10.12.1.1</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.derby</groupId>
-				<artifactId>derbynet</artifactId>
-				<version>10.12.1.1</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.derby</groupId>
-				<artifactId>derby</artifactId>
-				<version>10.12.1.1</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>4.5.2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.bouncycastle</groupId>
-				<artifactId>bcprov-jdk15on</artifactId>
-				<version>1.58</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.jetty.aggregate</groupId>
-				<artifactId>jetty-all</artifactId>
-				<version>9.2.13.v20150730</version>
-			</dependency>
-			<dependency>
-				<groupId>org.glassfish</groupId>
-				<artifactId>javax.json</artifactId>
-				<version>1.0.4</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jasypt</groupId>
-				<artifactId>jasypt</artifactId>
-				<version>1.9.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mgnl.nicki</groupId>
@@ -187,18 +92,8 @@
 				<version>${nicki.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.mgnl.nicki</groupId>
-				<artifactId>nicki-dynamic-objects</artifactId>
-				<version>${nicki.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.mgnl.nicki.vaadin7</groupId>
 				<artifactId>nicki-vaadin7-editor-log4j</artifactId>
-				<version>${nicki-vaadin7.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mgnl.nicki.vaadin7</groupId>
-				<artifactId>nicki-vaadin7-editor-scripts</artifactId>
 				<version>${nicki-vaadin7.version}</version>
 			</dependency>
 			<dependency>
@@ -213,11 +108,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.mgnl.nicki</groupId>
-				<artifactId>nicki-mq</artifactId>
-				<version>${nicki.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mgnl.nicki</groupId>
 				<artifactId>nicki-pdf</artifactId>
 				<version>${nicki.version}</version>
 			</dependency>
@@ -225,16 +115,6 @@
 				<groupId>org.mgnl.nicki.vaadin7</groupId>
 				<artifactId>nicki-vaadin7-reports</artifactId>
 				<version>${nicki-vaadin7.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mgnl.nicki</groupId>
-				<artifactId>nicki-scheduler</artifactId>
-				<version>${nicki.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mgnl.nicki</groupId>
-				<artifactId>nicki-spnego</artifactId>
-				<version>${nicki.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mgnl.nicki</groupId>
@@ -250,21 +130,6 @@
 				<groupId>org.mgnl.nicki.vaadin7</groupId>
 				<artifactId>nicki-vaadin7-db</artifactId>
 				<version>${nicki-vaadin7.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mgnl.nicki</groupId>
-				<artifactId>nicki-verify</artifactId>
-				<version>${nicki.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mgnl.nicki</groupId>
-				<artifactId>nicki-ws</artifactId>
-				<version>${nicki.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>1.6.4</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
