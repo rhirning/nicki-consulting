@@ -15,34 +15,42 @@
 		<dependency>
 			<groupId>org.mgnl.nicki</groupId>
 			<artifactId>nicki-core</artifactId>
+				<version>${nicki.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mgnl.nicki</groupId>
 			<artifactId>nicki-db</artifactId>
+				<version>${nicki.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mgnl.nicki.vaadin7</groupId>
 			<artifactId>nicki-vaadin7-editor-templates</artifactId>
+				<version>${nicki-vaadin7.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mgnl.nicki</groupId>
 			<artifactId>nicki-ldap</artifactId>
+				<version>${nicki.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mgnl.nicki</groupId>
 			<artifactId>nicki-pdf</artifactId>
+				<version>${nicki.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mgnl.nicki.vaadin7</groupId>
 			<artifactId>nicki-vaadin7-reports</artifactId>
+				<version>${nicki-vaadin7.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mgnl.nicki</groupId>
 			<artifactId>nicki-template</artifactId>
+				<version>${nicki.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mgnl.nicki.vaadin7</groupId>
 			<artifactId>nicki-vaadin7-db</artifactId>
+				<version>${nicki-vaadin7.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.derby</groupId>

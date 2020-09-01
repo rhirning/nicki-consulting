@@ -15,18 +15,22 @@
 		<dependency>
 			<groupId>org.mgnl.nicki</groupId>
 			<artifactId>nicki-core</artifactId>
+				<version>${nicki.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mgnl.nicki</groupId>
 			<artifactId>nicki-db</artifactId>
+				<version>${nicki.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mgnl.nicki.vaadin7</groupId>
 			<artifactId>nicki-vaadin7-editor-log4j</artifactId>
+				<version>${nicki-vaadin7.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mgnl.nicki.vaadin7</groupId>
 			<artifactId>nicki-vaadin7-base</artifactId>
+				<version>${nicki-vaadin7.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mgnl.nicki.consulting</groupId>
