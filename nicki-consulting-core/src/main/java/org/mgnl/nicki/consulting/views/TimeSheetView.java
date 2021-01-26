@@ -296,7 +296,7 @@ public class TimeSheetView extends BaseView implements View {
 		
 		// timeTable
 		timeTable = new Grid<TimeWrapper>();
-		timeTable.setWidth("-1px");
+		timeTable.setWidth("100%");
 		timeTable.setHeight("100.0%");
 		mainLayout.addComponent(timeTable);
 		mainLayout.setExpandRatio(timeTable, 1.0f);
