@@ -33,7 +33,7 @@ import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 
 public abstract class BaseView extends CustomComponent implements View {
@@ -230,24 +230,22 @@ public abstract class BaseView extends CustomComponent implements View {
 	protected void reload() {
 	}
 
-	protected void initTimeComboBox(ComboBox timeComboBox) {
-		for(PERIOD period : PERIOD.values()) {
-			timeComboBox.addItem(period);
-			timeComboBox.setItemCaption(period, period.getName());
-		}
+	protected void initTimeComboBox(ComboBox<PERIOD> timeComboBox) {
+		timeComboBox.setItems(PERIOD.values());
+		timeComboBox.setItemCaptionGenerator(PERIOD::getName);
 		timeComboBox.setValue(PERIOD.THIS_MONTH);
 		setTimeComboBoxValue(PERIOD.THIS_MONTH);
-		timeComboBox.setNullSelectionAllowed(false);
+		timeComboBox.setEmptySelectionAllowed(false);
 	}
 
 	protected enum ALL {TRUE, FALSE}
 
-	protected void initPersonComboBox(ComboBox personComboBox, ALL withAllEntry) throws NoValidPersonException, NoApplicationContextException {
+	protected void initPersonComboBox(ComboBox<Person> personComboBox, ALL withAllEntry) throws NoValidPersonException, NoApplicationContextException {
 		Person self = getPerson();
+		personComboBox.setItemCaptionGenerator(Person::getDisplayName);
 		if (isAdmin()) {
+			personComboBox.setItems(PersonHelper.getPersons());
 			for(Person person : PersonHelper.getPersons()) {
-				personComboBox.addItem(person);
-				personComboBox.setItemCaption(person, person.getName());
 				if (self.getId() == person.getId()) {
 					personComboBox.setValue(person);
 					setPersonComboBoxValue(person);
@@ -255,19 +253,22 @@ public abstract class BaseView extends CustomComponent implements View {
 			}
 			if (withAllEntry == ALL.TRUE) {
 				// ALL
+				List<Person> allList = new ArrayList<>();
 				Person all = new Person();
 				all.setId(-1L);
-				personComboBox.addItem(all);
-				personComboBox.setItemCaption(all, "Alle");
+				all.setDisplayName("Alle");
+				allList.add(all);
+				personComboBox.setItems(allList);
 			}
 		} else {
-			personComboBox.addItem(self);
-			personComboBox.setItemCaption(self, self.getName());
+			List<Person> selfList = new ArrayList<>();
+			selfList.add(self);
+			personComboBox.setItems(selfList);
 			personComboBox.setValue(self);
 			setPersonComboBoxValue(self);
 			personComboBox.setEnabled(false);
 		}
-		personComboBox.setNullSelectionAllowed(false);
+		personComboBox.setEmptySelectionAllowed(false);
 	}
 
 	public PERIOD getTimeComboBoxValue() {

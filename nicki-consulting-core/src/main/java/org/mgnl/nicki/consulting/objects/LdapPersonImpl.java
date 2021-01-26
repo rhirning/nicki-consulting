@@ -15,8 +15,6 @@ import org.mgnl.nicki.dynamic.objects.objects.Group;
 import org.mgnl.nicki.dynamic.objects.objects.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModelException;
 
 @DynamicObject
 

@@ -3,6 +3,7 @@ package org.mgnl.nicki.consulting.core.model;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.mgnl.nicki.consulting.objects.LdapPerson;
 import org.mgnl.nicki.core.auth.InvalidPrincipalException;
 import org.mgnl.nicki.core.context.AppContext;
@@ -10,6 +11,11 @@ import org.mgnl.nicki.core.context.NickiContext;
 import org.mgnl.nicki.db.annotation.Attribute;
 import org.mgnl.nicki.db.annotation.SubTable;
 import org.mgnl.nicki.db.annotation.Table;
+
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Table(name = "PERSONS")
 public class Person implements Serializable {
@@ -27,8 +33,18 @@ public class Person implements Serializable {
 	@SubTable(foreignKey = "personId")
 	private List<Member> members;
 	private LdapPerson ldapPerson;
+	
+	private @Setter String displayName;
 
 	public Person() {
+	}
+	
+	public String getDisplayName() {
+		if (StringUtils.isNotBlank(displayName)) {
+			return displayName;
+		} else {
+			return getName();
+		}
 	}
 	
 	public String getName() {

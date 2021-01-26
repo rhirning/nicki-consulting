@@ -262,6 +262,7 @@ public class TimeWrapper implements Serializable {
 			pauseComboBox.setWidth("100px");
 			UIHelper.setImmediate(pauseComboBox, true);
 			pauseComboBox.setItems(Pause.values());
+			pauseComboBox.setItemCaptionGenerator(Pause::getDisplayName);
 			
 			if (time.getPause() != null) {
 				pauseComboBox.setSelectedItem(Pause.getPause(time.getPause()));
