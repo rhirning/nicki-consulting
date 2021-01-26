@@ -34,6 +34,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.renderers.ComponentRenderer;
 
 public class TimeSheetView extends BaseView implements View {
 
@@ -256,15 +257,15 @@ public class TimeSheetView extends BaseView implements View {
 			if (period != null) {
 				timeContainerDataSource = new ListDataProvider<TimeWrapper>(getTimeWrappers(getPersonComboBoxValue(), period.getPeriod(), null, null, READONLY.FALSE, 10));
 				timeTable.setDataProvider(timeContainerDataSource);
-				timeTable.addColumn(TimeWrapper::getDelete).setCaption("Löschen");
-				timeTable.addColumn(TimeWrapper::getMember).setCaption("Projekt");
-				timeTable.addColumn(TimeWrapper::getDay).setCaption("Datum");
-				timeTable.addColumn(TimeWrapper::getStart).setCaption("von");
-				timeTable.addColumn(TimeWrapper::getEnd).setCaption("bis");
-				timeTable.addColumn(TimeWrapper::getPause).setCaption("Pause");
+				timeTable.addColumn(TimeWrapper::getDelete, new ComponentRenderer()).setCaption("Löschen");
+				timeTable.addColumn(TimeWrapper::getMember, new ComponentRenderer()).setCaption("Projekt");
+				timeTable.addColumn(TimeWrapper::getDay, new ComponentRenderer()).setCaption("Datum");
+				timeTable.addColumn(TimeWrapper::getStart, new ComponentRenderer()).setCaption("von");
+				timeTable.addColumn(TimeWrapper::getEnd, new ComponentRenderer()).setCaption("bis");
+				timeTable.addColumn(TimeWrapper::getPause, new ComponentRenderer()).setCaption("Pause");
 				timeTable.addColumn(TimeWrapper::getHours).setCaption("Stunden");
-				timeTable.addColumn(TimeWrapper::getCustomerReport).setCaption("Bei Kunde erfasst");
-				timeTable.addColumn(TimeWrapper::getText).setCaption("Tätigkeit");
+				timeTable.addColumn(TimeWrapper::getCustomerReport, new ComponentRenderer()).setCaption("Bei Kunde erfasst");
+				timeTable.addColumn(TimeWrapper::getText, new ComponentRenderer()).setCaption("Tätigkeit");
 			}
 		} catch (IllegalStateException | IllegalArgumentException | TimeSelectException e) {
 			// TODO Auto-generated catch block
