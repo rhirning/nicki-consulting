@@ -12,9 +12,6 @@ import org.mgnl.nicki.db.annotation.Attribute;
 import org.mgnl.nicki.db.annotation.SubTable;
 import org.mgnl.nicki.db.annotation.Table;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
-
-import lombok.Getter;
 import lombok.Setter;
 
 @Table(name = "PERSONS")

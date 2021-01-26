@@ -77,6 +77,13 @@ public class TimeWrapper implements Serializable {
 		return this.deleteCheckBox;
 
 	}
+	public boolean isDelete() {
+		if (getDelete() != null) {
+			return getDelete().getValue().booleanValue();
+		} else {
+			return false;
+		}
+	}
 	
 	public Component getCustomerReport() {
 		if (this.customerReportComponent == null) {

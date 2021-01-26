@@ -1,14 +1,10 @@
 package org.mgnl.nicki.consulting.views;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.mgnl.nicki.consulting.core.helper.PersonHelper;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.data.BeanContainerDataSource;
-import org.mgnl.nicki.db.context.DBContext;
-import org.mgnl.nicki.db.context.DBContextManager;
-import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
 import org.mgnl.nicki.vaadin.base.helper.UIHelper;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
