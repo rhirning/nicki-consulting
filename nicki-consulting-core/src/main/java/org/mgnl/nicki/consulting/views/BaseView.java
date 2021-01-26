@@ -33,7 +33,7 @@ import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 
 public abstract class BaseView extends CustomComponent implements View {

@@ -3,8 +3,8 @@ package org.mgnl.nicki.consulting.data;
 import org.apache.commons.lang.StringUtils;
 import org.mgnl.nicki.consulting.core.model.Member;
 
-import com.vaadin.data.Container.Sortable;
-import com.vaadin.data.util.ItemSorter;
+import com.vaadin.v7.data.Container.Sortable;
+import com.vaadin.v7.data.util.ItemSorter;
 import com.vaadin.ui.CheckBox;
 
 public class TimeWrapperItemSorter implements ItemSorter {

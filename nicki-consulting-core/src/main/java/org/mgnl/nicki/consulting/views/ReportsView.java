@@ -30,6 +30,7 @@ import org.mgnl.nicki.dynamic.objects.objects.Template;
 import org.mgnl.nicki.report.XlsDocuHelper;
 import org.mgnl.nicki.template.engine.ConfigurationFactory.TYPE;
 import org.mgnl.nicki.template.engine.TemplateEngine;
+import org.mgnl.nicki.vaadin.base.helper.UIHelper;
 import org.mgnl.nicki.vaadin.base.menu.application.ConfigurableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,12 +42,12 @@ import com.vaadin.server.FileDownloader;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
 import freemarker.template.TemplateException;
@@ -434,7 +435,6 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	private VerticalLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new VerticalLayout();
-		mainLayout.setImmediate(false);
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 		mainLayout.setMargin(false);
@@ -453,7 +453,6 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		
 		// timeTable
 		timeTable = new Table();
-		timeTable.setImmediate(false);
 		timeTable.setWidth("100%");
 		timeTable.setHeight("100.0%");
 		mainLayout.addComponent(timeTable);
@@ -467,7 +466,6 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	private VerticalLayout buildVerticalLayout_2() {
 		// common part: create layout
 		verticalLayout_2 = new VerticalLayout();
-		verticalLayout_2.setImmediate(false);
 		verticalLayout_2.setWidth("-1px");
 		verticalLayout_2.setHeight("-1px");
 		verticalLayout_2.setMargin(true);
@@ -489,7 +487,6 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	private HorizontalLayout buildFilterLayout() {
 		// common part: create layout
 		filterLayout = new HorizontalLayout();
-		filterLayout.setImmediate(false);
 		filterLayout.setWidth("-1px");
 		filterLayout.setHeight("-1px");
 		filterLayout.setMargin(false);
@@ -498,7 +495,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		// personComboBox
 		personComboBox = new ComboBox();
 		personComboBox.setCaption("Person");
-		personComboBox.setImmediate(true);
+		UIHelper.setImmediate(personComboBox, true);
 		personComboBox.setWidth("-1px");
 		personComboBox.setHeight("-1px");
 		filterLayout.addComponent(personComboBox);
@@ -506,7 +503,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		// timeComboBox
 		timeComboBox = new ComboBox();
 		timeComboBox.setCaption("Zeitraum");
-		timeComboBox.setImmediate(true);
+		UIHelper.setImmediate(timeComboBox, true);
 		timeComboBox.setWidth("-1px");
 		timeComboBox.setHeight("-1px");
 		filterLayout.addComponent(timeComboBox);
@@ -514,7 +511,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		// customerComboBox
 		customerComboBox = new ComboBox();
 		customerComboBox.setCaption("Kunde");
-		customerComboBox.setImmediate(true);
+		UIHelper.setImmediate(customerComboBox, true);
 		customerComboBox.setWidth("-1px");
 		customerComboBox.setHeight("-1px");
 		filterLayout.addComponent(customerComboBox);
@@ -522,7 +519,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		// projectComboBox
 		projectComboBox = new ComboBox();
 		projectComboBox.setCaption("Projekt");
-		projectComboBox.setImmediate(true);
+		UIHelper.setImmediate(projectComboBox, true);
 		projectComboBox.setWidth("-1px");
 		projectComboBox.setHeight("-1px");
 		filterLayout.addComponent(projectComboBox);
@@ -535,7 +532,6 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	private HorizontalLayout buildReportsLayout() {
 		// common part: create layout
 		reportsLayout = new HorizontalLayout();
-		reportsLayout.setImmediate(false);
 		reportsLayout.setWidth("-1px");
 		reportsLayout.setHeight("-1px");
 		reportsLayout.setMargin(false);
@@ -544,7 +540,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		// reportComboBox
 		reportComboBox = new ComboBox();
 		reportComboBox.setCaption("Report");
-		reportComboBox.setImmediate(true);
+		UIHelper.setImmediate(reportComboBox, true);
 		reportComboBox.setWidth("-1px");
 		reportComboBox.setHeight("-1px");
 		reportsLayout.addComponent(reportComboBox);
@@ -552,7 +548,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		// downloadPdfButton
 		downloadPdfButton = new Button();
 		downloadPdfButton.setCaption("PDF");
-		downloadPdfButton.setImmediate(true);
+		UIHelper.setImmediate(downloadPdfButton, true);
 		downloadPdfButton.setWidth("-1px");
 		downloadPdfButton.setHeight("-1px");
 		reportsLayout.addComponent(downloadPdfButton);
@@ -561,7 +557,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		// downloadXlsButton
 		downloadXlsButton = new Button();
 		downloadXlsButton.setCaption("Excel");
-		downloadXlsButton.setImmediate(true);
+		UIHelper.setImmediate(downloadXlsButton, true);
 		downloadXlsButton.setWidth("-1px");
 		downloadXlsButton.setHeight("-1px");
 		reportsLayout.addComponent(downloadXlsButton);
@@ -575,7 +571,6 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	private HorizontalLayout buildSummaryLayout() {
 		// common part: create layout
 		summaryLayout = new HorizontalLayout();
-		summaryLayout.setImmediate(false);
 		summaryLayout.setWidth("-1px");
 		summaryLayout.setHeight("-1px");
 		summaryLayout.setMargin(true);
@@ -584,7 +579,6 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		// hoursLabel
 		hoursLabel = new Label();
 		hoursLabel.setCaption("Summe (h)");
-		hoursLabel.setImmediate(false);
 		hoursLabel.setWidth("-1px");
 		hoursLabel.setHeight("-1px");
 		hoursLabel.setValue("0");
@@ -593,7 +587,6 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		// daysLabel
 		daysLabel = new Label();
 		daysLabel.setCaption("Summe (Tage)");
-		daysLabel.setImmediate(false);
 		daysLabel.setWidth("-1px");
 		daysLabel.setHeight("-1px");
 		daysLabel.setValue("Label");

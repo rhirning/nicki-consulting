@@ -34,7 +34,6 @@ public class SaveOrIgnoreDialog extends CustomComponent {
 	private VerticalLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new VerticalLayout();
-		mainLayout.setImmediate(false);
 		mainLayout.setWidth("-1px");
 		mainLayout.setHeight("-1px");
 		mainLayout.setMargin(true);
@@ -46,7 +45,6 @@ public class SaveOrIgnoreDialog extends CustomComponent {
 		
 		// introLabel
 		introLabel = new Label();
-		introLabel.setImmediate(false);
 		introLabel.setWidth("-1px");
 		introLabel.setHeight("-1px");
 		introLabel.setValue("Die Daten wurden verändert");
@@ -63,7 +61,6 @@ public class SaveOrIgnoreDialog extends CustomComponent {
 	private HorizontalLayout buildHorizontalLayout_1() {
 		// common part: create layout
 		buttonsLayout = new HorizontalLayout();
-		buttonsLayout.setImmediate(false);
 		buttonsLayout.setWidth("-1px");
 		buttonsLayout.setHeight("-1px");
 		buttonsLayout.setMargin(false);
@@ -72,7 +69,6 @@ public class SaveOrIgnoreDialog extends CustomComponent {
 		// saveButton
 		saveButton = new Button();
 		saveButton.setCaption("Speichern");
-		saveButton.setImmediate(false);
 		saveButton.setWidth("-1px");
 		saveButton.setHeight("-1px");
 		buttonsLayout.addComponent(saveButton);
@@ -80,7 +76,6 @@ public class SaveOrIgnoreDialog extends CustomComponent {
 		// ignoreButton
 		ignoreButton = new Button();
 		ignoreButton.setCaption("Verwerfen");
-		ignoreButton.setImmediate(false);
 		ignoreButton.setWidth("-1px");
 		ignoreButton.setHeight("-1px");
 		buttonsLayout.addComponent(ignoreButton);

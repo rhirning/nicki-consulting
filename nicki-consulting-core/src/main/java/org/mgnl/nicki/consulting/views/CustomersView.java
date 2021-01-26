@@ -14,6 +14,7 @@ import org.mgnl.nicki.consulting.data.MemberWrapper;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.profile.InitProfileException;
+import org.mgnl.nicki.vaadin.base.helper.UIHelper;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.mgnl.nicki.vaadin.db.editor.DbBeanCloseListener;
 import org.mgnl.nicki.vaadin.db.editor.DbBeanViewer;
@@ -26,7 +27,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -456,7 +457,6 @@ public class CustomersView extends BaseView implements View {
 	private VerticalLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new VerticalLayout();
-		mainLayout.setImmediate(false);
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 		mainLayout.setMargin(false);
@@ -476,7 +476,6 @@ public class CustomersView extends BaseView implements View {
 	private HorizontalLayout buildHorizontalLayout_1() {
 		// common part: create layout
 		horizontalLayout_1 = new HorizontalLayout();
-		horizontalLayout_1.setImmediate(false);
 		horizontalLayout_1.setWidth("-1px");
 		horizontalLayout_1.setHeight("100.0%");
 		horizontalLayout_1.setMargin(false);
@@ -500,7 +499,6 @@ public class CustomersView extends BaseView implements View {
 	private VerticalLayout buildCustomersLayout() {
 		// common part: create layout
 		customersLayout = new VerticalLayout();
-		customersLayout.setImmediate(false);
 		customersLayout.setWidth("-1px");
 		customersLayout.setHeight("-1px");
 		customersLayout.setMargin(false);
@@ -512,7 +510,6 @@ public class CustomersView extends BaseView implements View {
 		
 		// customerLayout
 		customerLayout = new VerticalLayout();
-		customerLayout.setImmediate(false);
 		customerLayout.setWidth("100.0%");
 		customerLayout.setHeight("100.0%");
 		customerLayout.setMargin(false);
@@ -525,7 +522,6 @@ public class CustomersView extends BaseView implements View {
 	private HorizontalLayout buildHorizontalLayout_3() {
 		// common part: create layout
 		horizontalLayout_3 = new HorizontalLayout();
-		horizontalLayout_3.setImmediate(false);
 		horizontalLayout_3.setWidth("-1px");
 		horizontalLayout_3.setHeight("-1px");
 		horizontalLayout_3.setMargin(true);
@@ -534,7 +530,7 @@ public class CustomersView extends BaseView implements View {
 		// customersTable
 		customersTable = new Table();
 		customersTable.setCaption("Kunden");
-		customersTable.setImmediate(true);
+		UIHelper.setImmediate(customersTable, true);
 		customersTable.setWidth("-1px");
 		customersTable.setHeight("-1px");
 		horizontalLayout_3.addComponent(customersTable);
@@ -550,7 +546,6 @@ public class CustomersView extends BaseView implements View {
 	private VerticalLayout buildVerticalLayout_2() {
 		// common part: create layout
 		verticalLayout_2 = new VerticalLayout();
-		verticalLayout_2.setImmediate(false);
 		verticalLayout_2.setWidth("-1px");
 		verticalLayout_2.setHeight("-1px");
 		verticalLayout_2.setMargin(true);
@@ -559,7 +554,7 @@ public class CustomersView extends BaseView implements View {
 		// newCustomerButton
 		newCustomerButton = new Button();
 		newCustomerButton.setCaption("Neu");
-		newCustomerButton.setImmediate(true);
+		UIHelper.setImmediate(newCustomerButton, true);
 		newCustomerButton.setWidth("-1px");
 		newCustomerButton.setHeight("-1px");
 		verticalLayout_2.addComponent(newCustomerButton);
@@ -567,7 +562,6 @@ public class CustomersView extends BaseView implements View {
 		// deleteCustomerButton
 		deleteCustomerButton = new Button();
 		deleteCustomerButton.setCaption("Löschen");
-		deleteCustomerButton.setImmediate(false);
 		deleteCustomerButton.setWidth("-1px");
 		deleteCustomerButton.setHeight("-1px");
 		verticalLayout_2.addComponent(deleteCustomerButton);
@@ -579,7 +573,6 @@ public class CustomersView extends BaseView implements View {
 	private VerticalLayout buildProjectsLayout() {
 		// common part: create layout
 		projectsLayout = new VerticalLayout();
-		projectsLayout.setImmediate(false);
 		projectsLayout.setWidth("-1px");
 		projectsLayout.setHeight("-1px");
 		projectsLayout.setMargin(false);
@@ -590,7 +583,6 @@ public class CustomersView extends BaseView implements View {
 		
 		// projectLayout
 		projectLayout = new VerticalLayout();
-		projectLayout.setImmediate(false);
 		projectLayout.setWidth("100.0%");
 		projectLayout.setHeight("100.0%");
 		projectLayout.setMargin(false);
@@ -603,7 +595,6 @@ public class CustomersView extends BaseView implements View {
 	private HorizontalLayout buildHorizontalLayout_4() {
 		// common part: create layout
 		horizontalLayout_4 = new HorizontalLayout();
-		horizontalLayout_4.setImmediate(false);
 		horizontalLayout_4.setWidth("-1px");
 		horizontalLayout_4.setHeight("-1px");
 		horizontalLayout_4.setMargin(true);
@@ -612,7 +603,7 @@ public class CustomersView extends BaseView implements View {
 		// projectsTable
 		projectsTable = new Table();
 		projectsTable.setCaption("Projekte");
-		projectsTable.setImmediate(true);
+		UIHelper.setImmediate(projectsTable, true);
 		projectsTable.setWidth("-1px");
 		projectsTable.setHeight("-1px");
 		horizontalLayout_4.addComponent(projectsTable);
@@ -628,7 +619,6 @@ public class CustomersView extends BaseView implements View {
 	private VerticalLayout buildVerticalLayout_3() {
 		// common part: create layout
 		verticalLayout_3 = new VerticalLayout();
-		verticalLayout_3.setImmediate(false);
 		verticalLayout_3.setWidth("-1px");
 		verticalLayout_3.setHeight("-1px");
 		verticalLayout_3.setMargin(true);
@@ -637,7 +627,7 @@ public class CustomersView extends BaseView implements View {
 		// newProjectButton
 		newProjectButton = new Button();
 		newProjectButton.setCaption("Neu");
-		newProjectButton.setImmediate(true);
+		UIHelper.setImmediate(newProjectButton, true);
 		newProjectButton.setWidth("-1px");
 		newProjectButton.setHeight("-1px");
 		verticalLayout_3.addComponent(newProjectButton);
@@ -645,7 +635,6 @@ public class CustomersView extends BaseView implements View {
 		// deleteProjectButton
 		deleteProjectButton = new Button();
 		deleteProjectButton.setCaption("Löschen");
-		deleteProjectButton.setImmediate(false);
 		deleteProjectButton.setWidth("-1px");
 		deleteProjectButton.setHeight("-1px");
 		verticalLayout_3.addComponent(deleteProjectButton);
@@ -657,7 +646,6 @@ public class CustomersView extends BaseView implements View {
 	private VerticalLayout buildMembersLayout() {
 		// common part: create layout
 		membersLayout = new VerticalLayout();
-		membersLayout.setImmediate(false);
 		membersLayout.setWidth("-1px");
 		membersLayout.setHeight("-1px");
 		membersLayout.setMargin(false);
@@ -669,7 +657,6 @@ public class CustomersView extends BaseView implements View {
 		
 		// memberLayout
 		memberLayout = new VerticalLayout();
-		memberLayout.setImmediate(false);
 		memberLayout.setWidth("100.0%");
 		memberLayout.setHeight("100.0%");
 		memberLayout.setMargin(false);
@@ -682,7 +669,6 @@ public class CustomersView extends BaseView implements View {
 	private HorizontalLayout buildHorizontalLayout_6() {
 		// common part: create layout
 		horizontalLayout_6 = new HorizontalLayout();
-		horizontalLayout_6.setImmediate(false);
 		horizontalLayout_6.setWidth("-1px");
 		horizontalLayout_6.setHeight("-1px");
 		horizontalLayout_6.setMargin(true);
@@ -691,7 +677,7 @@ public class CustomersView extends BaseView implements View {
 		// membersTable
 		membersTable = new Table();
 		membersTable.setCaption("Projektmitglieder");
-		membersTable.setImmediate(true);
+		UIHelper.setImmediate(membersTable, true);
 		membersTable.setWidth("-1px");
 		membersTable.setHeight("-1px");
 		horizontalLayout_6.addComponent(membersTable);
@@ -707,7 +693,6 @@ public class CustomersView extends BaseView implements View {
 	private VerticalLayout buildVerticalLayout_4() {
 		// common part: create layout
 		verticalLayout_4 = new VerticalLayout();
-		verticalLayout_4.setImmediate(false);
 		verticalLayout_4.setWidth("-1px");
 		verticalLayout_4.setHeight("-1px");
 		verticalLayout_4.setMargin(true);
@@ -716,7 +701,7 @@ public class CustomersView extends BaseView implements View {
 		// newMemberButton
 		newMemberButton = new Button();
 		newMemberButton.setCaption("Neu");
-		newMemberButton.setImmediate(true);
+		UIHelper.setImmediate(newMemberButton, true);
 		newMemberButton.setWidth("-1px");
 		newMemberButton.setHeight("-1px");
 		verticalLayout_4.addComponent(newMemberButton);
@@ -724,7 +709,6 @@ public class CustomersView extends BaseView implements View {
 		// deleteMemberButton
 		deleteMemberButton = new Button();
 		deleteMemberButton.setCaption("Löschen");
-		deleteMemberButton.setImmediate(false);
 		deleteMemberButton.setWidth("-1px");
 		deleteMemberButton.setHeight("-1px");
 		verticalLayout_4.addComponent(deleteMemberButton);

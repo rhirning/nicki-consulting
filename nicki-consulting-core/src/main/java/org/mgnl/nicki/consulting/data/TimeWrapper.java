@@ -16,14 +16,14 @@ import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.views.BaseView.READONLY;
 
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.ui.CheckBox;
+import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.DateField;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextField;
 
 public class TimeWrapper implements Serializable {
 
