@@ -16,7 +16,7 @@ import com.vaadin.ui.AbstractLayout;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 public class MyProjectsView extends BaseView implements View {

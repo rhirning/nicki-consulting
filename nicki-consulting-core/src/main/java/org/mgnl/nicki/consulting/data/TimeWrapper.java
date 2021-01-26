@@ -1,6 +1,7 @@
 package org.mgnl.nicki.consulting.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,20 +11,23 @@ import org.mgnl.nicki.consulting.core.helper.Clock;
 import org.mgnl.nicki.consulting.core.helper.DateFormatException;
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.model.Member;
+import org.mgnl.nicki.consulting.core.model.Pause;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.views.BaseView.READONLY;
+import org.mgnl.nicki.core.helper.DataHelper;
+import org.mgnl.nicki.vaadin.base.helper.UIHelper;
 
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.v7.ui.CheckBox;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.v7.ui.DateField;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.v7.ui.TextField;
+import com.vaadin.ui.TextField;
 
 public class TimeWrapper implements Serializable {
 
@@ -35,13 +39,13 @@ public class TimeWrapper implements Serializable {
 	private List<Member> members;
 	private Map<Long, Member> membersMap = new HashMap<>();
 	
-	private ComboBox memberComboBox;
+	private ComboBox<Member> memberComboBox;
 	private CheckBox deleteCheckBox;
 	private Component customerReportComponent;
 	private DateField dayDateField;
 	private TextField startTextField;
 	private TextField endTextField;
-	private ComboBox pauseComboBox;
+	private ComboBox<Pause> pauseComboBox;
 	private TextField textTextField;
 	private Label personLabel;
 	private boolean readOnly;
@@ -80,7 +84,7 @@ public class TimeWrapper implements Serializable {
 				this.customerReportComponent = new Label(" ");
 			} else {
 				CheckBox customerReportCheckBox = new CheckBox();
-				customerReportCheckBox.setImmediate(true);
+				UIHelper.setImmediate(customerReportCheckBox, true);
 				customerReportCheckBox.setValue(false);
 				customerReportCheckBox.addValueChangeListener(
 						event -> time.setCustomerReport(customerReportCheckBox.getValue()));
@@ -125,23 +129,25 @@ public class TimeWrapper implements Serializable {
 		return null;
 	}
 	
-	public ComboBox getMember() {
+	public ComboBox<Member> getMember() {
 		if (this.memberComboBox == null) {
-			memberComboBox = new ComboBox();
+			memberComboBox = new ComboBox<Member>();
+			List<Member> items = new ArrayList<>();
 			for (Member member : members) {
-				memberComboBox.addItem(member);
-				memberComboBox.setItemCaption(member, member.getDisplayName());
+				items.add(member);
 			}
+			memberComboBox.setItems(items);
+			memberComboBox.setItemCaptionGenerator(Member::getDisplayName);
 			
 			if (time.getMemberId() != null) {
 				for (Member member : members) {
 					if (time.getMemberId() == member.getId()) {
-						memberComboBox.select(member);
+						memberComboBox.setSelectedItem(member);
 					}
 				}
 			}
 			memberComboBox.addValueChangeListener(event -> {
-				Member m = (Member) event.getProperty().getValue();
+				Member m = event.getValue();
 				if (m != null) {
 					time.setMemberId(m.getId());
 				} else {
@@ -159,9 +165,9 @@ public class TimeWrapper implements Serializable {
 			dayDateField.setDateFormat("dd.MM.yy");
 			
 			if (time.getStart() != null) {
-				dayDateField.setValue(time.getStart());
+				dayDateField.setValue(DataHelper.getLocalDate(time.getStart()));
 			}
-			dayDateField.setImmediate(true);
+			UIHelper.setImmediate(dayDateField, true);
 			dayDateField.addValueChangeListener(event -> {
 				try {
 					timeChanged();
@@ -179,7 +185,7 @@ public class TimeWrapper implements Serializable {
 		if (this.startTextField == null) {
 			startTextField = new TextField();
 			startTextField.setWidth("50px");
-			startTextField.setImmediate(true);
+			UIHelper.setImmediate(startTextField, true);
 			
 			if (time.getStart() != null) {
 				startTextField.setValue(TimeHelper.getTimeString(time.getStart()));
@@ -202,13 +208,13 @@ public class TimeWrapper implements Serializable {
 		if (dayDateField.getValue() != null) {
 			if (StringUtils.isNotBlank(startTextField.getValue())) {
 				String startEntry = StringUtils.stripToEmpty(startTextField.getValue());
-				time.setStart(TimeHelper.getDate(dayDateField.getValue(), Clock.parse(startEntry)));
+				time.setStart(TimeHelper.getDate(DataHelper.getDate(dayDateField.getValue()), Clock.parse(startEntry)));
 			} else {
 				time.setStart(null);
 			}
 			if (StringUtils.isNotBlank(endTextField.getValue())) {
 				String endEntry = StringUtils.stripToEmpty(endTextField.getValue());
-				time.setEnd(TimeHelper.getDate(dayDateField.getValue(), Clock.parse(endEntry)));
+				time.setEnd(TimeHelper.getDate(DataHelper.getDate(dayDateField.getValue()), Clock.parse(endEntry)));
 			} else {
 				time.setEnd(null);
 			}
@@ -223,7 +229,7 @@ public class TimeWrapper implements Serializable {
 		if (this.endTextField == null) {
 			endTextField = new TextField();
 			endTextField.setWidth("50px");
-			endTextField.setImmediate(true);
+			UIHelper.setImmediate(endTextField, true);
 			
 			if (time.getEnd() != null) {
 				endTextField.setValue(TimeHelper.getTimeString(time.getEnd()));
@@ -250,23 +256,20 @@ public class TimeWrapper implements Serializable {
 		}
 	}
 
-	public ComboBox getPause() {
+	public ComboBox<Pause> getPause() {
 		if (this.pauseComboBox == null) {
-			pauseComboBox = new ComboBox();
+			pauseComboBox = new ComboBox<>();
 			pauseComboBox.setWidth("100px");
-			pauseComboBox.setImmediate(true);
-			pauseComboBox.addItem(30);
-			pauseComboBox.setItemCaption(30, "30 Min.");
-			pauseComboBox.addItem(60);
-			pauseComboBox.setItemCaption(60, "60 Min.");
+			UIHelper.setImmediate(pauseComboBox, true);
+			pauseComboBox.setItems(Pause.values());
 			
 			if (time.getPause() != null) {
-				pauseComboBox.setValue(time.getPause());
+				pauseComboBox.setSelectedItem(Pause.getPause(time.getPause()));
 			}
 			
 			pauseComboBox.addValueChangeListener(event -> {
 				if (pauseComboBox.getValue() != null) {
-					this.time.setPause((Integer) pauseComboBox.getValue());
+					this.time.setPause( pauseComboBox.getValue().getMins());
 				} else {
 					this.time.setPause(null);
 				}
@@ -286,7 +289,7 @@ public class TimeWrapper implements Serializable {
 		if (this.textTextField == null) {
 			textTextField = new TextField();
 			textTextField.setWidth("400px");
-			textTextField.setImmediate(true);
+			UIHelper.setImmediate(textTextField, true);
 			
 			if (time.getText() != null) {
 				textTextField.setValue(time.getText());
