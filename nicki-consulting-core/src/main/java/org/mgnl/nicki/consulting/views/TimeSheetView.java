@@ -56,7 +56,7 @@ public class TimeSheetView extends BaseView implements View {
 	private static final long serialVersionUID = 8329773710892387845L;
 	private static final Logger LOG = LoggerFactory.getLogger(TimeSheetView.class);
 
-	private ListDataProvider<TimeWrapper> timeContainerDataSource;
+	private ListDataProvider<TimeWrapper> timeDataProvider;
 	
 	private boolean isInit;
 	
@@ -135,7 +135,7 @@ public class TimeSheetView extends BaseView implements View {
 		}
 
 		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
-			for (TimeWrapper timeWrapper : timeContainerDataSource.getItems()) {
+			for (TimeWrapper timeWrapper : timeDataProvider.getItems()) {
 				if (!timeWrapper.isReadOnly()) {
 					if (timeWrapper.isMarkedDelete()) {
 						deleteOrIgnore(dbContext, timeWrapper.getTime());
@@ -181,7 +181,7 @@ public class TimeSheetView extends BaseView implements View {
 
 	private boolean verify() {
 		boolean ok = true;
-		for (TimeWrapper timeWrapper : timeContainerDataSource.getItems()) {
+		for (TimeWrapper timeWrapper : timeDataProvider.getItems()) {
 			if (!timeWrapper.isReadOnly()) {
 				try {
 					ok &= verify(timeWrapper);
@@ -255,8 +255,8 @@ public class TimeSheetView extends BaseView implements View {
 		createTimeTable();		try {
 			PERIOD period = (PERIOD) timeComboBox.getValue();
 			if (period != null) {
-				timeContainerDataSource = new ListDataProvider<TimeWrapper>(getTimeWrappers(getPersonComboBoxValue(), period.getPeriod(), null, null, READONLY.FALSE, 10));
-				timeTable.setDataProvider(timeContainerDataSource);
+				timeDataProvider = new ListDataProvider<TimeWrapper>(getTimeWrappers(getPersonComboBoxValue(), period.getPeriod(), null, null, READONLY.FALSE, 10));
+				timeTable.setDataProvider(timeDataProvider);
 				timeTable.addColumn(TimeWrapper::getDelete, new ComponentRenderer()).setCaption("Löschen");
 				timeTable.addColumn(TimeWrapper::getMember, new ComponentRenderer()).setCaption("Projekt");
 				timeTable.addColumn(TimeWrapper::getDay, new ComponentRenderer()).setCaption("Datum");
@@ -280,7 +280,7 @@ public class TimeSheetView extends BaseView implements View {
 
 	@Override
 	public boolean isModified() {
-		for (TimeWrapper timeWrapper : timeContainerDataSource.getItems()) {
+		for (TimeWrapper timeWrapper : timeDataProvider.getItems()) {
 			if (timeWrapper.isModified()) {
 				return true;
 			}

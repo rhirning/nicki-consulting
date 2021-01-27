@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import org.mgnl.nicki.consulting.core.helper.Constants;
 import org.mgnl.nicki.consulting.core.helper.PersonHelper;
@@ -35,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Grid;
 
 public abstract class BaseView extends CustomComponent implements View {
 	private static final long serialVersionUID = 4599832847213624084L;
@@ -81,6 +84,15 @@ public abstract class BaseView extends CustomComponent implements View {
 			throw new NoValidPersonException(ldapPerson.getDisplayName());
 		}
 		
+	}
+	
+	protected <T> Optional<T> getSelectedItem(Grid<T> table) {
+		Set<T> set = table.getSelectedItems();
+		if (set != null && set.size() > 0) {
+			return Optional.of(set.iterator().next());
+		} else {
+			return Optional.empty();
+		}
 	}
 	
 	public boolean isAdmin() {
@@ -253,17 +265,13 @@ public abstract class BaseView extends CustomComponent implements View {
 			}
 			if (withAllEntry == ALL.TRUE) {
 				// ALL
-				List<Person> allList = new ArrayList<>();
 				Person all = new Person();
 				all.setId(-1L);
 				all.setDisplayName("Alle");
-				allList.add(all);
-				personComboBox.setItems(allList);
+				personComboBox.setItems(all);
 			}
 		} else {
-			List<Person> selfList = new ArrayList<>();
-			selfList.add(self);
-			personComboBox.setItems(selfList);
+			personComboBox.setItems(self);
 			personComboBox.setValue(self);
 			setPersonComboBoxValue(self);
 			personComboBox.setEnabled(false);

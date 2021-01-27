@@ -163,7 +163,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		if (getTemplateType() == TEMPLATE_TYPE.TEMPLATE)  {
 			
 			Template template = loadTemplate(getTemplatePath());
-			reportComboBox.setItems(DataHelper.getList(template));
+			reportComboBox.setItems(template);
 			reportComboBox.setValue(template);
 		} else if (getTemplateType() == TEMPLATE_TYPE.GROUP_OF_TEMPLATES) {
 

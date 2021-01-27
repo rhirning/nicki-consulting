@@ -139,11 +139,7 @@ public class TimeWrapper implements Serializable {
 	public ComboBox<Member> getMember() {
 		if (this.memberComboBox == null) {
 			memberComboBox = new ComboBox<Member>();
-			List<Member> items = new ArrayList<>();
-			for (Member member : members) {
-				items.add(member);
-			}
-			memberComboBox.setItems(items);
+			memberComboBox.setItems(members);
 			memberComboBox.setItemCaptionGenerator(Member::getDisplayName);
 			
 			if (time.getMemberId() != null) {
