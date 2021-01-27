@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -99,7 +100,7 @@ public class TimeHelper {
 		return hours;
 	}
 	
-	public static float getHoursFromTimeWrapperList(List<TimeWrapper> timeWrappers) {
+	public static float getHoursFromTimeWrapperList(Collection<TimeWrapper> timeWrappers) {
 		float hours = 0;
 		for (TimeWrapper timeWrapper : timeWrappers) {
 			hours += timeWrapper.getTime().getHours();
