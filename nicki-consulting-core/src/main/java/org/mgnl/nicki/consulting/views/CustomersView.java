@@ -224,7 +224,7 @@ public class CustomersView extends BaseView implements View {
 			});
 			beanViewer.setDbContextName("projects");
 			beanViewer.setWidth("400px");
-			beanViewer.setDbBean(customer);
+			beanViewer.setDbBean(customer.get());
 			customerLayout.removeAllComponents();
 			customerLayout.addComponent(beanViewer);
 			showProjects(customer);
@@ -279,7 +279,7 @@ public class CustomersView extends BaseView implements View {
 			});
 			beanViewer.setDbContextName("projects");
 			beanViewer.setWidth("400px");
-			beanViewer.setDbBean(project);
+			beanViewer.setDbBean(project.get());
 			
 			projectLayout.removeAllComponents();
 			projectLayout.addComponent(beanViewer);
