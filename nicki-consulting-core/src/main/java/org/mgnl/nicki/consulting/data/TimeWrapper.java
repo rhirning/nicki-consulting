@@ -16,7 +16,6 @@ import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.views.BaseView.READONLY;
 import org.mgnl.nicki.core.helper.DataHelper;
-import org.mgnl.nicki.vaadin.base.helper.UIHelper;
 
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.CheckBox;
@@ -29,7 +28,6 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TextField;
 
 public class TimeWrapper implements Serializable {
-
 	private static final long serialVersionUID = -3445248806029063825L;
 	private Person person;
 	private Time time;
@@ -90,7 +88,6 @@ public class TimeWrapper implements Serializable {
 				this.customerReportComponent = new Label(" ");
 			} else {
 				CheckBox customerReportCheckBox = new CheckBox();
-				UIHelper.setImmediate(customerReportCheckBox, true);
 				customerReportCheckBox.setValue(false);
 				customerReportCheckBox.addValueChangeListener(
 						event -> time.setCustomerReport(customerReportCheckBox.getValue()));
@@ -169,7 +166,6 @@ public class TimeWrapper implements Serializable {
 			if (time.getStart() != null) {
 				dayDateField.setValue(DataHelper.getLocalDate(time.getStart()));
 			}
-			UIHelper.setImmediate(dayDateField, true);
 			dayDateField.addValueChangeListener(event -> {
 				try {
 					timeChanged();
@@ -187,7 +183,6 @@ public class TimeWrapper implements Serializable {
 		if (this.startTextField == null) {
 			startTextField = new TextField();
 			startTextField.setWidth("50px");
-			UIHelper.setImmediate(startTextField, true);
 			
 			if (time.getStart() != null) {
 				startTextField.setValue(TimeHelper.getTimeString(time.getStart()));
@@ -231,7 +226,6 @@ public class TimeWrapper implements Serializable {
 		if (this.endTextField == null) {
 			endTextField = new TextField();
 			endTextField.setWidth("50px");
-			UIHelper.setImmediate(endTextField, true);
 			
 			if (time.getEnd() != null) {
 				endTextField.setValue(TimeHelper.getTimeString(time.getEnd()));
@@ -262,7 +256,6 @@ public class TimeWrapper implements Serializable {
 		if (this.pauseComboBox == null) {
 			pauseComboBox = new ComboBox<>();
 			pauseComboBox.setWidth("100px");
-			UIHelper.setImmediate(pauseComboBox, true);
 			pauseComboBox.setItems(Pause.values());
 			pauseComboBox.setItemCaptionGenerator(Pause::getDisplayName);
 			
@@ -292,7 +285,6 @@ public class TimeWrapper implements Serializable {
 		if (this.textTextField == null) {
 			textTextField = new TextField();
 			textTextField.setWidth("400px");
-			UIHelper.setImmediate(textTextField, true);
 			
 			if (time.getText() != null) {
 				textTextField.setValue(time.getText());

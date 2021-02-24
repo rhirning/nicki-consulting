@@ -6,7 +6,6 @@ import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.model.Customer;
 import org.mgnl.nicki.consulting.core.model.Member;
 import org.mgnl.nicki.consulting.core.model.Project;
-import org.mgnl.nicki.vaadin.base.helper.UIHelper;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.mgnl.nicki.vaadin.db.editor.DbBeanCloseListener;
 import org.mgnl.nicki.vaadin.db.editor.DbBeanViewer;
@@ -153,7 +152,6 @@ public class MyProjectsView extends BaseView implements View {
 		// timeComboBox
 		timeComboBox = new ComboBox<PERIOD>();
 		timeComboBox.setCaption("Zeitraum");
-		UIHelper.setImmediate(timeComboBox, true);
 		timeComboBox.setWidth("-1px");
 		timeComboBox.setHeight("-1px");
 		buttonsLayout.addComponent(timeComboBox);
@@ -161,7 +159,6 @@ public class MyProjectsView extends BaseView implements View {
 		// memberComboBox
 		memberComboBox = new ComboBox<Member>();
 		memberComboBox.setCaption("Projekt");
-		UIHelper.setImmediate(memberComboBox, true);
 		memberComboBox.setWidth("-1px");
 		memberComboBox.setHeight("-1px");
 		buttonsLayout.addComponent(memberComboBox);

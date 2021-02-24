@@ -12,8 +12,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-		<nicki.version>8.19</nicki.version>
-		<nicki-vaadin7.version>8.08</nicki-vaadin7.version>
+		<nickiX.version>8.19</nickiX.version>
+		<nicki-vaadin7.version>8.15-SNAPSHOT</nicki-vaadin7.version>
 	</properties>
 	<modules>
 		<module>nicki-consulting-app</module>

@@ -18,7 +18,6 @@ import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
-import org.mgnl.nicki.vaadin.base.helper.UIHelper;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +69,7 @@ public class TimeSheetView extends BaseView implements View {
 	@Override
 	public void init() {
 		if (!isInit) {
+//			timeTable.setStyleName("mygridwithcomponents");
 			initTimeComboBox(this.timeComboBox);
 			timeComboBox.addValueChangeListener(event -> { timeValueChanged(); });
 			try {
@@ -337,7 +337,6 @@ public class TimeSheetView extends BaseView implements View {
 		// saveButton
 		saveButton = new Button();
 		saveButton.setCaption("Speichern");
-		UIHelper.setImmediate(saveButton, true);
 		saveButton.setWidth("-1px");
 		saveButton.setHeight("-1px");
 		filterLayout.addComponent(saveButton);
@@ -345,21 +344,18 @@ public class TimeSheetView extends BaseView implements View {
 		// reloadButton
 		reloadButton = new Button();
 		reloadButton.setCaption("Verwerfen");
-		UIHelper.setImmediate(reloadButton, true);
 		reloadButton.setWidth("-1px");
 		reloadButton.setHeight("-1px");
 		filterLayout.addComponent(reloadButton);
 		
 		// timeComboBox
 		timeComboBox = new ComboBox<PERIOD>();
-		UIHelper.setImmediate(timeComboBox, true);
 		timeComboBox.setWidth("-1px");
 		timeComboBox.setHeight("-1px");
 		filterLayout.addComponent(timeComboBox);
 		
 		// personComboBox
 		personComboBox = new ComboBox<Person>();
-		UIHelper.setImmediate(personComboBox, true);
 		personComboBox.setWidth("-1px");
 		personComboBox.setHeight("-1px");
 		filterLayout.addComponent(personComboBox);

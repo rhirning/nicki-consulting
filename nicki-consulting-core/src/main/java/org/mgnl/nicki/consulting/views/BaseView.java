@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import org.mgnl.nicki.consulting.core.helper.Constants;
 import org.mgnl.nicki.consulting.core.helper.PersonHelper;
@@ -87,11 +86,10 @@ public abstract class BaseView extends CustomComponent implements View {
 	}
 	
 	protected <T> Optional<T> getSelectedItem(Grid<T> table) {
-		Set<T> set = table.getSelectedItems();
-		if (set != null && set.size() > 0) {
-			return Optional.of(set.iterator().next());
-		} else {
+		if (table.asSingleSelect().isEmpty()) {
 			return Optional.empty();
+		} else {
+			return Optional.of(table.asSingleSelect().getValue());
 		}
 	}
 	
@@ -256,7 +254,8 @@ public abstract class BaseView extends CustomComponent implements View {
 		Person self = getPerson();
 		personComboBox.setItemCaptionGenerator(Person::getDisplayName);
 		if (isAdmin()) {
-			personComboBox.setItems(PersonHelper.getPersons());
+			List<Person> persons = new ArrayList<>();
+			persons.addAll(PersonHelper.getPersons());
 			for(Person person : PersonHelper.getPersons()) {
 				if (self.getId() == person.getId()) {
 					personComboBox.setValue(person);
@@ -268,8 +267,9 @@ public abstract class BaseView extends CustomComponent implements View {
 				Person all = new Person();
 				all.setId(-1L);
 				all.setDisplayName("Alle");
-				personComboBox.setItems(all);
+				persons.add(all);
 			}
+			personComboBox.setItems(persons);
 		} else {
 			personComboBox.setItems(self);
 			personComboBox.setValue(self);

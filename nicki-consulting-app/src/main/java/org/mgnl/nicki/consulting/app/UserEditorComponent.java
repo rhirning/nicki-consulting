@@ -29,6 +29,7 @@ import org.mgnl.nicki.consulting.objects.LdapPerson;
 import org.mgnl.nicki.core.config.Config;
 import org.mgnl.nicki.core.context.NickiContext;
 import org.mgnl.nicki.core.data.DataProvider;
+import org.mgnl.nicki.core.data.TreeData;
 import org.mgnl.nicki.core.i18n.I18n;
 import org.mgnl.nicki.dynamic.objects.objects.Org;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
@@ -59,7 +60,7 @@ public class UserEditorComponent extends CustomComponent implements Serializable
 	private Component getEditor() {
 		//ScriptViewer scriptViewer = new ScriptViewer(AppContext.getRequest());
 
-		DataProvider treeDataProvider = new DynamicObjectRoot(Config.getString("nicki.users.basedn"), new ShowAllFilter());
+		DataProvider<TreeData> treeDataProvider = new DynamicObjectRoot(Config.getString("nicki.users.basedn"), new ShowAllFilter());
 		TreeEditor editor = new TreeEditor(getNickiApplication(), getNickiContext(), treeDataProvider, getI18nBase());
 		editor.configureClass(Org.class, Icon.FOLDER, TreeEditor.CREATE.ALLOW, TreeEditor.DELETE.ALLOW, TreeEditor.RENAME.ALLOW, Org.class, LdapPerson.class );
 		editor.configureClass(LdapPerson.class, Icon.DOCUMENT, TreeEditor.CREATE.ALLOW, TreeEditor.DELETE.ALLOW, TreeEditor.RENAME.ALLOW);
