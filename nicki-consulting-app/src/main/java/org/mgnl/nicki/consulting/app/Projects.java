@@ -25,7 +25,6 @@ public class Projects extends NickiApplication implements Serializable {
 	@Override
 	public Component getEditor() {
 		
-		mainView = new MainView(null);
 		mainView = new MainView((Person) getNickiContext().getUser());
 		
 		try {
