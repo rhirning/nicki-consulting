@@ -19,10 +19,10 @@ import org.mgnl.nicki.core.helper.DataHelper;
 
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TextField;
@@ -36,13 +36,13 @@ public class TimeWrapper implements Serializable {
 	private List<Member> members;
 	private Map<Long, Member> membersMap = new HashMap<>();
 	
-	private ComboBox<Member> memberComboBox;
+	private NativeSelect<Member> memberComboBox;
 	private CheckBox deleteCheckBox;
 	private Component customerReportComponent;
 	private DateField dayDateField;
 	private TextField startTextField;
 	private TextField endTextField;
-	private ComboBox<Pause> pauseComboBox;
+	private NativeSelect<Pause> pauseComboBox;
 	private TextField textTextField;
 	private Label personLabel;
 	private boolean readOnly;
@@ -67,6 +67,7 @@ public class TimeWrapper implements Serializable {
 	public CheckBox getDelete() {
 		if (this.deleteCheckBox == null) {
 			this.deleteCheckBox = new CheckBox();
+			this.deleteCheckBox.setWidth("-1px");
 			if (this.readOnly) {
 				this.deleteCheckBox.setEnabled(false);
 			}
@@ -132,10 +133,11 @@ public class TimeWrapper implements Serializable {
 		return null;
 	}
 	
-	public ComboBox<Member> getMember() {
+	public NativeSelect<Member> getMember() {
 		if (this.memberComboBox == null) {
-			memberComboBox = new ComboBox<Member>();
+			memberComboBox = new NativeSelect<>();
 			memberComboBox.setItems(members);
+			memberComboBox.setWidth("200px");
 			memberComboBox.setItemCaptionGenerator(Member::getDisplayName);
 			
 			if (time.getMemberId() != null) {
@@ -252,9 +254,9 @@ public class TimeWrapper implements Serializable {
 		}
 	}
 
-	public ComboBox<Pause> getPause() {
+	public NativeSelect<Pause> getPause() {
 		if (this.pauseComboBox == null) {
-			pauseComboBox = new ComboBox<>();
+			pauseComboBox = new NativeSelect<>();
 			pauseComboBox.setWidth("100px");
 			pauseComboBox.setItems(Pause.values());
 			pauseComboBox.setItemCaptionGenerator(Pause::getDisplayName);

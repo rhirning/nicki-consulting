@@ -34,7 +34,7 @@ import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid;
 
@@ -240,7 +240,7 @@ public abstract class BaseView extends CustomComponent implements View {
 	protected void reload() {
 	}
 
-	protected void initTimeComboBox(ComboBox<PERIOD> timeComboBox) {
+	protected void initTimeComboBox(NativeSelect<PERIOD> timeComboBox) {
 		timeComboBox.setItems(PERIOD.values());
 		timeComboBox.setItemCaptionGenerator(PERIOD::getName);
 		timeComboBox.setValue(PERIOD.THIS_MONTH);
@@ -250,7 +250,7 @@ public abstract class BaseView extends CustomComponent implements View {
 
 	protected enum ALL {TRUE, FALSE}
 
-	protected void initPersonComboBox(ComboBox<Person> personComboBox, ALL withAllEntry) throws NoValidPersonException, NoApplicationContextException {
+	protected void initPersonComboBox(NativeSelect<Person> personComboBox, ALL withAllEntry) throws NoValidPersonException, NoApplicationContextException {
 		Person self = getPerson();
 		personComboBox.setItemCaptionGenerator(Person::getDisplayName);
 		if (isAdmin()) {
