@@ -27,6 +27,9 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TextField;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class TimeWrapper implements Serializable {
 	private static final long serialVersionUID = -3445248806029063825L;
 	private Person person;
@@ -141,9 +144,11 @@ public class TimeWrapper implements Serializable {
 			memberComboBox.setItemCaptionGenerator(Member::getDisplayName);
 			
 			if (time.getMemberId() != null) {
+				log.debug("MemberId: " + time.getMemberId());
 				for (Member member : members) {
 					if (time.getMemberId() == member.getId()) {
 						memberComboBox.setSelectedItem(member);
+						log.debug("Selected: " + member);
 					}
 				}
 			}
