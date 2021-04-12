@@ -203,7 +203,7 @@ public class TimeWrapper implements Serializable {
 				try {
 					timeChanged();
 				} catch (DateFormatException e) {
-					Notification.show("Invalid time: " + e.getMessage(), Type.ERROR_MESSAGE);
+					Notification.show("Invalid time: " + e.getMessage(), Type.WARNING_MESSAGE);
 				}
 			});
 			
@@ -246,7 +246,7 @@ public class TimeWrapper implements Serializable {
 				try {
 					timeChanged();
 				} catch (DateFormatException e) {
-					Notification.show("Invalid time: " + e.getMessage(), Type.ERROR_MESSAGE);
+					Notification.show("Invalid time: " + e.getMessage(), Type.WARNING_MESSAGE);
 				}
 			});
 			
