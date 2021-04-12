@@ -139,6 +139,7 @@ public class TimeWrapper implements Serializable {
 	public NativeSelect<Member> getMember() {
 		if (this.memberComboBox == null) {
 			memberComboBox = new NativeSelect<>();
+			log.debug("Members: " + members);
 			memberComboBox.setItems(members);
 			memberComboBox.setWidth("200px");
 			memberComboBox.setItemCaptionGenerator(Member::getDisplayName);
