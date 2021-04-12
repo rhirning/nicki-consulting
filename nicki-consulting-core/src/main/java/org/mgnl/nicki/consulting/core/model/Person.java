@@ -12,8 +12,10 @@ import org.mgnl.nicki.db.annotation.Attribute;
 import org.mgnl.nicki.db.annotation.SubTable;
 import org.mgnl.nicki.db.annotation.Table;
 
+import lombok.Data;
 import lombok.Setter;
 
+@Data
 @Table(name = "PERSONS")
 public class Person implements Serializable {
 	/**
@@ -68,14 +70,6 @@ public class Person implements Serializable {
 		}
 	}
 
-	public List<Member> getMembers() {
-		return members;
-	}
-
-	public void setMembers(List<Member> members) {
-		this.members = members;
-	}
-
 	public String getEmail() {
 		load();
 		if (ldapPerson != null) {
@@ -84,22 +78,6 @@ public class Person implements Serializable {
 		else {
 			return null;
 		}
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
 	}
 
 	@Override

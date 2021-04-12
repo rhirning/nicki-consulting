@@ -8,6 +8,9 @@ import org.mgnl.nicki.db.annotation.ForeignKey;
 import org.mgnl.nicki.db.annotation.Table;
 import org.mgnl.nicki.db.data.DataType;
 
+import lombok.Data;
+
+@Data
 @Table(name = "PROJECTS")
 public class Project implements Serializable {
 
@@ -47,14 +50,6 @@ public class Project implements Serializable {
 	@Attribute(name = "VACATION")
 	private Boolean vacation;
 
-	public Boolean getVacation() {
-		return vacation;
-	}
-
-	public void setVacation(Boolean vacation) {
-		this.vacation = vacation;
-	}
-
 	@Attribute(name = "CUSTOMER_REPORT")
 	private Boolean customerReport;
 
@@ -73,139 +68,10 @@ public class Project implements Serializable {
 	@Attribute(name = "TIMESHEET_TEMPLATE")
 	private String timeSheetTemplate;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getCustomerId() {
-		return customerId;
-	}
-
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getContact() {
-		return contact;
-	}
-
-	public void setContact(String contact) {
-		this.contact = contact;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public Integer getDays() {
-		return days;
-	}
-
-	public void setDays(Integer days) {
-		this.days = days;
-	}
-
-	public Float getRate() {
-		return rate;
-	}
-
-	public void setRate(Float rate) {
-		this.rate = rate;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Date getStart() {
-		return start;
-	}
-
-	public void setStart(Date start) {
-		this.start = start;
-	}
-
-	public Date getEnd() {
-		return end;
-	}
-
-	public void setEnd(Date end) {
-		this.end = end;
-	}
-
-	public String getReference() {
-		return reference;
-	}
-
-	public void setReference(String reference) {
-		this.reference = reference;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name).append(" (").append(id).append(")");
 		return sb.toString();
 	}
-
-	public Date getOpen() {
-		return open;
-	}
-
-	public void setOpen(Date open) {
-		this.open = open;
-	}
-
-	public String getInvoiceTemplate() {
-		return invoiceTemplate;
-	}
-
-	public void setInvoiceTemplate(String invoiceTemplate) {
-		this.invoiceTemplate = invoiceTemplate;
-	}
-
-	public String getTimeSheetTemplate() {
-		return timeSheetTemplate;
-	}
-
-	public void setTimeSheetTemplate(String timeSheetTemplate) {
-		this.timeSheetTemplate = timeSheetTemplate;
-	}
-
-	public Boolean getCustomerReport() {
-		return customerReport;
-	}
-
-	public void setCustomerReport(Boolean customerReport) {
-		this.customerReport = customerReport;
-	}
-
 }
