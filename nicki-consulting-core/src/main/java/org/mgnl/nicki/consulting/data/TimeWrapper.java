@@ -148,7 +148,7 @@ public class TimeWrapper implements Serializable {
 				log.debug("MemberId: " + time.getMemberId());
 				for (Member member : members) {
 					log.debug("Test Member: " + member);
-					if (time.getMemberId() == member.getId()) {
+					if (time.getMemberId().longValue() == member.getId().longValue()) {
 						memberComboBox.setSelectedItem(member);
 						log.debug("Selected: " + member);
 					} else {
