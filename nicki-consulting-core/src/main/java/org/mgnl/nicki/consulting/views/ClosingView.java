@@ -159,9 +159,10 @@ public class ClosingView extends BaseView implements ConfigurableView  {
 		
 		// projectsTable
 		projectsTable = new Grid<OpenProject>();
-		projectsTable.setWidth("-1px");
-		projectsTable.setHeight("100.0%");
+		projectsTable.setWidthFull();
+		projectsTable.setHeightFull();
 		horizontalLayout_1.addComponent(projectsTable);
+		horizontalLayout_1.setExpandRatio(projectsTable, 1);
 		
 		// verticalLayout_2
 		verticalLayout_2 = buildVerticalLayout_2();
