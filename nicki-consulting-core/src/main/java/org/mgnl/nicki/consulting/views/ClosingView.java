@@ -152,8 +152,8 @@ public class ClosingView extends BaseView implements ConfigurableView  {
 	private HorizontalLayout buildHorizontalLayout_1() {
 		// common part: create layout
 		horizontalLayout_1 = new HorizontalLayout();
-		horizontalLayout_1.setWidth("-1px");
-		horizontalLayout_1.setHeight("100.0%");
+		horizontalLayout_1.setWidthFull();
+		horizontalLayout_1.setHeightFull();
 		horizontalLayout_1.setMargin(false);
 		horizontalLayout_1.setSpacing(true);
 		
