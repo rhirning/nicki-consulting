@@ -1,11 +1,13 @@
 package org.mgnl.nicki.consulting.data;
 
+import java.io.Serializable;
+
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.model.Member;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.core.model.Project;
 
-public class MemberWrapper {
+public class MemberWrapper implements Serializable, TreeObject {
 	private Member member;
 	private Person person;
 	private Project project;
@@ -41,6 +43,16 @@ public class MemberWrapper {
 			project = TimeHelper.getProjectFromMemberId(member.getId());
 		}
 		return project;
+	}
+
+	@Override
+	public String getDisplayName() {
+		return getPersonName();
+	}
+
+	@Override
+	public TreeObject getObject() {
+		return this;
 	}
 
 }

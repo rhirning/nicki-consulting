@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
+import org.mgnl.nicki.consulting.data.TreeObject;
 import org.mgnl.nicki.db.annotation.Attribute;
 import org.mgnl.nicki.db.annotation.ForeignKey;
 import org.mgnl.nicki.db.annotation.SubTable;
@@ -15,7 +16,7 @@ import lombok.Data;
 
 @Data
 @Table(name = "MEMBERS")
-public class Member implements Serializable {
+public class Member implements Serializable, TreeObject {
 	private static final long serialVersionUID = -2589276383513009338L;
 
 	@Attribute(name = "ID", autogen=true, primaryKey=true)
@@ -50,11 +51,21 @@ public class Member implements Serializable {
 	@SubTable(foreignKey = "memberId")
 	private List<Time> time;
 
-	public String getDisplayName() {
+	public String toString () {
 		StringBuilder sb = new StringBuilder();
 		sb.append(TimeHelper.getProjectDisplayName(projectId));
 		sb.append(" - ").append(role);
 		return sb.toString();
+	}
+
+	@Override
+	public String getDisplayName() {
+		return toString();
+	}
+
+	@Override
+	public TreeObject getObject() {
+		return this;
 	}
 
 }

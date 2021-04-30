@@ -3,6 +3,7 @@ package org.mgnl.nicki.consulting.core.model;
 import java.io.Serializable;
 import java.util.List;
 
+import org.mgnl.nicki.consulting.data.TreeObject;
 import org.mgnl.nicki.db.annotation.Attribute;
 import org.mgnl.nicki.db.annotation.ForeignKey;
 import org.mgnl.nicki.db.annotation.SubTable;
@@ -12,7 +13,7 @@ import lombok.Data;
 
 @Data
 @Table(name = "CUSTOMERS")
-public class Customer implements Serializable {
+public class Customer implements Serializable, TreeObject {
 
 	private static final long serialVersionUID = 2432644242405557820L;
 
@@ -53,4 +54,15 @@ public class Customer implements Serializable {
 		sb.append(name).append(" (").append(id).append(")");
 		return sb.toString();
 	}
+
+	@Override
+	public String getDisplayName() {
+		return name;
+	}
+
+	@Override
+	public TreeObject getObject() {
+		return this;
+	}
+	
 }
