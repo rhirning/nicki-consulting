@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.data.TreeObject;
 import org.mgnl.nicki.db.annotation.Attribute;
@@ -54,7 +55,9 @@ public class Member implements Serializable, TreeObject {
 	public String toString () {
 		StringBuilder sb = new StringBuilder();
 		sb.append(TimeHelper.getProjectDisplayName(projectId));
-		sb.append(" - ").append(role);
+		if (StringUtils.isNotBlank(role)) {
+			sb.append(" - ").append(role);
+		}
 		return sb.toString();
 	}
 
