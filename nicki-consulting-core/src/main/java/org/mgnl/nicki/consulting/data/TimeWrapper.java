@@ -16,16 +16,16 @@ import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.views.BaseView.READONLY;
 import org.mgnl.nicki.core.helper.DataHelper;
+import org.mgnl.nicki.vaadin.base.notification.Notification;
+import org.mgnl.nicki.vaadin.base.notification.Notification.Type;
 
-import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.TextField;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasElement;
+import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.TextField;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,13 +39,13 @@ public class TimeWrapper implements Serializable {
 	private List<Member> members;
 	private Map<Long, Member> membersMap = new HashMap<>();
 	
-	private NativeSelect<Member> memberComboBox;
-	private CheckBox deleteCheckBox;
+	private Select<Member> memberComboBox;
+	private Checkbox deleteCheckBox;
 	private Component customerReportComponent;
-	private DateField dayDateField;
+	private DatePicker dayDateField;
 	private TextField startTextField;
 	private TextField endTextField;
-	private NativeSelect<Pause> pauseComboBox;
+	private Select<Pause> pauseComboBox;
 	private TextField textTextField;
 	private Label personLabel;
 	private boolean readOnly;
@@ -67,9 +67,9 @@ public class TimeWrapper implements Serializable {
 		}
 	}
 	
-	public CheckBox getDelete() {
+	public Checkbox getDelete() {
 		if (this.deleteCheckBox == null) {
-			this.deleteCheckBox = new CheckBox();
+			this.deleteCheckBox = new Checkbox();
 			this.deleteCheckBox.setWidth("-1px");
 			if (this.readOnly) {
 				this.deleteCheckBox.setEnabled(false);
@@ -91,7 +91,7 @@ public class TimeWrapper implements Serializable {
 			if (disableCustomerReport()) {
 				this.customerReportComponent = new Label(" ");
 			} else {
-				CheckBox customerReportCheckBox = new CheckBox();
+				Checkbox customerReportCheckBox = new Checkbox();
 				customerReportCheckBox.setValue(false);
 				customerReportCheckBox.addValueChangeListener(
 						event -> time.setCustomerReport(customerReportCheckBox.getValue()));
@@ -136,20 +136,20 @@ public class TimeWrapper implements Serializable {
 		return null;
 	}
 	
-	public NativeSelect<Member> getMember() {
+	public Select<Member> getMember() {
 		if (this.memberComboBox == null) {
-			memberComboBox = new NativeSelect<>();
+			memberComboBox = new Select<>();
 			log.debug("Members: " + members);
 			memberComboBox.setItems(members);
-			memberComboBox.setWidth("200px");
-			memberComboBox.setItemCaptionGenerator(Member::getDisplayName);
+			memberComboBox.setWidth("100%");
+			memberComboBox.setItemLabelGenerator(Member::getDisplayName);
 			
 			if (time.getMemberId() != null) {
 				log.debug("MemberId: " + time.getMemberId());
 				for (Member member : members) {
 					log.debug("Test Member: " + member);
 					if (time.getMemberId().longValue() == member.getId().longValue()) {
-						memberComboBox.setSelectedItem(member);
+						memberComboBox.setValue(member);
 						log.debug("Selected: " + member);
 					} else {
 						log.debug("not maching: " + time.getMemberId() + "<-->" + member.getId());
@@ -169,10 +169,14 @@ public class TimeWrapper implements Serializable {
 		return memberComboBox;
 	}
 	
-	public DateField getDay() {
+	public String getMemberName() {
+		return getMember(time.getMemberId()).getDisplayName();
+	}
+	
+	public DatePicker getDay() {
 		if (this.dayDateField == null) {
-			dayDateField = new DateField();
-			dayDateField.setDateFormat("dd.MM.yy");
+			dayDateField = new DatePicker();
+			// TODO: dayDateField.setDateFormat("dd.MM.yy");
 			
 			if (time.getStart() != null) {
 				dayDateField.setValue(DataHelper.getLocalDate(time.getStart()));
@@ -189,11 +193,14 @@ public class TimeWrapper implements Serializable {
 		}
 		return dayDateField;
 	}
+	public String getDisplayDay() {
+		return DataHelper.getDisplayDay(time.getStart());
+	}
 
 	public TextField getStart() {
 		if (this.startTextField == null) {
 			startTextField = new TextField();
-			startTextField.setWidth("50px");
+			startTextField.setWidth("100%");
 			
 			if (time.getStart() != null) {
 				startTextField.setValue(TimeHelper.getTimeString(time.getStart()));
@@ -210,6 +217,9 @@ public class TimeWrapper implements Serializable {
 			startTextField.setReadOnly(readOnly);
 		}
 		return startTextField;
+	}
+	public String getDisplayStart() {
+		return TimeHelper.getTimeString(time.getStart());
 	}
 	
 	protected void timeChanged() throws DateFormatException {
@@ -236,7 +246,7 @@ public class TimeWrapper implements Serializable {
 	public TextField getEnd() {
 		if (this.endTextField == null) {
 			endTextField = new TextField();
-			endTextField.setWidth("50px");
+			endTextField.setWidth("100%");
 			
 			if (time.getEnd() != null) {
 				endTextField.setValue(TimeHelper.getTimeString(time.getEnd()));
@@ -254,6 +264,9 @@ public class TimeWrapper implements Serializable {
 		}
 		return endTextField;
 	}
+	public String getDisplayEnd() {
+		return TimeHelper.getTimeString(time.getEnd());
+	}
 	
 	public String getHours() {
 		if (time.getHours() != null) {
@@ -263,15 +276,15 @@ public class TimeWrapper implements Serializable {
 		}
 	}
 
-	public NativeSelect<Pause> getPause() {
+	public Select<Pause> getPause() {
 		if (this.pauseComboBox == null) {
-			pauseComboBox = new NativeSelect<>();
-			pauseComboBox.setWidth("100px");
+			pauseComboBox = new Select<>();
+			pauseComboBox.setWidth("-1px");
 			pauseComboBox.setItems(Pause.values());
-			pauseComboBox.setItemCaptionGenerator(Pause::getDisplayName);
+			pauseComboBox.setItemLabelGenerator(Pause::getDisplayName);
 			
 			if (time.getPause() != null) {
-				pauseComboBox.setSelectedItem(Pause.getPause(time.getPause()));
+				pauseComboBox.setValue(Pause.getPause(time.getPause()));
 			}
 			
 			pauseComboBox.addValueChangeListener(event -> {
@@ -291,11 +304,19 @@ public class TimeWrapper implements Serializable {
 		}
 		return pauseComboBox;
 	}
+	
+	public String getDisplayPause() {
+		if (time.getPause() == null) {
+			return "";
+		} else {
+			return Pause.getPause(time.getPause()).getDisplayName();
+		}
+	}
 
 	public TextField getText() {
 		if (this.textTextField == null) {
 			textTextField = new TextField();
-			textTextField.setWidth("400px");
+			textTextField.setWidth("100%");
 			
 			if (time.getText() != null) {
 				textTextField.setValue(time.getText());
@@ -323,10 +344,14 @@ public class TimeWrapper implements Serializable {
 			personLabel = new Label();
 			
 			if (time.getText() != null) {
-				personLabel.setValue(person.getName());
+				personLabel.setText(getPersonName());
 			}
 		}
 		return personLabel;
+	}
+	
+	public String getPersonName() {
+		return person.getName();
 	}
 
 	public Time getTime() {
@@ -352,9 +377,9 @@ public class TimeWrapper implements Serializable {
 		
 	}
 
-	private void setErrorMessage(AbstractComponent component, String errorMessage) {
-		component.setDescription(errorMessage);
-		component.addStyleName("error");
+	private void setErrorMessage(HasElement component, String errorMessage) {
+		component.getElement().setAttribute("title", errorMessage);
+		component.getElement().getClassList().add("error");
 	}
 
 	private String getHtml(List<String> messages) {
@@ -362,7 +387,7 @@ public class TimeWrapper implements Serializable {
 			StringBuilder sb = new StringBuilder();
 			for (String message : messages) {
 				if (sb.length() > 0) {
-					sb.append("<br/>");
+					sb.append("\n");
 				}
 				sb.append(message);
 			}

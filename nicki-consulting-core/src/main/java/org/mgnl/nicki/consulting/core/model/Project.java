@@ -3,7 +3,7 @@ package org.mgnl.nicki.consulting.core.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.mgnl.nicki.consulting.data.TreeObject;
+import org.mgnl.nicki.core.data.TreeObject;
 import org.mgnl.nicki.db.annotation.Attribute;
 import org.mgnl.nicki.db.annotation.ForeignKey;
 import org.mgnl.nicki.db.annotation.Table;

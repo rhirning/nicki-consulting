@@ -34,11 +34,14 @@ import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Grid;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.data.renderer.TextRenderer;
 
-public abstract class BaseView extends CustomComponent implements View {
+public abstract class BaseView extends Div implements View {
 	private static final long serialVersionUID = 4599832847213624084L;
 	private static final Logger LOG = LoggerFactory.getLogger(BaseView.class);
 	private NickiApplication application;
@@ -65,6 +68,12 @@ public abstract class BaseView extends CustomComponent implements View {
 		}
 		return person;
 		
+	}
+	
+	public Icon createIcon(VaadinIcon vaadinIcon, String title) {
+		Icon icon = new Icon(vaadinIcon);
+		icon.getElement().setAttribute("title", title);
+		return icon;
 	}
 	
 	private void loadPerson() throws NoValidPersonException, NoApplicationContextException {
@@ -240,9 +249,9 @@ public abstract class BaseView extends CustomComponent implements View {
 	protected void reload() {
 	}
 
-	protected void initTimeComboBox(NativeSelect<PERIOD> timeComboBox) {
+	protected void initTimeComboBox(Select<PERIOD> timeComboBox) {
 		timeComboBox.setItems(PERIOD.values());
-		timeComboBox.setItemCaptionGenerator(PERIOD::getName);
+		timeComboBox.setRenderer(new TextRenderer<>(PERIOD::getName));
 		timeComboBox.setValue(PERIOD.THIS_MONTH);
 		setTimeComboBoxValue(PERIOD.THIS_MONTH);
 		timeComboBox.setEmptySelectionAllowed(false);
@@ -250,18 +259,12 @@ public abstract class BaseView extends CustomComponent implements View {
 
 	protected enum ALL {TRUE, FALSE}
 
-	protected void initPersonComboBox(NativeSelect<Person> personComboBox, ALL withAllEntry) throws NoValidPersonException, NoApplicationContextException {
+	protected void initPersonComboBox(Select<Person> personComboBox, ALL withAllEntry) throws NoValidPersonException, NoApplicationContextException {
 		Person self = getPerson();
-		personComboBox.setItemCaptionGenerator(Person::getDisplayName);
+		personComboBox.setRenderer(new TextRenderer<>(Person::getDisplayName));
 		if (isAdmin()) {
 			List<Person> persons = new ArrayList<>();
 			persons.addAll(PersonHelper.getPersons());
-			for(Person person : PersonHelper.getPersons()) {
-				if (self.getId() == person.getId()) {
-					personComboBox.setValue(person);
-					setPersonComboBoxValue(person);
-				}
-			}
 			if (withAllEntry == ALL.TRUE) {
 				// ALL
 				Person all = new Person();
@@ -270,6 +273,12 @@ public abstract class BaseView extends CustomComponent implements View {
 				persons.add(all);
 			}
 			personComboBox.setItems(persons);
+			for(Person person : persons) {
+				if (self.getId() == person.getId()) {
+					personComboBox.setValue(person);
+					setPersonComboBoxValue(person);
+				}
+			}
 		} else {
 			personComboBox.setItems(self);
 			personComboBox.setValue(self);

@@ -14,29 +14,23 @@ import org.mgnl.nicki.consulting.data.MemberWrapper;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.profile.InitProfileException;
+import org.mgnl.nicki.vaadin.base.components.DialogBase;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
+import org.mgnl.nicki.vaadin.base.notification.Notification;
+import org.mgnl.nicki.vaadin.base.notification.Notification.Type;
 import org.mgnl.nicki.vaadin.db.editor.DbBeanCloseListener;
 import org.mgnl.nicki.vaadin.db.editor.DbBeanViewer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.Grid.SelectionMode;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class CustomersView extends BaseView implements View {
-	
-	private Panel mainPanel;
-	
-	private VerticalLayout mainLayout;
 	
 	private HorizontalLayout contentLayout;
 	
@@ -90,14 +84,13 @@ public class CustomersView extends BaseView implements View {
 	private static final Logger LOG = LoggerFactory.getLogger(CustomersView.class);
 	private boolean isInit;
 
-	private Window editWindow;
-	private Window newProjectWindow;
-	private Window newMemberWindow;
-	private Window selectPersonWindow;
+	private DialogBase editWindow;
+	private DialogBase newProjectWindow;
+	private DialogBase newMemberWindow;
+	private DialogBase selectPersonWindow;
 
 	public CustomersView() {
 		buildMainLayout();
-		setCompositionRoot(mainPanel);
 
 		newCustomerButton.addClickListener(event ->	showEditCustomerView(Optional.empty()));
 		editCustomerButton.addClickListener(event -> {
@@ -224,8 +217,8 @@ public class CustomersView extends BaseView implements View {
 		beanViewer.setWidth("400px");
 		beanViewer.setHeightFull();
 		beanViewer.setDbBean(customer);
-		customerLayout.removeAllComponents();
-		customerLayout.addComponent(beanViewer);
+		customerLayout.removeAll();
+		customerLayout.add(beanViewer);
 		showProjects(customer);
 	}
 
@@ -257,7 +250,7 @@ public class CustomersView extends BaseView implements View {
 			
 			@Override
 			public void close(Component component) {
-				UI.getCurrent().removeWindow(editWindow);
+				editWindow.close();
 				loadCustomers();
 				showCustomersLayout(true);
 			}
@@ -278,14 +271,14 @@ public class CustomersView extends BaseView implements View {
 			beanViewer.setDbBean(object.get());
 			windowTitle = editCaption;
 		}
-		editWindow = new Window(windowTitle, beanViewer);
+		editWindow = new DialogBase(windowTitle, beanViewer);
 		editWindow.setModal(true);
 		editWindow.setHeightFull();
-		UI.getCurrent().addWindow(editWindow);
+		editWindow.open();
 	}
 
 	private void hideProject() {
-		projectLayout.removeAllComponents();
+		projectLayout.removeAll();
 		showProjectsLayout(true);
 		showMembersLayout(false);
 	}
@@ -305,8 +298,8 @@ public class CustomersView extends BaseView implements View {
 		beanViewer.setHeightFull();
 		beanViewer.setDbBean(project);
 		
-		projectLayout.removeAllComponents();
-		projectLayout.addComponent(beanViewer);
+		projectLayout.removeAll();
+		projectLayout.add(beanViewer);
 		showMembers(project);
 	}
 
@@ -322,7 +315,7 @@ public class CustomersView extends BaseView implements View {
 				
 				@Override
 				public void close(Component component) {
-					UI.getCurrent().removeWindow(newProjectWindow);
+					newProjectWindow.close();
 					hideProject();
 					if (getSelectedItem(customersTable).isPresent()) {
 						loadProjects(getSelectedItem(customersTable).get());
@@ -337,22 +330,22 @@ public class CustomersView extends BaseView implements View {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			newProjectWindow = new Window("Neues Projekt", beanViewer);
+			newProjectWindow = new DialogBase("Neues Projekt", beanViewer);
 			newProjectWindow.setModal(true);
-			UI.getCurrent().addWindow(newProjectWindow);
+			newProjectWindow.open();
 		}
 	}
 
 	private void showNewMemberView() {
 		PersonSelector selector = new PersonSelector(person -> {
-			UI.getCurrent().removeWindow(selectPersonWindow);
+			selectPersonWindow.close();
 			setPerson(person);
 			
 		});
 		selector.init();
-		selectPersonWindow = new Window("Person wählen", selector);
+		selectPersonWindow = new DialogBase("Person wählen", selector);
 		selectPersonWindow.setModal(true);
-		UI.getCurrent().addWindow(selectPersonWindow);
+		selectPersonWindow.open();
 	}
 
 	private void setPerson(Person person) {
@@ -361,7 +354,7 @@ public class CustomersView extends BaseView implements View {
 			
 			@Override
 			public void close(Component component) {
-				UI.getCurrent().removeWindow(newMemberWindow);
+				newMemberWindow.close();
 				hideMember();
 				if (getSelectedItem(projectsTable).isPresent()) {
 					loadMembers(getSelectedItem(projectsTable).get());
@@ -375,13 +368,13 @@ public class CustomersView extends BaseView implements View {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		newMemberWindow = new Window("Neues Projektmitglied", beanViewer);
+		newMemberWindow = new DialogBase("Neues Projektmitglied", beanViewer);
 		newMemberWindow.setModal(true);
-		UI.getCurrent().addWindow(newMemberWindow);
+		newMemberWindow.open();
 	}
 
 	private void hideMember() {
-		memberLayout.removeAllComponents();
+		memberLayout.removeAll();
 	}
 
 	private void showEditMember(Optional<MemberWrapper> memberWrapper) {
@@ -401,8 +394,8 @@ public class CustomersView extends BaseView implements View {
 			beanViewer.setHeightFull();
 			beanViewer.setDbBean(memberWrapper.get().getMember());
 			
-			memberLayout.removeAllComponents();
-			memberLayout.addComponent(beanViewer);
+			memberLayout.removeAll();
+			memberLayout.add(beanViewer);
 		}
 	}
 
@@ -410,12 +403,12 @@ public class CustomersView extends BaseView implements View {
 	public void init() {
 		if (!isInit) {
 
-			projectsTable.addColumn(Project::getName).setCaption("Projekt");
-			membersTable.addColumn(MemberWrapper::getPersonName).setCaption("Mitglied");
+			projectsTable.addColumn(Project::getName).setHeader("Projekt");
+			membersTable.addColumn(MemberWrapper::getPersonName).setHeader("Mitglied");
 
-			customersTable.addColumn(Customer::getName).setCaption("Name");
-			customersTable.addColumn(Customer::getAlias).setCaption("Alias");
-			customersTable.addColumn(Customer::getCity).setCaption("Stadt");
+			customersTable.addColumn(Customer::getName).setHeader("Name");
+			customersTable.addColumn(Customer::getAlias).setHeader("Alias");
+			customersTable.addColumn(Customer::getCity).setHeader("Stadt");
 
 			loadCustomers();
 			showCustomersLayout(true);
@@ -442,11 +435,7 @@ public class CustomersView extends BaseView implements View {
 		try (DBContext dbContext = DBContextManager.getContext("projects")) {
 			List<Customer> customers = dbContext.loadObjects(customer, false);
 			customersTable.setItems(customers);
-			if (customers.size() > 0) {
-				customersTable.setHeightByRows(customers.size());
-			} else {
-				customersTable.setHeightByRows(1);
-			}
+			customersTable.setHeightByRows(true);
 
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			LOG.error("Could not load customers", e);
@@ -460,11 +449,7 @@ public class CustomersView extends BaseView implements View {
 		try (DBContext dbContext = DBContextManager.getContext("projects")) {
 			List<Project> projects = dbContext.loadObjects(project, false);
 			projectsTable.setItems(projects);
-			if (projects.size() > 0) {
-				projectsTable.setHeightByRows(projects.size());
-			} else {
-				projectsTable.setHeightByRows(1);
-			}
+			projectsTable.setHeightByRows(true);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			LOG.error("Could not load projects", e);
 		}
@@ -480,33 +465,18 @@ public class CustomersView extends BaseView implements View {
 				memberWrappers.add(new MemberWrapper(m));
 			}
 			membersTable.setItems(memberWrappers);
-			if (memberWrappers.size() > 0) {
-				membersTable.setHeightByRows(memberWrappers.size());
-			} else {
-				membersTable.setHeightByRows(1);
-			}
+			membersTable.setHeightByRows(true);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			LOG.error("Could not load members", e);
 		}		
 	}
 
 	
-	private Panel buildMainLayout() {
-		mainPanel = new Panel();
-		mainPanel.setSizeFull();
-		
-		// common part: create layout
-		mainLayout = new VerticalLayout();
-		mainLayout.setSizeFull();
-		mainLayout.setMargin(false);
-		
-		// top-level component properties
+	private void buildMainLayout() {
 		setSizeFull();
 		
 		contentLayout = buildContentLayout();
-		mainLayout.addComponent(contentLayout);
-		mainPanel.setContent(mainLayout);
-		return mainPanel;
+		add(contentLayout);
 	}
 
 	
@@ -518,11 +488,11 @@ public class CustomersView extends BaseView implements View {
 		
 		// tablesLayout
 		tablesLayout = buildTablesLayout();
-		contentLayout.addComponent(tablesLayout);
+		contentLayout.add(tablesLayout);
 		
 		// customersLayout
 		editLayout = buildEditLayout();
-		contentLayout.addComponent(editLayout);
+		contentLayout.add(editLayout);
 		
 		return contentLayout;
 	}
@@ -538,15 +508,15 @@ public class CustomersView extends BaseView implements View {
 		
 		// customersTableLayout
 		customersTableLayout = buildCustomersTableLayout();
-		tablesLayout.addComponent(customersTableLayout);
+		tablesLayout.add(customersTableLayout);
 		
 		// projectsTableLayout
 		projectsTableLayout = buildProjectsTableLayout();
-		tablesLayout.addComponent(projectsTableLayout);
+		tablesLayout.add(projectsTableLayout);
 		
 		// membersTableLayout
 		membersTableLayout = buildMembersTableLayout();
-		tablesLayout.addComponent(membersTableLayout);
+		tablesLayout.add(membersTableLayout);
 				
 		return tablesLayout;
 	}
@@ -564,19 +534,19 @@ public class CustomersView extends BaseView implements View {
 		customerLayout = new VerticalLayout();
 		customerLayout.setSizeFull();
 		customerLayout.setMargin(true);
-		editLayout.addComponent(customerLayout);
+		editLayout.add(customerLayout);
 		
 		// projectLayout
 		projectLayout = new VerticalLayout();
 		projectLayout.setSizeFull();
 		projectLayout.setMargin(true);
-		editLayout.addComponent(projectLayout);
+		editLayout.add(projectLayout);
 		
 		// memberLayout
 		memberLayout = new VerticalLayout();
 		memberLayout.setSizeFull();
 		memberLayout.setMargin(true);
-		editLayout.addComponent(memberLayout);
+		editLayout.add(memberLayout);
 		
 				
 		return editLayout;
@@ -592,13 +562,14 @@ public class CustomersView extends BaseView implements View {
 		customersTableLayout.setSpacing(true);
 		
 		// customersTable
+		// TODO: setLabel
 		customersTable = new Grid<Customer>();
-		customersTable.setCaption("Kunden");
+//		customersTable.setCaption("Kunden");
 		customersTable.setWidth("400px");
-		customersTableLayout.addComponent(customersTable);
+		customersTableLayout.add(customersTable);
 		
 		customerActionsLayout = buildCustomerActionsLayout();
-		customersTableLayout.addComponent(customerActionsLayout);
+		customersTableLayout.add(customerActionsLayout);
 		
 		return customersTableLayout;
 	}
@@ -614,24 +585,24 @@ public class CustomersView extends BaseView implements View {
 		
 		// editCustomerButton
 		editCustomerButton = new Button();
-		editCustomerButton.setCaption("Edit");
+		editCustomerButton.setText("Edit");
 		editCustomerButton.setWidth("-1px");
 		editCustomerButton.setHeight("-1px");
-		customerActionsLayout.addComponent(editCustomerButton);
+		customerActionsLayout.add(editCustomerButton);
 		
 		// newCustomerButton
 		newCustomerButton = new Button();
-		newCustomerButton.setCaption("Neu");
+		newCustomerButton.setText("Neu");
 		newCustomerButton.setWidth("-1px");
 		newCustomerButton.setHeight("-1px");
-		customerActionsLayout.addComponent(newCustomerButton);
+		customerActionsLayout.add(newCustomerButton);
 		
 		// deleteCustomerButton
 		deleteCustomerButton = new Button();
-		deleteCustomerButton.setCaption("Löschen");
+		deleteCustomerButton.setText("Löschen");
 		deleteCustomerButton.setWidth("-1px");
 		deleteCustomerButton.setHeight("-1px");
-		customerActionsLayout.addComponent(deleteCustomerButton);
+		customerActionsLayout.add(deleteCustomerButton);
 		
 		return customerActionsLayout;
 	}
@@ -646,14 +617,15 @@ public class CustomersView extends BaseView implements View {
 		projectsTableLayout.setSpacing(true);
 		
 		// projectsTable
+		// TODO: setLabel
 		projectsTable = new Grid<Project>();
-		projectsTable.setCaption("Projekte");
+//		projectsTable.setCaption("Projekte");
 		projectsTable.setWidth("400px");
 		projectsTable.setHeight("-1px");
-		projectsTableLayout.addComponent(projectsTable);
+		projectsTableLayout.add(projectsTable);
 		
 		projectActionsLayout = buildProjectActionsLayout();
-		projectsTableLayout.addComponent(projectActionsLayout);
+		projectsTableLayout.add(projectActionsLayout);
 		
 		return projectsTableLayout;
 	}
@@ -669,24 +641,24 @@ public class CustomersView extends BaseView implements View {
 		
 		// editProjectButton
 		editProjectButton = new Button();
-		editProjectButton.setCaption("Edit");
+		editProjectButton.setText("Edit");
 		editProjectButton.setWidth("-1px");
 		editProjectButton.setHeight("-1px");
-		projectActionsLayout.addComponent(editProjectButton);
+		projectActionsLayout.add(editProjectButton);
 		
 		// newProjectButton
 		newProjectButton = new Button();
-		newProjectButton.setCaption("Neu");
+		newProjectButton.setText("Neu");
 		newProjectButton.setWidth("-1px");
 		newProjectButton.setHeight("-1px");
-		projectActionsLayout.addComponent(newProjectButton);
+		projectActionsLayout.add(newProjectButton);
 		
 		// deleteProjectButton
 		deleteProjectButton = new Button();
-		deleteProjectButton.setCaption("Löschen");
+		deleteProjectButton.setText("Löschen");
 		deleteProjectButton.setWidth("-1px");
 		deleteProjectButton.setHeight("-1px");
-		projectActionsLayout.addComponent(deleteProjectButton);
+		projectActionsLayout.add(deleteProjectButton);
 		
 		return projectActionsLayout;
 	}
@@ -701,14 +673,15 @@ public class CustomersView extends BaseView implements View {
 		membersTableLayout.setSpacing(true);
 		
 		// membersTable
+		// TODO: setLabel
 		membersTable = new Grid<MemberWrapper>();
-		membersTable.setCaption("Projektmitglieder");
+//		membersTable.setCaption("Projektmitglieder");
 		membersTable.setWidth("400px");
 		membersTable.setHeight("-1px");
-		membersTableLayout.addComponent(membersTable);
+		membersTableLayout.add(membersTable);
 		
 		memberActionsLayout = buildMemberActionsLayout();
-		membersTableLayout.addComponent(memberActionsLayout);
+		membersTableLayout.add(memberActionsLayout);
 		
 		return membersTableLayout;
 	}
@@ -724,24 +697,24 @@ public class CustomersView extends BaseView implements View {
 		
 		// editMemberButton
 		editMemberButton = new Button();
-		editMemberButton.setCaption("Edit");
+		editMemberButton.setText("Edit");
 		editMemberButton.setWidth("-1px");
 		editMemberButton.setHeight("-1px");
-		memberActionsLayout.addComponent(editMemberButton);
+		memberActionsLayout.add(editMemberButton);
 		
 		// newMemberButton
 		newMemberButton = new Button();
-		newMemberButton.setCaption("Neu");
+		newMemberButton.setText("Neu");
 		newMemberButton.setWidth("-1px");
 		newMemberButton.setHeight("-1px");
-		memberActionsLayout.addComponent(newMemberButton);
+		memberActionsLayout.add(newMemberButton);
 		
 		// deleteMemberButton
 		deleteMemberButton = new Button();
-		deleteMemberButton.setCaption("Löschen");
+		deleteMemberButton.setText("Löschen");
 		deleteMemberButton.setWidth("-1px");
 		deleteMemberButton.setHeight("-1px");
-		memberActionsLayout.addComponent(deleteMemberButton);
+		memberActionsLayout.add(deleteMemberButton);
 		
 		return memberActionsLayout;
 	}

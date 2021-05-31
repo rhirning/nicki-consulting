@@ -6,6 +6,7 @@ import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.model.Member;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.core.model.Project;
+import org.mgnl.nicki.core.data.TreeObject;
 
 public class MemberWrapper implements Serializable, TreeObject {
 	private Member member;

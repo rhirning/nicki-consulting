@@ -40,12 +40,12 @@ import org.mgnl.nicki.vaadin.base.editor.ShowAllFilter;
 import org.mgnl.nicki.vaadin.base.editor.TreeEditor;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
 
-import com.vaadin.icons.VaadinIcons;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomComponent;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.VaadinIcon;
 
 @SuppressWarnings("serial")
-public class UserEditorComponent extends CustomComponent implements Serializable, View {
+public class UserEditorComponent extends Div implements Serializable, View {
 	private NickiApplication nickiApplication;
 	private boolean isInit;
 	
@@ -62,8 +62,8 @@ public class UserEditorComponent extends CustomComponent implements Serializable
 
 		DataProvider<TreeData> treeDataProvider = new DynamicObjectRoot(Config.getString("nicki.users.basedn"), new ShowAllFilter());
 		TreeEditor editor = new TreeEditor(getNickiApplication(), getNickiContext(), treeDataProvider, getI18nBase());
-		editor.configureClass(Org.class, VaadinIcons.FOLDER, TreeEditor.CREATE.ALLOW, TreeEditor.DELETE.ALLOW, TreeEditor.RENAME.ALLOW, Org.class, LdapPerson.class );
-		editor.configureClass(LdapPerson.class, VaadinIcons.FILE, TreeEditor.CREATE.ALLOW, TreeEditor.DELETE.ALLOW, TreeEditor.RENAME.ALLOW);
+		editor.configureClass(Org.class, VaadinIcon.FOLDER, TreeEditor.CREATE.ALLOW, TreeEditor.DELETE.ALLOW, TreeEditor.RENAME.ALLOW, Org.class, LdapPerson.class );
+		editor.configureClass(LdapPerson.class, VaadinIcon.USER, TreeEditor.CREATE.ALLOW, TreeEditor.DELETE.ALLOW, TreeEditor.RENAME.ALLOW);
 //		editor.setClassEditor(Script.class, scriptViewer);
 		editor.addAction(new ImportTreeAction(editor, Org.class, I18n.getText(getI18nBase() + ".action.import"), getI18nBase()));
 		editor.addAction(new ExportTreeAction(getNickiContext(), Org.class, I18n.getText(getI18nBase() + ".action.export"), getI18nBase()));
@@ -88,7 +88,7 @@ public class UserEditorComponent extends CustomComponent implements Serializable
 	@Override
 	public void init() {
 		if (!isInit) {
-			setCompositionRoot(getEditor());
+			add(getEditor());
 			setSizeFull();
 			isInit = true;
 		}

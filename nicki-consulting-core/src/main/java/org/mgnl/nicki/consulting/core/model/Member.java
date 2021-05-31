@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
-import org.mgnl.nicki.consulting.data.TreeObject;
+import org.mgnl.nicki.core.data.TreeObject;
 import org.mgnl.nicki.db.annotation.Attribute;
 import org.mgnl.nicki.db.annotation.ForeignKey;
 import org.mgnl.nicki.db.annotation.SubTable;
@@ -64,11 +64,6 @@ public class Member implements Serializable, TreeObject {
 	@Override
 	public String getDisplayName() {
 		return toString();
-	}
-
-	@Override
-	public TreeObject getObject() {
-		return this;
 	}
 
 }

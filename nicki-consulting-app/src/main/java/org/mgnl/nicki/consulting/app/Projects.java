@@ -12,7 +12,7 @@ import org.mgnl.nicki.vaadin.base.menu.application.MainView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.ui.Component;
+import com.vaadin.flow.component.Component;
 
 @AccessGroup(name = {"nickiAdmins", "IDM-Development"})
 @SuppressWarnings("serial")
@@ -25,19 +25,15 @@ public class Projects extends NickiApplication implements Serializable {
 	@Override
 	public Component getEditor() {
 		
-		mainView = new MainView((Person) getNickiContext().getUser());
 		
 		try {
-			mainView.addNavigation(this, "/META-INF/applications/projects.json");
-		} catch (IllegalAccessException | InvocationTargetException | InstantiationException
-				| ClassNotFoundException e) {
+			mainView = new MainView((Person) getNickiContext().getUser(), "/META-INF/applications/projects.json");
+			mainView.addNavigation(this);
+			mainView.initNavigation();
+		} catch (IllegalAccessException | InstantiationException
+				| ClassNotFoundException | InvocationTargetException e) {
 			LOG.error("Error in config", e);
 		}
-
-		
-
-		mainView.initNavigation();
-		
 		return mainView;
 	}
 

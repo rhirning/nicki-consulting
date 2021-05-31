@@ -1,6 +1,7 @@
 package org.mgnl.nicki.consulting.core.model;
 
 public enum Pause {
+	MIN_0(0, "keine"),
 	MIN_30(30, "30 Min."),
 	MIN_60(60, "60 Min.")
 	;

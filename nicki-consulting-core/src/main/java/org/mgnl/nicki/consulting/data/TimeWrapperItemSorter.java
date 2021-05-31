@@ -5,14 +5,15 @@ import java.io.Serializable;
 import org.apache.commons.lang.StringUtils;
 import org.mgnl.nicki.consulting.core.model.Member;
 
-import com.vaadin.ui.CheckBox;
+import com.vaadin.flow.component.checkbox.Checkbox;
+
 
 public class TimeWrapperItemSorter implements Serializable {
 	enum PROPERTY {
 		PERSON("person") {
 			@Override
 			Object getValue(TimeWrapper timeWrapper) {
-				return timeWrapper.getPerson().getValue();
+				return timeWrapper.getPerson().getText();
 			}
 		},
 		DELETE("delete") {
@@ -65,8 +66,8 @@ public class TimeWrapperItemSorter implements Serializable {
 		CUSTOMER_REPORT("customerReport") {
 			@Override
 			Object getValue(TimeWrapper timeWrapper) {
-				if (timeWrapper.getCustomerReport() instanceof CheckBox) {
-					return ((CheckBox) timeWrapper.getCustomerReport()).getValue();
+				if (timeWrapper.getCustomerReport() instanceof Checkbox) {
+					return ((Checkbox) timeWrapper.getCustomerReport()).getValue();
 				} else {
 					return false;
 				}

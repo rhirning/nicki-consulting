@@ -23,24 +23,22 @@ import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.components.ConfirmDialog;
+import org.mgnl.nicki.vaadin.base.notification.Notification;
+import org.mgnl.nicki.vaadin.base.notification.Notification.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.server.FileDownloader;
-import com.vaadin.server.StreamResource;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.UI;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.server.StreamResource;
 
 public class InvoiceWrapper {
 	private static final Logger LOG = LoggerFactory.getLogger(InvoiceWrapper.class);
 
 	private Invoice invoice;
 	private Reloader reloader;
-	private FileDownloader invoicePdfFileDownloader;
-	private FileDownloader timeSheetPdfFileDownloader;
 	private Button undoButton;
 	
 	public InvoiceWrapper(Invoice invoice, Reloader reloader) {
@@ -89,23 +87,18 @@ public class InvoiceWrapper {
 	}
 	
 	public Component getInvoiceDocument() {
-		Button downloadButton  = new Button("Download");
+		Anchor anchor  = new Anchor();
 		StreamResource pdfSource = createInvoicePDFStream();
-		if (invoicePdfFileDownloader != null) {
-			downloadButton.removeExtension(invoicePdfFileDownloader);
-		}
-		invoicePdfFileDownloader = new FileDownloader(pdfSource);
-		invoicePdfFileDownloader.extend(downloadButton);
-		downloadButton.setEnabled(true);
-		downloadButton.setCaption("Download");
+		anchor.setEnabled(true);
+		anchor.setHref(pdfSource);
+		anchor.setText("Download");
 
-		return downloadButton;
+		return new Div(anchor);
 	}
 
 	private StreamResource createInvoicePDFStream() {
-		return new StreamResource(
-				() -> InvoiceHelper.renderInvoice(getProject(), getInvoiceParams()),
-				"Invoice_" + DataHelper.getMilli(invoice.getInvoiceDate()) + ".pdf");
+		return new StreamResource("Invoice_" + DataHelper.getMilli(invoice.getInvoiceDate()) + ".pdf",
+				() -> InvoiceHelper.renderInvoice(getProject(), getInvoiceParams()));
 	}
 	
 	protected Map<String, Object> getInvoiceParams() {
@@ -141,27 +134,22 @@ public class InvoiceWrapper {
 		}
 
 		UndoCommand undoCommand = new UndoCommand(invoice, reloader);
-		UI.getCurrent().addWindow(new ConfirmDialog(undoCommand));
+		new ConfirmDialog(undoCommand).open();;
 	}
 
 	public Component getTimeSheetDocument() {
-		Button downloadButton  = new Button("Download");
+		Anchor anchor  = new Anchor();
 		StreamResource pdfSource = createTimeSheetPDFStream();
-		if (timeSheetPdfFileDownloader != null) {
-			downloadButton.removeExtension(timeSheetPdfFileDownloader);
-		}
-		timeSheetPdfFileDownloader = new FileDownloader(pdfSource);
-		timeSheetPdfFileDownloader.extend(downloadButton);
-		downloadButton.setEnabled(true);
-		downloadButton.setCaption("Download");
+		anchor.setEnabled(true);
+		anchor.setHref(pdfSource);
+		anchor.setText("Download");
 
-		return downloadButton;
+		return new Div(anchor);
 	}
 
 	private StreamResource createTimeSheetPDFStream() {
-		return new StreamResource(
-				() -> InvoiceHelper.renderTimeSheet(getProject(), getTimeSheetParams()),
-				"TimeSheet_" + DataHelper.getMilli(invoice.getInvoiceDate()) + ".pdf");
+		return new StreamResource("TimeSheet_" + DataHelper.getMilli(invoice.getInvoiceDate()) + ".pdf",
+				() -> InvoiceHelper.renderTimeSheet(getProject(), getTimeSheetParams()));
 	}
 	
 	protected Map<String, Object> getTimeSheetParams() {
