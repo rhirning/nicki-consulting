@@ -28,6 +28,7 @@ public class Projects extends NickiApplication implements Serializable {
 		
 		try {
 			mainView = new MainView((Person) getNickiContext().getUser(), "/META-INF/applications/projects.json");
+			mainView.setApplication(this);
 			mainView.addNavigation(this);
 			mainView.initNavigation();
 		} catch (IllegalAccessException | InstantiationException
