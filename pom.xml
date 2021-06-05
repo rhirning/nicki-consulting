@@ -12,7 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-		<nicki-vaadin7.version>14.04</nicki-vaadin7.version>
+		<nicki-vaadin.version>14.05</nicki-vaadin.version>
 		<project.scm.id>github</project.scm.id>
 	</properties>
 	<modules>

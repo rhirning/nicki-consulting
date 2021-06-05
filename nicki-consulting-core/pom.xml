@@ -13,19 +13,19 @@
 	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>
-			<groupId>org.mgnl.nicki.vaadin7</groupId>
-			<artifactId>nicki-vaadin7-editor-templates</artifactId>
-				<version>${nicki-vaadin7.version}</version>
+			<groupId>org.mgnl.nicki.vaadin</groupId>
+			<artifactId>nicki-vaadin-editor-templates</artifactId>
+				<version>${nicki-vaadin.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.mgnl.nicki.vaadin7</groupId>
-			<artifactId>nicki-vaadin7-reports</artifactId>
-				<version>${nicki-vaadin7.version}</version>
+			<groupId>org.mgnl.nicki.vaadin</groupId>
+			<artifactId>nicki-vaadin-reports</artifactId>
+				<version>${nicki-vaadin.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.mgnl.nicki.vaadin7</groupId>
-			<artifactId>nicki-vaadin7-db</artifactId>
-				<version>${nicki-vaadin7.version}</version>
+			<groupId>org.mgnl.nicki.vaadin</groupId>
+			<artifactId>nicki-vaadin-db</artifactId>
+				<version>${nicki-vaadin.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.derby</groupId>
