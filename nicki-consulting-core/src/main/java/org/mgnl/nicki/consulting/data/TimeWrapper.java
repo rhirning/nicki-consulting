@@ -25,6 +25,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,7 @@ public class TimeWrapper implements Serializable {
 	private DatePicker dayDateField;
 	private TextField startTextField;
 	private TextField endTextField;
-	private ComboBox<Pause> pauseComboBox;
+	private Select<Pause> pauseComboBox;
 	private TextField textTextField;
 	private Label personLabel;
 	private boolean readOnly;
@@ -279,12 +280,14 @@ public class TimeWrapper implements Serializable {
 		}
 	}
 
-	public ComboBox<Pause> getPause() {
+	public Select<Pause> getPause() {
 		if (this.pauseComboBox == null) {
-			pauseComboBox = new ComboBox<>();
+			pauseComboBox = new Select<>();
 			pauseComboBox.setWidth("-1px");
 			pauseComboBox.setItems(Pause.values());
 			pauseComboBox.setItemLabelGenerator(Pause::getDisplayName);
+			pauseComboBox.setEmptySelectionAllowed(true);
+			pauseComboBox.setEmptySelectionCaption("keine");
 			
 			if (time.getPause() != null) {
 				pauseComboBox.setValue(Pause.getPause(time.getPause()));
@@ -302,7 +305,6 @@ public class TimeWrapper implements Serializable {
 					Notification.show("Invalid time: " + e.getMessage(), Type.ERROR_MESSAGE);
 				}
 			});
-			pauseComboBox.setClearButtonVisible(true);
 			pauseComboBox.setReadOnly(readOnly);
 		}
 		return pauseComboBox;
