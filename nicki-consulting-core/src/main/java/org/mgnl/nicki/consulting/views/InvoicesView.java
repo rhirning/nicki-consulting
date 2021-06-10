@@ -13,6 +13,7 @@ import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.vaadin.base.menu.application.ConfigurableView;
 
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -26,9 +27,9 @@ public class InvoicesView extends BaseView implements ConfigurableView  {
 	
 	private HorizontalLayout filterLayout;
 	
-	private Select<Project> projectComboBox;
+	private ComboBox<Project> projectComboBox;
 	
-	private Select<Customer> customerComboBox;
+	private ComboBox<Customer> customerComboBox;
 	
 	private Select<PERIOD> timeComboBox;
 
@@ -213,17 +214,19 @@ public class InvoicesView extends BaseView implements ConfigurableView  {
 		filterLayout.add(timeComboBox);
 		
 		// customerComboBox
-		customerComboBox = new Select<>();
+		customerComboBox = new ComboBox<>();
 		customerComboBox.setLabel("Kunde");
 		customerComboBox.setWidth("-1px");
 		customerComboBox.setHeight("-1px");
+		customerComboBox.setClearButtonVisible(true);
 		filterLayout.add(customerComboBox);
 		
 		// projectComboBox
-		projectComboBox = new Select<>();
+		projectComboBox = new ComboBox<>();
 		projectComboBox.setLabel("Projekt");
 		projectComboBox.setWidth("-1px");
 		projectComboBox.setHeight("-1px");
+		projectComboBox.setClearButtonVisible(true);
 		filterLayout.add(projectComboBox);
 		
 		return filterLayout;

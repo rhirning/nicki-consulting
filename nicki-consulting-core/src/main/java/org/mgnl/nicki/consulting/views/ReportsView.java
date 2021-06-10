@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.itextpdf.text.DocumentException;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -72,9 +73,9 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	
 	private HorizontalLayout filterLayout;
 	
-	private Select<Project> projectComboBox;
+	private ComboBox<Project> projectComboBox;
 	
-	private Select<Customer> customerComboBox;
+	private ComboBox<Customer> customerComboBox;
 	
 	private Select<PERIOD> timeComboBox;
 	
@@ -470,17 +471,19 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		filterLayout.add(timeComboBox);
 		
 		// customerComboBox
-		customerComboBox = new Select<>();
+		customerComboBox = new ComboBox<>();
 		customerComboBox.setLabel("Kunde");
 		customerComboBox.setWidth("-1px");
 		customerComboBox.setHeight("-1px");
+		customerComboBox.setClearButtonVisible(true);
 		filterLayout.add(customerComboBox);
 		
 		// projectComboBox
-		projectComboBox = new Select<>();
+		projectComboBox = new ComboBox<>();
 		projectComboBox.setLabel("Projekt");
 		projectComboBox.setWidth("-1px");
 		projectComboBox.setHeight("-1px");
+		projectComboBox.setClearButtonVisible(true);
 		filterLayout.add(projectComboBox);
 		
 		return filterLayout;
