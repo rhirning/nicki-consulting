@@ -2,12 +2,13 @@ package org.mgnl.nicki.consulting.views;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.db.OpenProject;
 import org.mgnl.nicki.vaadin.base.components.DialogBase;
 import org.mgnl.nicki.vaadin.base.menu.application.ConfigurableView;
+import org.mgnl.nicki.vaadin.base.notification.Notification;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -71,13 +72,14 @@ public class ClosingView extends BaseView implements ConfigurableView  {
 
 
 	private void showPerformClosingWindow(boolean close) {
-		Set<OpenProject> openProjects = projectsTable.getSelectedItems();
-		if (openProjects != null && openProjects.size() > 0) {
-			OpenProject openProject = openProjects.iterator().next();
+		OpenProject openProject = projectsTable.asSingleSelect().getValue();
+		if (openProject != null && StringUtils.isNotBlank(openProject.getSince())) {
 			PerformClosingView performClosingView = new PerformClosingView(this, openProject.getProject(), close);
 			performClosingWindow = new DialogBase(close? "Abschluss" : "Vorschau", performClosingView);
 			performClosingWindow.setModal(true);
 			performClosingWindow.open();
+		} else {
+			Notification.show("Bitte ein gültiges Projekt wählen");
 		}
 	}
 	
@@ -95,7 +97,7 @@ public class ClosingView extends BaseView implements ConfigurableView  {
 
 
 	private void projectSelected(Optional<OpenProject> selectedItem) {
-		if (selectedItem != null) {
+		if (selectedItem.isPresent() && StringUtils.isNotBlank(selectedItem.get().getSince())) {
 			previewInvoiceButton.setEnabled(true);
 			closingButton.setEnabled(true);
 		} else {

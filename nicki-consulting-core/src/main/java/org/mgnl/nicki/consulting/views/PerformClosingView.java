@@ -105,7 +105,11 @@ public class PerformClosingView extends VerticalLayout {
 	
 	protected Map<String, Object> getInvoiceParams() {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("times", getTimes());
+		List<Time> times = getTimes();
+		if (times == null || times.size() == 0) {
+			LOG.error("No data");
+		}
+		params.put("times", times);
 		params.put("invoiceNumber", invoiceNumberTextField.getValue());
 		params.put("firstDay", this.project.getOpen());
 		params.put("lastDay", new Date(DataHelper.getDate(nextStart.getValue()).getTime() - InvoiceHelper.DAY_IN_MS));
@@ -120,7 +124,9 @@ public class PerformClosingView extends VerticalLayout {
 		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			OpenTimeSelectHandler selectHandler = new OpenTimeSelectHandler(this.project, this.project.getOpen(), DataHelper.getDate(nextStart.getValue()), Constants.DB_CONTEXT_NAME);
 			dbContext.select(selectHandler);
-			return selectHandler.getList();
+			if (selectHandler.getList() != null) {
+				return selectHandler.getList();
+			};
 		} catch (SQLException | InitProfileException | TimeSelectException e) {
 			LOG.error("Could not load open times", e);
 		}
