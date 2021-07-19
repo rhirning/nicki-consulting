@@ -81,7 +81,7 @@ public abstract class BaseView extends Div implements View {
 		if (application == null) {
 			throw new NoApplicationContextException();
 		}
-		LdapPerson ldapPerson = (LdapPerson) application.getContext().getLoginContext().getUser();
+		LdapPerson ldapPerson = (LdapPerson) application.getDoubleContext().getLoginContext().getUser();
 		Person person = new Person();
 		person.setUserId(ldapPerson.getName());
 
@@ -103,7 +103,7 @@ public abstract class BaseView extends Div implements View {
 	}
 	
 	public boolean isAdmin() {
-		LdapPerson ldapPerson = (LdapPerson) application.getContext().getLoginContext().getUser();
+		LdapPerson ldapPerson = (LdapPerson) application.getDoubleContext().getLoginContext().getUser();
 		return ldapPerson.isMemberOf(Config.getString("nicki.consulting.group.admin"));
 	}
 
