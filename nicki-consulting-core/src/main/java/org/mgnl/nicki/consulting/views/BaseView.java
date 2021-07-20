@@ -35,19 +35,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.data.renderer.TextRenderer;
 
-public abstract class BaseView extends Div implements View {
+public abstract class BaseView extends VerticalLayout implements View {
 	private static final long serialVersionUID = 4599832847213624084L;
 	private static final Logger LOG = LoggerFactory.getLogger(BaseView.class);
 	private NickiApplication application;
 	private Person person;
 	private PERIOD timeComboBoxValue;
 	private Person personComboBoxValue;
+	
+	public BaseView() {
+		setSizeFull();
+		setMargin(false);
+		setSpacing(false);
+		setPadding(false);
+	}
 	
 	public NickiApplication getApplication() {
 		return application;

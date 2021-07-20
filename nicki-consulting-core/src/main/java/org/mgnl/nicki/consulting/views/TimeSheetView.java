@@ -27,10 +27,8 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 
 public class TimeSheetView extends BaseView implements View {
@@ -55,8 +53,6 @@ public class TimeSheetView extends BaseView implements View {
 	private boolean isInit;
 	
 	private Dialog decisionWindow;
-
-	private VerticalLayout verticalLayout;
 	
 	public TimeSheetView() {
 		buildMainLayout();
@@ -78,15 +74,15 @@ public class TimeSheetView extends BaseView implements View {
 			saveButton.addClickListener(event-> {save();});
 			reloadButton.addClickListener(event -> {loadTimes();});
 			
-			timeTable.addComponentColumn(TimeWrapper::getDelete).setHeader(createIcon(VaadinIcon.TRASH, "Löschen")).setWidth("10px");
-			timeTable.addComponentColumn(TimeWrapper::getMember).setHeader("Projekt").setWidth("300px");
-			timeTable.addComponentColumn(TimeWrapper::getDay).setHeader("Datum").setWidth("60px");
-			timeTable.addComponentColumn(TimeWrapper::getStart).setHeader("von").setWidth("40px");
-			timeTable.addComponentColumn(TimeWrapper::getEnd).setHeader("bis").setWidth("40px");
-			timeTable.addComponentColumn(TimeWrapper::getPause).setHeader("Pause").setWidth("60px");
-			timeTable.addColumn(TimeWrapper::getHours).setHeader("Stunden").setWidth("50px");
-			timeTable.addComponentColumn(TimeWrapper::getCustomerReport).setHeader(createIcon(VaadinIcon.FILE, "Bei Kunde erfasst")).setWidth("10px");
-			timeTable.addComponentColumn(TimeWrapper::getText).setHeader("Tätigkeit").setWidth("200px");
+			timeTable.addComponentColumn(TimeWrapper::getDelete).setHeader(createIcon(VaadinIcon.TRASH, "Löschen")).setFlexGrow(0).setWidth("50px");
+			timeTable.addComponentColumn(TimeWrapper::getMember).setHeader("Projekt").setWidth("300px").setFlexGrow(1);
+			timeTable.addComponentColumn(TimeWrapper::getDay).setHeader("Datum").setFlexGrow(0).setWidth("210px");
+			timeTable.addComponentColumn(TimeWrapper::getStart).setHeader("von").setFlexGrow(0);//.setWidth("40px");
+			timeTable.addComponentColumn(TimeWrapper::getEnd).setHeader("bis").setFlexGrow(0);//.setWidth("40px");
+			timeTable.addComponentColumn(TimeWrapper::getPause).setHeader("Pause").setFlexGrow(0).setWidth("180px");
+			timeTable.addColumn(TimeWrapper::getHours).setHeader("Stunden").setFlexGrow(0);//.setWidth("50px");
+			timeTable.addComponentColumn(TimeWrapper::getCustomerReport).setHeader(createIcon(VaadinIcon.FILE, "Bei Kunde erfasst")).setFlexGrow(0).setWidth("50px");
+			timeTable.addComponentColumn(TimeWrapper::getText).setHeader("Tätigkeit").setWidth("200px").setFlexGrow(1);
 
 			isInit = true;
 		}
@@ -291,32 +287,25 @@ public class TimeSheetView extends BaseView implements View {
 	private Grid<TimeWrapper> createTimeTable() {
 
 		if (timeTable != null) {
-			verticalLayout.remove(timeTable);
+			remove(timeTable);
 		}
 		
 		// timeTable
 		timeTable = new Grid<TimeWrapper>();
-		timeTable.setWidth("100%");
-		timeTable.setHeight("100.0%");
-		verticalLayout.add(timeTable);
-		verticalLayout.setFlexGrow(1, timeTable);
+//		timeTable.setWidthFull();
+		add(timeTable);
+		//setFlexGrow(1, timeTable);
 		return timeTable;
 	}
 
 	
 	private void buildMainLayout() {
-		setWidth("100%");
+		setWidth("-1px");
 		setHeight("100%");
-		verticalLayout = new VerticalLayout();
-		verticalLayout.setSizeFull();
-		verticalLayout.setMargin(true);
-		verticalLayout.setSpacing(true);
-		
-		add(verticalLayout);
 		
 		// filterLayout
 		filterLayout = buildFilterLayout();
-		verticalLayout.add(filterLayout);
+		add(filterLayout);
 
 		createTimeTable();
 	}

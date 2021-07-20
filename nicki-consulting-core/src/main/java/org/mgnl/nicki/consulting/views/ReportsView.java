@@ -125,15 +125,15 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 			downloadXlsAnchor.setEnabled(false);
 			
 
-			timeTable.addColumn(TimeWrapper::getPersonName).setHeader("Person");
-			timeTable.addComponentColumn(TimeWrapper::getMember).setHeader("Projekt").setWidth("300px");
-			timeTable.addColumn(TimeWrapper::getDisplayDay).setHeader("Datum").setWidth("60px");
-			timeTable.addColumn(TimeWrapper::getDisplayStart).setHeader("von").setWidth("40px");
-			timeTable.addColumn(TimeWrapper::getDisplayEnd).setHeader("bis").setWidth("40px");
-			timeTable.addColumn(TimeWrapper::getDisplayPause).setHeader("Pause").setWidth("60px");
-			timeTable.addColumn(TimeWrapper::getHours).setHeader("Stunden").setWidth("40px");
-			timeTable.addComponentColumn(TimeWrapper::getCustomerReport).setHeader(createIcon(VaadinIcon.FILE, "Bei Kunde erfasst"));
-			timeTable.addColumn(TimeWrapper::getTextString).setHeader("Tätigkeit").setWidth("200px");
+			timeTable.addColumn(TimeWrapper::getPersonName).setHeader("Person").setFlexGrow(0).setWidth("300px");;
+			timeTable.addComponentColumn(TimeWrapper::getMember).setHeader("Projekt").setWidth("300px").setFlexGrow(1);
+			timeTable.addColumn(TimeWrapper::getDisplayDay).setHeader("Datum").setFlexGrow(0).setWidth("120px");
+			timeTable.addColumn(TimeWrapper::getDisplayStart).setHeader("von").setFlexGrow(0).setWidth("10px");
+			timeTable.addColumn(TimeWrapper::getDisplayEnd).setHeader("bis").setFlexGrow(0).setWidth("100px");
+			timeTable.addColumn(TimeWrapper::getDisplayPause).setHeader("Pause").setFlexGrow(0).setWidth("120px");
+			timeTable.addColumn(TimeWrapper::getHours).setHeader("Stunden").setFlexGrow(0).setWidth("100px");
+			timeTable.addComponentColumn(TimeWrapper::getCustomerReport).setHeader(createIcon(VaadinIcon.FILE, "Bei Kunde erfasst")).setFlexGrow(0);
+			timeTable.addColumn(TimeWrapper::getTextString).setHeader("Tätigkeit").setWidth("200px").setFlexGrow(1);
 			
 			timeComboBox.addValueChangeListener(event -> {timeComboBoxChanged();});
 			customerComboBox.addValueChangeListener(event -> {customerComboBoxChanged();});
