@@ -244,6 +244,13 @@ public abstract class BaseView extends VerticalLayout implements View {
 		return timeWrappers;
 	}
 
+	protected void addEmptyTimeWrappers(List<TimeWrapper> timeWrappers, Person person, Period period, READONLY readonly, int emptyCount) throws TimeSelectException {
+		List<Member> members = getMembers(person, period);
+		for (int i = 0; i < emptyCount; i++) {
+			timeWrappers.add(new TimeWrapper(person, new Time(), members, readonly));
+		}
+	}
+
 	protected List<InvoiceWrapper> getInvoiceWrappers(Period period, Customer customer, Project project) throws TimeSelectException {
 		List<InvoiceWrapper> invoiceWrappers = new ArrayList<>();
 		for (Invoice invoice: getInvoices(period, customer, project)) {

@@ -3,6 +3,7 @@ package org.mgnl.nicki.consulting.data;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -16,6 +17,7 @@ import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.views.BaseView.READONLY;
 import org.mgnl.nicki.core.helper.DataHelper;
+import org.mgnl.nicki.vaadin.base.data.DateHelper;
 import org.mgnl.nicki.vaadin.base.notification.Notification;
 import org.mgnl.nicki.vaadin.base.notification.Notification.Type;
 
@@ -24,6 +26,7 @@ import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.datepicker.DatePicker.DatePickerI18n;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.textfield.TextField;
 
@@ -179,7 +182,7 @@ public class TimeWrapper implements Serializable {
 	public DatePicker getDay() {
 		if (this.dayDateField == null) {
 			dayDateField = new DatePicker();
-			// TODO: dayDateField.setDateFormat("dd.MM.yy");
+			DateHelper.init(dayDateField);
 			
 			if (time.getStart() != null) {
 				dayDateField.setValue(DataHelper.getLocalDate(time.getStart()));
@@ -243,7 +246,9 @@ public class TimeWrapper implements Serializable {
 			time.setStart(null);
 			time.setEnd(null);			
 		}
-		Notification.show("" + time.getStart() + " - " + time.getEnd(), Type.TRAY_NOTIFICATION);
+		if (log.isDebugEnabled()) {
+			Notification.show("" + time.getStart() + " - " + time.getEnd(), Type.TRAY_NOTIFICATION);
+		}
 	}
 
 	public TextField getEnd() {

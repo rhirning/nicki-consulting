@@ -128,7 +128,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 			timeTable.addColumn(TimeWrapper::getPersonName).setHeader("Person").setFlexGrow(0).setWidth("300px");;
 			timeTable.addComponentColumn(TimeWrapper::getMember).setHeader("Projekt").setWidth("300px").setFlexGrow(1);
 			timeTable.addColumn(TimeWrapper::getDisplayDay).setHeader("Datum").setFlexGrow(0).setWidth("120px");
-			timeTable.addColumn(TimeWrapper::getDisplayStart).setHeader("von").setFlexGrow(0).setWidth("10px");
+			timeTable.addColumn(TimeWrapper::getDisplayStart).setHeader("von").setFlexGrow(0).setWidth("100px");
 			timeTable.addColumn(TimeWrapper::getDisplayEnd).setHeader("bis").setFlexGrow(0).setWidth("100px");
 			timeTable.addColumn(TimeWrapper::getDisplayPause).setHeader("Pause").setFlexGrow(0).setWidth("120px");
 			timeTable.addColumn(TimeWrapper::getHours).setHeader("Stunden").setFlexGrow(0).setWidth("100px");
@@ -248,11 +248,13 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		downloadPdfAnchor.setEnabled(true);
 		downloadPdfAnchor.setHref(pdfSource);
 		downloadPdfAnchor.setText("Download PDF");
+		downloadPdfAnchor.setTarget("_blank");
 
 		StreamResource xlsSource = createXlsStream();
 		downloadXlsAnchor.setHref(xlsSource);
 		downloadXlsAnchor.setEnabled(true);
 		downloadXlsAnchor.setText("Download XLS");
+		downloadXlsAnchor.setTarget("_blank");
 		
 	}
 

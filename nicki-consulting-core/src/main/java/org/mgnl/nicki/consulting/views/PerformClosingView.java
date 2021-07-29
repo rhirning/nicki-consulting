@@ -23,6 +23,7 @@ import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.context.PrimaryKey;
 import org.mgnl.nicki.db.profile.InitProfileException;
+import org.mgnl.nicki.vaadin.base.data.DateHelper;
 import org.mgnl.nicki.vaadin.base.notification.Notification;
 import org.mgnl.nicki.vaadin.base.notification.Notification.Type;
 import org.slf4j.Logger;
@@ -186,6 +187,8 @@ public class PerformClosingView extends VerticalLayout {
 		
 		// nextStart
 		nextStart = new DatePicker();
+
+		DateHelper.init(nextStart);
 		nextStart.setLabel("Neuer Zeitraum ab");
 		nextStart.setWidth("-1px");
 		nextStart.setHeight("-1px");

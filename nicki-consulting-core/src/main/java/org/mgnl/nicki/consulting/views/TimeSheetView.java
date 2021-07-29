@@ -44,6 +44,8 @@ public class TimeSheetView extends BaseView implements View {
 	private Button reloadButton;
 	
 	private Button saveButton;
+	
+	private Button moreLinesButton;
 
 	private static final long serialVersionUID = 8329773710892387845L;
 	private static final Logger LOG = LoggerFactory.getLogger(TimeSheetView.class);
@@ -53,7 +55,7 @@ public class TimeSheetView extends BaseView implements View {
 	private boolean isInit;
 	
 	private Dialog decisionWindow;
-	
+		
 	public TimeSheetView() {
 		buildMainLayout();
 	}
@@ -73,6 +75,9 @@ public class TimeSheetView extends BaseView implements View {
 			
 			saveButton.addClickListener(event-> {save();});
 			reloadButton.addClickListener(event -> {loadTimes();});
+			moreLinesButton.addClickListener(event -> {
+				addLines((10));
+			});
 			
 			timeTable.addComponentColumn(TimeWrapper::getDelete).setHeader(createIcon(VaadinIcon.TRASH, "Löschen")).setFlexGrow(0).setWidth("50px");
 			timeTable.addComponentColumn(TimeWrapper::getMember).setHeader("Projekt").setWidth("300px").setFlexGrow(1);
@@ -83,7 +88,9 @@ public class TimeSheetView extends BaseView implements View {
 			timeTable.addColumn(TimeWrapper::getHours).setHeader("Stunden").setFlexGrow(0);//.setWidth("50px");
 			timeTable.addComponentColumn(TimeWrapper::getCustomerReport).setHeader(createIcon(VaadinIcon.FILE, "Bei Kunde erfasst")).setFlexGrow(0).setWidth("50px");
 			timeTable.addComponentColumn(TimeWrapper::getText).setHeader("Tätigkeit").setWidth("200px").setFlexGrow(1);
-
+			//timeTable.setHeightByRows(true);
+			timeTable.setHeight("100%");
+			setFlexGrow(1, timeTable);
 			isInit = true;
 		}
 		loadTimes();
@@ -252,26 +259,30 @@ public class TimeSheetView extends BaseView implements View {
 		}
 		return ok || empty;
 	}
+	
+	private void addLines(int emptyCount) {
+		PERIOD period = (PERIOD) timeComboBox.getValue();
+		if (period != null) {
+			try {
+				addEmptyTimeWrappers(times, getPersonComboBoxValue(), period.getPeriod(), READONLY.FALSE, emptyCount);
+				timeTable.setItems(times);
+			} catch (TimeSelectException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 
 	private void loadTimes() {
 		try {
 			PERIOD period = (PERIOD) timeComboBox.getValue();
 			if (period != null) {
-				
 				times = getTimeWrappers(getPersonComboBoxValue(), period.getPeriod(), null, null, READONLY.FALSE, 10);
 				timeTable.setItems(times);
-				
-				timeTable.setHeightByRows(true);
 			}
 		} catch (IllegalStateException | IllegalArgumentException | TimeSelectException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//		timeContainerDataSource.setItemSorter(new TimeWrapperItemSorter());
-//		timeTable.setVisibleColumns("delete", "member", "day", "start", "end", "pause", "hours", "customerReport", "text");
-//		timeTable.setColumnHeaders("Löschen", "Projekt", "Datum", "von", "bis", "Pause", "Stunden", "Bei Kunde erfasst", "Tätigkeit");
-
-
 	}
 
 	@Override
@@ -332,6 +343,13 @@ public class TimeSheetView extends BaseView implements View {
 		reloadButton.setWidth("-1px");
 		reloadButton.setHeight("-1px");
 		filterLayout.add(reloadButton);
+		
+		// moreLinesButton
+		moreLinesButton = new Button();
+		moreLinesButton.setText("Mehr Zeilen");
+		moreLinesButton.setWidth("-1px");
+		moreLinesButton.setHeight("-1px");
+		filterLayout.add(moreLinesButton);
 		
 		// timeComboBox
 		timeComboBox = new Select<PERIOD>();
