@@ -32,8 +32,18 @@ public class LdapPersonImpl extends Person implements LdapPerson {
 	public static final String ATTRIBUTE_TELEPHONE_NUMBER = "telephoneNumber";
 	public static final String ATTRIBUTE_SURNAME = "surname";
 	public static final String ATTRIBUTE_UNICODE_PWD = "unicodePwd";
+	public static final String ATTRIBUTE_CARLICENSE = "carLicense";
 
 	private Collection<Group> groups;
+	
+	@DynamicAttribute(externalName = "carLicense")
+	public String getCarLicense() {
+		return getAttribute(ATTRIBUTE_CARLICENSE);
+	}
+
+	public void setCarLicense(String value) {
+		put(ATTRIBUTE_CARLICENSE, value);
+	}
 	
 	@DynamicAttribute(externalName = "telephoneNumber")
 	public String getTelephoneNumber() {
