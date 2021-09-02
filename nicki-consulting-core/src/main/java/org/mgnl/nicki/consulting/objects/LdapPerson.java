@@ -11,6 +11,7 @@ public interface LdapPerson extends DynamicObject {
 	String getMobile();
 	String getTelephoneNumber();
 	String getCarLicense();
+	String getOu();
 	
 	void setSurName(String surName);
 	void setGivenName(String grivenName);
@@ -18,7 +19,7 @@ public interface LdapPerson extends DynamicObject {
 	void setMobile(String mobile);
 	void setUserPassword(String userpassword);
 	void setTelephoneNumber(String telephoneNumber);
-	void setCarLicense(String carLicense);
+	void setOu(String ou);
 
 	boolean isMemberOf(String groupName);
 }
