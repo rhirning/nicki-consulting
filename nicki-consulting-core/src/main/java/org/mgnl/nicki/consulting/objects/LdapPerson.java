@@ -9,12 +9,14 @@ public interface LdapPerson extends DynamicObject {
 	String getGivenName();
 	String getMail();
 	String getMobile();
+	String getTelephoneNumber();
 	
 	void setSurName(String surName);
 	void setGivenName(String grivenName);
 	void setMail(String mail);
 	void setMobile(String mobile);
 	void setUserPassword(String userpassword);
+	void setTelephoneNumber(String value);
 
 	boolean isMemberOf(String groupName);
 }

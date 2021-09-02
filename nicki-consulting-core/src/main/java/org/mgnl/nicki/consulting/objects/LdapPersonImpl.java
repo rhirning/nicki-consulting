@@ -29,10 +29,20 @@ public class LdapPersonImpl extends Person implements LdapPerson {
 	public static final String ATTRIBUTE_LOCATION = "location";
 	public static final String ATTRIBUTE_MAIL = "mail";
 	public static final String ATTRIBUTE_MOBILE = "mobile";
+	public static final String ATTRIBUTE_TELEPHONE_NUMBER = "telephoneNumber";
 	public static final String ATTRIBUTE_SURNAME = "surname";
 	public static final String ATTRIBUTE_UNICODE_PWD = "unicodePwd";
 
 	private Collection<Group> groups;
+	
+	@DynamicAttribute(externalName = "telephoneNumber")
+	public String getTelephoneNumber() {
+		return getAttribute(ATTRIBUTE_TELEPHONE_NUMBER);
+	}
+
+	public void setTelephoneNumber(String value) {
+		put(ATTRIBUTE_TELEPHONE_NUMBER, value);
+	}
 	
 	@DynamicAttribute(externalName = "mobile")
 	public String getMobile() {
