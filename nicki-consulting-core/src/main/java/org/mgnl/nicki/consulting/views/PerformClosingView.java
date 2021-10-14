@@ -62,7 +62,9 @@ public class PerformClosingView extends VerticalLayout {
 		this.project = project;
 		buildMainLayout();
 		downloadInvoiceAnchor.setEnabled(false);
+		downloadInvoiceAnchor.setTarget("_blank");
 		downloadTimeSheetAnchor.setEnabled(false);
+		downloadTimeSheetAnchor.setTarget("_blank");
 		if (!closeProject) {
 			closeProjectButton.setVisible(false);
 		}

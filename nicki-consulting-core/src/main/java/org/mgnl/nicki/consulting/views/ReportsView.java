@@ -24,7 +24,7 @@ import org.mgnl.nicki.core.config.Config;
 import org.mgnl.nicki.core.context.AppContext;
 import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.dynamic.objects.objects.Template;
-import org.mgnl.nicki.report.XlsDocuHelper;
+import org.mgnl.nicki.template.report.helper.XlsDocuHelper;
 import org.mgnl.nicki.template.engine.ConfigurationFactory.TYPE;
 import org.mgnl.nicki.template.engine.TemplateEngine;
 import org.mgnl.nicki.vaadin.base.menu.application.ConfigurableView;
