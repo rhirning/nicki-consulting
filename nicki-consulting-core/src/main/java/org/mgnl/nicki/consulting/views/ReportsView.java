@@ -452,7 +452,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	private HorizontalLayout buildFilterLayout() {
 		// common part: create layout
 		filterLayout = new HorizontalLayout();
-		filterLayout.setWidth("-1px");
+		filterLayout.setWidthFull();
 		filterLayout.setHeight("-1px");
 		filterLayout.setMargin(false);
 		filterLayout.setSpacing(true);
@@ -461,21 +461,21 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		// personComboBox
 		personComboBox = new Select<>();
 		personComboBox.setLabel("Person");
-		personComboBox.setWidth("-1px");
+		personComboBox.setWidthFull();
 		personComboBox.setHeight("-1px");
 		filterLayout.add(personComboBox);
 		
 		// timeComboBox
 		timeComboBox = new Select<>();
 		timeComboBox.setLabel("Zeitraum");
-		timeComboBox.setWidth("-1px");
+		timeComboBox.setWidthFull();
 		timeComboBox.setHeight("-1px");
 		filterLayout.add(timeComboBox);
 		
 		// customerComboBox
 		customerComboBox = new ComboBox<>();
 		customerComboBox.setLabel("Kunde");
-		customerComboBox.setWidth("-1px");
+		customerComboBox.setWidthFull();
 		customerComboBox.setHeight("-1px");
 		customerComboBox.setClearButtonVisible(true);
 		filterLayout.add(customerComboBox);
@@ -483,7 +483,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		// projectComboBox
 		projectComboBox = new ComboBox<>();
 		projectComboBox.setLabel("Projekt");
-		projectComboBox.setWidth("-1px");
+		projectComboBox.setWidthFull();
 		projectComboBox.setHeight("-1px");
 		projectComboBox.setClearButtonVisible(true);
 		filterLayout.add(projectComboBox);
