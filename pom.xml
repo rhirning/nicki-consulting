@@ -4,7 +4,7 @@
 
 	<groupId>org.mgnl.nicki.consulting</groupId>
 	<artifactId>nicki-consulting</artifactId>
-	<version>14.21-SNAPSHOT</version>
+	<version>22.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>nicki-consulting</name>
@@ -12,7 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-		<nicki-vaadin.version>14.23</nicki-vaadin.version>
+		<nicki-vaadin.version>22.1</nicki-vaadin.version>
 		<project.scm.id>github</project.scm.id>
 	</properties>
 	<modules>
