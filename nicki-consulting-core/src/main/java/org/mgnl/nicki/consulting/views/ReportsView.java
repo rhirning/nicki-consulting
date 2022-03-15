@@ -48,6 +48,8 @@ import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.server.StreamResource;
 
 import freemarker.template.TemplateException;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -93,7 +95,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	private Collection<Member> members;
 	
 	private ListDataProvider<TimeWrapper> timeDataProvider;
-	Map<String, String> configuration;
+	private @Setter @Getter Map<String, String> configuration;
 	
 	public ReportsView() {
 		buildMainLayout();
@@ -375,14 +377,6 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	}
 
 
-	public Map<String, String> getConfiguration() {
-		return configuration;
-	}
-
-
-	public void setConfiguration(Map<String, String> configuration) {
-		this.configuration = configuration;
-	}
 	
 	protected TEMPLATE_TYPE getTemplateType() {
 		if (getConfiguration() != null) {

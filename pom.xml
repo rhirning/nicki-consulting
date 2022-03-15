@@ -12,12 +12,13 @@
 
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-		<nicki-vaadin.version>22.3</nicki-vaadin.version>
+		<nicki-vaadin.version>22.5</nicki-vaadin.version>
 		<project.scm.id>github</project.scm.id>
 	</properties>
 	<modules>
 		<module>nicki-consulting-app</module>
 		<module>nicki-consulting-core</module>
+		<module>nicki-consulting-survey</module>
 	</modules>
 	<distributionManagement>
 		<repository>
