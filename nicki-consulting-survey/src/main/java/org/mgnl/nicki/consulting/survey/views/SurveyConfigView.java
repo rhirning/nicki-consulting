@@ -51,9 +51,6 @@ public class SurveyConfigView extends VerticalLayout implements View {
 
 	public SurveyConfigView() {
 		buildMainLayout();
-		
-		init();
-
 	}
 
 	public void init() {
