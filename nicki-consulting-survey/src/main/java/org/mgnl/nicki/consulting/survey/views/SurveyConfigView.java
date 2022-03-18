@@ -1,33 +1,35 @@
 package org.mgnl.nicki.consulting.survey.views;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.mgnl.nicki.consulting.core.helper.Constants;
+import org.mgnl.nicki.consulting.core.model.Person;
+import org.mgnl.nicki.consulting.survey.helper.GridHelper;
+import org.mgnl.nicki.consulting.survey.helper.SurveyHelper;
 import org.mgnl.nicki.consulting.survey.model.SurveyConfig;
 import org.mgnl.nicki.consulting.survey.model.SurveyTopic;
+import org.mgnl.nicki.consulting.views.NoApplicationContextException;
+import org.mgnl.nicki.consulting.views.NoValidPersonException;
+import org.mgnl.nicki.core.helper.DataHelper;
+import org.mgnl.nicki.core.helper.NameValue;
 import org.mgnl.nicki.core.util.Classes;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
+import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
-import org.mgnl.nicki.vaadin.base.components.DialogBase;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
-import org.mgnl.nicki.vaadin.base.notification.Notification;
-import org.mgnl.nicki.vaadin.base.notification.Notification.Type;
-import org.mgnl.nicki.vaadin.db.editor.DbBeanCloseListener;
-import org.mgnl.nicki.vaadin.db.editor.DbBeanViewer;
-
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.splitlayout.SplitLayout;
-import com.vaadin.flow.component.splitlayout.SplitLayout.Orientation;
-
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -36,17 +38,19 @@ import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings("serial")
 public class SurveyConfigView extends VerticalLayout implements View {
 	
-	private SplitLayout horizontalSplitPanel;
-	
+	private HorizontalLayout buttonLayout;
+	private Button newSurveyButton;
+	private Button editSurveyButton;
+	private Button showResultButton;
+	private Button deleteSurveyButton;
 	private Grid<SurveyConfig> table;
-	private VerticalLayout tableCanvas;
 	private VerticalLayout canvas;
 	private boolean isInit;
 	
 	private List<SurveyConfig> surveys;
-	private DialogBase editWindow;
 	private @Setter @Getter NickiApplication application;
 	private @Setter @Getter Map<String, String> configuration;
+	private Person person;
 
 
 	public SurveyConfigView() {
@@ -55,40 +59,59 @@ public class SurveyConfigView extends VerticalLayout implements View {
 
 	public void init() {
 		if (!isInit) {
-			
+			table.addColumn(SurveyConfig::getName);
+			table.setItemDetailsRenderer(new ComponentRenderer<>(survey -> getDetails(survey)));
+			table.setAllRowsVisible(true);
+
+			table.addSelectionListener(event -> {
+				Optional<SurveyConfig> itemOptional = event.getFirstSelectedItem();
+				if (itemOptional.isPresent()) {
+					editSurveyButton.setVisible(true);
+					showResultButton.setVisible(true);
+					deleteSurveyButton.setVisible(true);
+				} else {
+					editSurveyButton.setVisible(false);
+					showResultButton.setVisible(false);
+					deleteSurveyButton.setVisible(false);
+				}
+			});
 			isInit = true;
 		}
 		
-		tableCanvas.removeAll();
-		canvas.removeAll();
-		
-		table = new Grid<>();
-		table.addColumn(SurveyConfig::getName);
-		table.setSizeFull();
-
 		collectData();
+		buttonLayout.setVisible(true);
 		table.setItems(surveys);
-		table.setAllRowsVisible(true);
+		table.setVisible(true);
+		canvas.removeAll();
+		canvas.setVisible(false);
 
-		table.addSelectionListener(event -> {
-			canvas.removeAll();
-			Optional<SurveyConfig> itemOptional = event.getFirstSelectedItem();
-			if (itemOptional.isPresent()) {
-				SurveyConfig target = itemOptional.get();
-				showEditView(canvas, target);
+
+		newSurveyButton.addClickListener(event -> showEditView(Optional.empty()));
+		editSurveyButton.addClickListener(event -> {
+			Optional<SurveyConfig> surveyOptional = Optional.ofNullable(table.getSelectedItems().iterator().next());
+			showEditView(surveyOptional);
+		});
+		showResultButton.addClickListener(event -> {
+			Optional<SurveyConfig> surveyOptional = Optional.ofNullable(table.getSelectedItems().iterator().next());
+			showResultView(surveyOptional);
+		});
+		
+		deleteSurveyButton.addClickListener(event -> {
+			Optional<SurveyConfig> surveyOptional = Optional.ofNullable(table.getSelectedItems().iterator().next());
+			
+			if (surveyOptional.isPresent()) {
+				SurveyConfig survey = surveyOptional.get();
+				if (SurveyHelper.isDeleteAllowed(survey))
+					try {
+						SurveyHelper.delete(survey);
+					} catch (SQLException | InitProfileException | NotSupportedException e) {
+						log.error("Could not delete survey: " + survey, e);
+					}
+			} else {
+				Notification.show("Da wurde schon abgestimmt");
 			}
 		});
 
-		// newSurveyButton
-		Button newSurveyButton = new Button();
-		newSurveyButton.setText("Neue Umfrage");
-		newSurveyButton.setWidth("-1px");
-		newSurveyButton.setHeight("-1px");
-		newSurveyButton.addClickListener(event -> showEditView(SurveyConfig.class, Optional.empty(), "Neue Umfrage", "Umfrage bearbeiten"));
-		tableCanvas.add(newSurveyButton);
-		
-		tableCanvas.add(table);
-		tableCanvas.setFlexGrow(1, table);
 
         GridContextMenu<SurveyConfig> contextMenu = new GridContextMenu<>(table);
         // handle item right-click
@@ -105,37 +128,45 @@ public class SurveyConfigView extends VerticalLayout implements View {
         });
 		
 	}
-
-	private <T> void showEditView(VerticalLayout layout, T object) {
-		DbBeanViewer beanViewer = new DbBeanViewer(new DbBeanCloseListener() {
-			
-			@Override
-			public void close(Component component) {
-				init();
-			}
-		});
-		beanViewer.setDbContextName("projects");
-		beanViewer.setHeightFull();
-		beanViewer.setWidthFull();
-		if (object != null) {
-			beanViewer.setDbBean(object);
-			layout.add(beanViewer);
+	
+	private Grid<NameValue> getDetails(SurveyConfig survey) {
+		List<NameValue> values = new ArrayList<>();
+		values.add(new NameValue("Beschreibung", survey.getDescription()));
+		values.add(new NameValue("Kommentar erlaubt", survey.getAddComment() ? "Ja" : "Nein"));
+		values.add(new NameValue("Themen hinzufügen erlaubt", survey.getAddTopic() ? "Ja" : "Nein"));
+		if (survey.getStart() != null) {
+			values.add(new NameValue("Start", DataHelper.getDisplayDay(survey.getStart())));
 		}
+		if (survey.getEnd() != null) {
+			values.add(new NameValue("Ende", DataHelper.getDisplayDay(survey.getEnd())));
+		}
+		if (survey.getVisible() != null) {
+			values.add(new NameValue("Sichtbar bis", DataHelper.getDisplayDay(survey.getVisible())));
+		}
+		return GridHelper.getDetails(values);
 	}
 
 	private void deleteSurvey(SurveyConfig survey ) {
 		try {
 			if (hasTopics(survey)) {
-				Notification.show("Die Umfrage hat schon begonnen", Type.HUMANIZED_MESSAGE);
+				Notification.show("Die Umfrage hat schon begonnen");
 			} else {
-				try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
-					dbContext.delete(survey);
-				}
-				init();
+				SurveyHelper.confirm("Umfrage löschen", survey, s -> {
+					try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+						SurveyHelper.deleteTopics(s);
+						SurveyHelper.deleteChoices(s);
+						SurveyHelper.deleteNotifies(s);
+						dbContext.delete(s);
+					} catch (SQLException | InitProfileException e) {
+						log.error("Error accessing db", e);
+						Notification.show("Die Umfrage konnte nicht gelöscht werden");
+					}
+					init();
+				});
 			}
 		} catch (SQLException | InitProfileException e) {
 			log.error("Error accessing db", e);
-			Notification.show("Die Umfrage konnte nicht gelöscht werden", Type.ERROR_MESSAGE);
+			Notification.show("Die Umfrage konnte nicht gelöscht werden");
 		}
 	}
 
@@ -151,35 +182,38 @@ public class SurveyConfigView extends VerticalLayout implements View {
 		}
 	}
 	
-	private <T> void showEditView(Class<T> clazz, Optional<T> object, String newCaption, String editCaption, Object... foreignObjects) {
-		DbBeanViewer beanViewer = new DbBeanViewer(new DbBeanCloseListener() {
-			
-			@Override
-			public void close(Component component) {
-				editWindow.close();
-				init();
-			}
-		});
-		beanViewer.setDbContextName("projects");
-		beanViewer.setHeightFull();
-		beanViewer.setWidth("400px");
-		String windowTitle;
-		if (!object.isPresent()) {
-			try {
-				beanViewer.init(clazz, foreignObjects);
-			} catch (InstantiationException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			windowTitle = newCaption;
-		} else {
-			beanViewer.setDbBean(object.get());
-			windowTitle = editCaption;
+	private void showEditView(Optional<SurveyConfig> surveyOptional) {
+		try {
+			SurveyEditor surveyEditor = new SurveyEditor(getPerson(), this, surveyOptional);
+			buttonLayout.setVisible(false);
+			canvas.removeAll();
+			canvas.add(surveyEditor);
+			table.setVisible(false);
+			canvas.setVisible(true);
+		} catch (NoValidPersonException | NoApplicationContextException e) {
+			Notification.show("Wer ist denn da angemeldet?");
 		}
-		editWindow = new DialogBase(windowTitle, beanViewer);
-		editWindow.setModal(true);
-		editWindow.setHeightFull();
-		editWindow.open();
+	}
+	
+	private void showResultView(Optional<SurveyConfig> surveyOptional) {
+		try {
+			FinishedSurveyView surveyEditor = new FinishedSurveyView(surveyOptional.get(), this, getPerson());
+			buttonLayout.setVisible(false);
+			canvas.removeAll();
+			canvas.add(surveyEditor);
+			table.setVisible(false);
+			canvas.setVisible(true);
+		} catch (NoValidPersonException | NoApplicationContextException e) {
+			Notification.show("Wer ist denn da angemeldet?");
+		}
+	}
+	
+	public Person getPerson() throws NoValidPersonException, NoApplicationContextException {
+		if (person == null) {
+			person = SurveyHelper.getActivePerson(application);
+		}
+		return person;
+		
 	}
 
 	private void collectData() {
@@ -201,24 +235,34 @@ public class SurveyConfigView extends VerticalLayout implements View {
 		setSizeFull();
 		setMargin(false);
 		setSpacing(false);
+
+		// buttonLayout
+		buttonLayout = new HorizontalLayout();
+		// newSurveyButton
+		newSurveyButton = new Button("Neue Umfrage");
+		// editSurveyButton
+		editSurveyButton = new Button("Umfrage ändern");
+		editSurveyButton.setVisible(false);
 		
-		// horizontalSplitPanel
-		horizontalSplitPanel = new SplitLayout();
-		horizontalSplitPanel.setOrientation(Orientation.HORIZONTAL);
-		horizontalSplitPanel.setSizeFull();
-		add(horizontalSplitPanel);
+		showResultButton = new Button("Ergebnis");
+		showResultButton.setVisible(false);
 		
-		tableCanvas = new VerticalLayout();
-		tableCanvas.setSizeFull();
-		tableCanvas.setMargin(false);
-		tableCanvas.setSpacing(true);
-		horizontalSplitPanel.addToPrimary(tableCanvas);
+		deleteSurveyButton = new Button("Umfrage löschen");
+		deleteSurveyButton.setVisible(false);
+		
+		buttonLayout.add(newSurveyButton, editSurveyButton, showResultButton, deleteSurveyButton);
+		
+
+		table = new Grid<>();
+		table.setSizeFull();
 		
 		canvas = new VerticalLayout();
 		canvas.setSizeFull();
-		canvas.setMargin(false);
-		canvas.setSpacing(false);
-		horizontalSplitPanel.addToSecondary(canvas);
+		canvas.setVisible(false);
+
+		
+		add(buttonLayout, table, canvas);
+
 	}
 
 	@Override

@@ -18,10 +18,13 @@ public class SurveyVote implements Serializable {
 	@ForeignKey(columnName = "ID", foreignKeyClass=SurveyTopic.class, display="name")
 	private Long surveyTopicId;
 
+	@Attribute(name = "SURVEYCHOICE_ID")
+	@ForeignKey(columnName = "ID", foreignKeyClass=SurveyChoice.class, display="name")
+	private Long surveyChoiceId;
+
 	@Attribute(name = "USER_ID", mandatory = true)
 	private String userId;
 
-	@Attribute(name = "SURVEYCHOICE_ID", mandatory = true)
-	@ForeignKey(columnName = "ID", foreignKeyClass=SurveyChoice.class, display="name")
-	private Long surveyChoiceId;
+	@Attribute(name = "COMMENT")
+	private String comment;
 }

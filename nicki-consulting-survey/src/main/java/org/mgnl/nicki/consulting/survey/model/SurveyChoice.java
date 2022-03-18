@@ -7,7 +7,7 @@ import org.mgnl.nicki.db.annotation.Table;
 import lombok.Data;
 
 @Data
-@Table(name="SURVEYICHOICES")
+@Table(name="SURVEYCHOICES")
 public class SurveyChoice implements Serializable {
 	private static final long serialVersionUID = -669706053477027937L;
 
@@ -25,5 +25,5 @@ public class SurveyChoice implements Serializable {
 	private String description;
 
 	@Attribute(name = "WEIGHT", mandatory = true)
-	private int weight;
+	private Integer weight;
 }

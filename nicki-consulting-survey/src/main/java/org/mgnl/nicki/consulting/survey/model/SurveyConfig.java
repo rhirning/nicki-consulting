@@ -32,7 +32,13 @@ public class SurveyConfig implements Serializable {
 	@Attribute(name = "END_TIME", type=DataType.TIMESTAMP)
 	private Date end;
 
+	@Attribute(name = "VISIBLE_TIME", type=DataType.TIMESTAMP)
+	private Date visible;
+
 	@Attribute(name = "ADD_TOPIC")
 	private Boolean addTopic;
+
+	@Attribute(name = "ADD_COMMENT")
+	private Boolean addComment;
 
 }
