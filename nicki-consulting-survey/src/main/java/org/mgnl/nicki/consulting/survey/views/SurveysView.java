@@ -12,6 +12,7 @@ import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
 
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -79,6 +80,8 @@ public class SurveysView extends VerticalLayout implements View {
 				} catch (NoValidPersonException | NoApplicationContextException e) {
 					Notification.show("Could not load Person");
 				}
+			} else if (surveys.size() == 0) {
+				canvas.add(new Span("Es gibt aktuell keine Umfrage"));
 			}
 		}
 	}
