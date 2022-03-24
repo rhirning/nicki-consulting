@@ -92,6 +92,7 @@ public class SurveyView extends VerticalLayout implements View {
 		TopicEditor topicEditor = new TopicEditor(surveyTopic, t -> {
 			survey.addTopic(t);
 			editWindow.close();
+			SurveyHelper.updateNotifies(survey.getSurveyConfig(), person);
 			init();
 		});
 		editWindow = new DialogBase("Neues Thema", topicEditor);

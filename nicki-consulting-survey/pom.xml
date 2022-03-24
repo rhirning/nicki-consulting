@@ -13,6 +13,15 @@
 	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.mgnl.nicki.vaadin</groupId>
 			<artifactId>nicki-vaadin-db</artifactId>
 				<version>${nicki-vaadin.version}</version>
@@ -25,6 +34,10 @@
 			<groupId>org.mgnl.nicki.consulting</groupId>
 			<artifactId>nicki-consulting-core</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mgnl.nicki</groupId>
+			<artifactId>nicki-scheduler</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

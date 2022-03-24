@@ -1,0 +1,20 @@
+{
+	"jobConfig" : [
+		{
+			"active" : "false",
+			"name" : "Test",
+			"group" : "SURVEY",
+			"jobClassName" : "org.mgnl.nicki.scheduler.TestJob",
+			"cronExpressions.doku" : "[Seconds] [Minutes] [Hours] [Day-of-Month] [Month] [Day-of-Week] [Year (optional)]",
+			"cronSchedule" : "0/10 * * * * ?"
+		},
+		{
+			"active" : "true",
+			"name" : "NotifyChanges",
+			"group" : "SURVEY",
+			"jobClassName" : "org.mgnl.nicki.consulting.survey.notify.NotifyJob",
+			"cronExpressions.doku" : "[Seconds] [Minutes] [Hours] [Day-of-Month] [Month] [Day-of-Week] [Year (optional)]",
+			"cronSchedule" : "0 30 1 * * ?"
+		}
+	]
+}

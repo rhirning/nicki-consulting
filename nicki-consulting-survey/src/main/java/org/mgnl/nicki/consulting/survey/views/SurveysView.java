@@ -11,11 +11,11 @@ import org.mgnl.nicki.consulting.views.NoValidPersonException;
 import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
+
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.data.renderer.TextRenderer;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -59,7 +59,7 @@ public class SurveysView extends VerticalLayout implements View {
 			
 			isInit = true;
 		}
-		
+
 		surveysSelect.setVisible(false);
 //		setFlexGrow(0, table);
 		setFlexGrow(1, canvas);

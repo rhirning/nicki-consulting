@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.views.PersonSelector;
@@ -27,6 +28,19 @@ public class PersonHelper implements Serializable {
 			LOG.error("Could not load persons", e);
 		}
 		return new ArrayList<Person>();
+		
+	}
+
+	public static Optional<Person> getPerson(String userId) {
+		Person person = new Person();
+		person.setUserId(userId);;
+		try (DBContext dbContext = DBContextManager.getContext("projects")) {
+			return Optional.ofNullable(dbContext.loadObject(person, false));
+
+		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
+			LOG.error("Could not load persons", e);
+		}
+		return Optional.empty();
 		
 	}
 }

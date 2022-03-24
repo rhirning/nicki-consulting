@@ -1,29 +1,52 @@
 package org.mgnl.nicki.consulting.survey.views;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.mgnl.nicki.consulting.core.helper.InvoiceHelper;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.survey.helper.GridHelper;
 import org.mgnl.nicki.consulting.survey.helper.SurveyHelper;
 import org.mgnl.nicki.consulting.survey.model.SurveyConfig;
 import org.mgnl.nicki.consulting.survey.model.SurveyConfigWrapper;
 import org.mgnl.nicki.consulting.survey.model.SurveyTopicWrapper;
+import org.mgnl.nicki.core.auth.InvalidPrincipalException;
+import org.mgnl.nicki.core.helper.DataHelper;
+import org.mgnl.nicki.template.engine.ConfigurationFactory.TYPE;
+import org.mgnl.nicki.template.engine.TemplateEngine;
+import org.mgnl.nicki.template.report.helper.XlsDocuHelper;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
+import org.xml.sax.SAXException;
 
+import com.itextpdf.text.DocumentException;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.server.StreamResource;
+
+import freemarker.template.TemplateException;
+import lombok.extern.slf4j.Slf4j;
 
 @SuppressWarnings("serial")
+@Slf4j
 public class FinishedSurveyView extends VerticalLayout implements View {
 
+	private static final String SURVEY_TEMPLATE = "survey/survey";
 	private Button backButton;
 	private Span title;
 	private Span description;
+	private Anchor downloadAnchor;
 	private Grid<SurveyTopicWrapper> table;
 	private boolean isInit;
 	
@@ -67,12 +90,42 @@ public class FinishedSurveyView extends VerticalLayout implements View {
 			table.setSizeFull();
 			table.setAllRowsVisible(true);
 			
+			StreamResource xlsxSource = createXlsxStream();
+			downloadAnchor.setEnabled(true);
+			downloadAnchor.setHref(xlsxSource);
+			
 			isInit = true;
 		}
 		collectData();
 		if (surveyTopicWrappers != null) {
 			table.setItems(surveyTopicWrappers);
 		}
+	}
+
+	private StreamResource createXlsxStream() {
+		return new StreamResource("Umfrage_" + survey.getName() + "_" + DataHelper.getMilli(new Date()) + ".xlsx",
+					() -> {
+						try {
+							return renderSurvey();
+						} catch (IOException | TemplateException | InvalidPrincipalException
+								| ParserConfigurationException | SAXException | DocumentException e) {
+							log.error("Error rendering survey", e);
+						}
+						return null;
+					});
+	}
+
+
+	
+	public InputStream renderSurvey() throws IOException, TemplateException, InvalidPrincipalException, ParserConfigurationException, SAXException, DocumentException {
+		Map<String, Object> dataModel = new HashMap<>();
+		dataModel.put("survey", survey.getSurveyConfig());
+		dataModel.put("helper", new SurveyHelper());
+		dataModel.put("person", person);
+		dataModel.put("topicWrappers", surveyTopicWrappers);
+		dataModel.put("dataHelper", new DataHelper());
+		return XlsDocuHelper.generateXlsx(TYPE.CLASSPATH, SURVEY_TEMPLATE, dataModel);
+
 	}
 
 	private void collectData() {
@@ -91,9 +144,11 @@ public class FinishedSurveyView extends VerticalLayout implements View {
 		}
 		title = new Span();
 		description = new Span();
+		downloadAnchor = new Anchor();
+		downloadAnchor.setText("download");
 		
 		table = new Grid<>();
-		add(title, description, table);
+		add(title, description, downloadAnchor, table);
 	}
 
 	@Override

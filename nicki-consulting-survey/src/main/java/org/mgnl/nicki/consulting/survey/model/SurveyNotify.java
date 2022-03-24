@@ -1,9 +1,13 @@
 package org.mgnl.nicki.consulting.survey.model;
 
 import java.io.Serializable;
+import java.util.Date;
+
 import org.mgnl.nicki.db.annotation.Attribute;
 import org.mgnl.nicki.db.annotation.ForeignKey;
 import org.mgnl.nicki.db.annotation.Table;
+import org.mgnl.nicki.db.data.DataType;
+
 import lombok.Data;
 
 @Data
@@ -20,4 +24,7 @@ public class SurveyNotify implements Serializable {
 
 	@Attribute(name = "USER_ID", mandatory = true)
 	private String userId;
+
+	@Attribute(name = "MODIFIED", type=DataType.TIMESTAMP)
+	private Date modified;
 }

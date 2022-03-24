@@ -12,7 +12,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-		<nicki-vaadin.version>22.9</nicki-vaadin.version>
+		<nicki.version>8.55</nicki.version>
+		<nicki-vaadin.version>14.32</nicki-vaadin.version>
 		<project.scm.id>github</project.scm.id>
 	</properties>
 	<modules>
@@ -78,9 +79,24 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+				<version>1.4.1</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.1.0</version>
+			</dependency>
+			<dependency>
 				<groupId>org.apache.derby</groupId>
 				<artifactId>derbyclient</artifactId>
 				<version>10.12.1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mgnl.nicki</groupId>
+				<artifactId>nicki-scheduler</artifactId>
+				<version>${nicki.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.projectlombok</groupId>

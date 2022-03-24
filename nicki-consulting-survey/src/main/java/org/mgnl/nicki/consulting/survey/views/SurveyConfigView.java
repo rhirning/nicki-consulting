@@ -19,13 +19,11 @@ import org.mgnl.nicki.core.helper.NameValue;
 import org.mgnl.nicki.core.util.Classes;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
-import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -42,6 +40,8 @@ public class SurveyConfigView extends VerticalLayout implements View {
 	private Button newSurveyButton;
 	private Button editSurveyButton;
 	private Button showResultButton;
+	private Button initSurveyButton;
+	private Button cloneSurveyButton;
 	private Button deleteSurveyButton;
 	private Grid<SurveyConfig> table;
 	private VerticalLayout canvas;
@@ -68,13 +68,55 @@ public class SurveyConfigView extends VerticalLayout implements View {
 				if (itemOptional.isPresent()) {
 					editSurveyButton.setVisible(true);
 					showResultButton.setVisible(true);
+					initSurveyButton.setVisible(true);
+					cloneSurveyButton.setVisible(true);
 					deleteSurveyButton.setVisible(true);
 				} else {
 					editSurveyButton.setVisible(false);
 					showResultButton.setVisible(false);
+					initSurveyButton.setVisible(false);
+					cloneSurveyButton.setVisible(false);
 					deleteSurveyButton.setVisible(false);
 				}
 			});
+
+			newSurveyButton.addClickListener(event -> showEditView(Optional.empty()));
+			editSurveyButton.addClickListener(event -> {
+				Optional<SurveyConfig> surveyOptional = Optional.ofNullable(table.getSelectedItems().iterator().next());
+				showEditView(surveyOptional);
+			});
+			showResultButton.addClickListener(event -> {
+				Optional<SurveyConfig> surveyOptional = Optional.ofNullable(table.getSelectedItems().iterator().next());
+				showResultView(surveyOptional);
+			});
+			
+			initSurveyButton.addClickListener(event -> {
+				Optional<SurveyConfig> surveyOptional = Optional.ofNullable(table.getSelectedItems().iterator().next());
+				
+				if (surveyOptional.isPresent()) {
+					SurveyConfig survey = surveyOptional.get();
+					initSurvey(survey);
+				}
+			});
+			
+			cloneSurveyButton.addClickListener(event -> {
+				Optional<SurveyConfig> surveyOptional = Optional.ofNullable(table.getSelectedItems().iterator().next());
+				
+				if (surveyOptional.isPresent()) {
+					SurveyConfig survey = surveyOptional.get();
+					cloneSurvey(survey);
+				}
+			});
+			
+			deleteSurveyButton.addClickListener(event -> {
+				Optional<SurveyConfig> surveyOptional = Optional.ofNullable(table.getSelectedItems().iterator().next());
+				
+				if (surveyOptional.isPresent()) {
+					SurveyConfig survey = surveyOptional.get();
+					deleteSurvey(survey);
+				}
+			});
+			
 			isInit = true;
 		}
 		
@@ -84,48 +126,6 @@ public class SurveyConfigView extends VerticalLayout implements View {
 		table.setVisible(true);
 		canvas.removeAll();
 		canvas.setVisible(false);
-
-
-		newSurveyButton.addClickListener(event -> showEditView(Optional.empty()));
-		editSurveyButton.addClickListener(event -> {
-			Optional<SurveyConfig> surveyOptional = Optional.ofNullable(table.getSelectedItems().iterator().next());
-			showEditView(surveyOptional);
-		});
-		showResultButton.addClickListener(event -> {
-			Optional<SurveyConfig> surveyOptional = Optional.ofNullable(table.getSelectedItems().iterator().next());
-			showResultView(surveyOptional);
-		});
-		
-		deleteSurveyButton.addClickListener(event -> {
-			Optional<SurveyConfig> surveyOptional = Optional.ofNullable(table.getSelectedItems().iterator().next());
-			
-			if (surveyOptional.isPresent()) {
-				SurveyConfig survey = surveyOptional.get();
-				if (SurveyHelper.isDeleteAllowed(survey))
-					try {
-						SurveyHelper.delete(survey);
-					} catch (SQLException | InitProfileException | NotSupportedException e) {
-						log.error("Could not delete survey: " + survey, e);
-					}
-			} else {
-				Notification.show("Da wurde schon abgestimmt");
-			}
-		});
-
-
-        GridContextMenu<SurveyConfig> contextMenu = new GridContextMenu<>(table);
-        // handle item right-click
-        contextMenu.setDynamicContentHandler(item -> {
-        	contextMenu.removeAll();
-            if (item != null) {
-            	table.select(item);
-            	SurveyConfig target = item;
-        		contextMenu.addItem("Löschen", selectedItem -> deleteSurvey(target));
-            	return true;
-            } else {
-            	return false;
-            }
-        });
 		
 	}
 	
@@ -146,24 +146,55 @@ public class SurveyConfigView extends VerticalLayout implements View {
 		return GridHelper.getDetails(values);
 	}
 
+	private void initSurvey(SurveyConfig survey ) {
+		try {
+			if (hasTopics(survey)) {
+				Notification.show("Die Umfrage hat schon begonnen");
+			}
+			SurveyHelper.confirm("Bewertungen löschen", survey, s -> {
+				try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+					SurveyHelper.deleteVotes(s);
+				} catch (SQLException e) {
+					log.error("Error accessing db", e);
+					Notification.show("Die Bewertungen konnten nicht gelöscht werden");
+				}
+				init();
+			});
+		} catch (SQLException | InitProfileException e) {
+			log.error("Error accessing db", e);
+			Notification.show("Die Bewertungen konnten nicht gelöscht werden");
+		}
+	}
+
+	private void cloneSurvey(SurveyConfig survey ) {
+		SurveyHelper.confirm("Umfrage kopieren", survey, s -> {
+			try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+				SurveyHelper.cloneSurvey(s, getPerson());
+			} catch (SQLException | NoValidPersonException | NoApplicationContextException e) {
+				log.error("Error accessing db", e);
+				Notification.show("Die Umfrage konnte nicht kopiert werden");
+			}
+			init();
+		});
+	}
+
 	private void deleteSurvey(SurveyConfig survey ) {
 		try {
 			if (hasTopics(survey)) {
 				Notification.show("Die Umfrage hat schon begonnen");
-			} else {
-				SurveyHelper.confirm("Umfrage löschen", survey, s -> {
-					try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
-						SurveyHelper.deleteTopics(s);
-						SurveyHelper.deleteChoices(s);
-						SurveyHelper.deleteNotifies(s);
-						dbContext.delete(s);
-					} catch (SQLException | InitProfileException e) {
-						log.error("Error accessing db", e);
-						Notification.show("Die Umfrage konnte nicht gelöscht werden");
-					}
-					init();
-				});
 			}
+			SurveyHelper.confirm("Umfrage löschen", survey, s -> {
+				try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+					SurveyHelper.deleteTopics(s);
+					SurveyHelper.deleteChoices(s);
+					SurveyHelper.deleteNotifies(s);
+					dbContext.delete(s);
+				} catch (SQLException | InitProfileException e) {
+					log.error("Error accessing db", e);
+					Notification.show("Die Umfrage konnte nicht gelöscht werden");
+				}
+				init();
+			});
 		} catch (SQLException | InitProfileException e) {
 			log.error("Error accessing db", e);
 			Notification.show("Die Umfrage konnte nicht gelöscht werden");
@@ -173,13 +204,7 @@ public class SurveyConfigView extends VerticalLayout implements View {
 	private boolean hasTopics(SurveyConfig survey) throws SQLException, InitProfileException {
 		SurveyTopic topic = new SurveyTopic();
 		topic.setSurveyId(survey.getId());
-		return isExist(topic);
-	}
-
-	public static boolean isExist(Object bean) throws SQLException, InitProfileException {
-		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
-			return dbContext.exists(bean);
-		}
+		return SurveyHelper.isExist(topic);
 	}
 	
 	private void showEditView(Optional<SurveyConfig> surveyOptional) {
@@ -247,10 +272,16 @@ public class SurveyConfigView extends VerticalLayout implements View {
 		showResultButton = new Button("Ergebnis");
 		showResultButton.setVisible(false);
 		
+		initSurveyButton = new Button("Umfrage initialisieren");
+		initSurveyButton.setVisible(false);
+		
+		cloneSurveyButton = new Button("Umfrage kopieren");
+		cloneSurveyButton.setVisible(false);
+		
 		deleteSurveyButton = new Button("Umfrage löschen");
 		deleteSurveyButton.setVisible(false);
 		
-		buttonLayout.add(newSurveyButton, editSurveyButton, showResultButton, deleteSurveyButton);
+		buttonLayout.add(newSurveyButton, editSurveyButton, showResultButton, initSurveyButton, cloneSurveyButton, deleteSurveyButton);
 		
 
 		table = new Grid<>();

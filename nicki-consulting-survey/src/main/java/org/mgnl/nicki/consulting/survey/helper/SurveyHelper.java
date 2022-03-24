@@ -1,8 +1,10 @@
 package org.mgnl.nicki.consulting.survey.helper;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +23,10 @@ import org.mgnl.nicki.consulting.survey.model.SurveyNotify;
 import org.mgnl.nicki.consulting.survey.model.SurveyTopic;
 import org.mgnl.nicki.consulting.survey.model.SurveyTopicWrapper;
 import org.mgnl.nicki.consulting.survey.model.SurveyVote;
-import org.mgnl.nicki.consulting.survey.views.TopicEditor;
 import org.mgnl.nicki.consulting.views.NoApplicationContextException;
 import org.mgnl.nicki.consulting.views.NoValidPersonException;
 import org.mgnl.nicki.core.data.Period;
-import org.mgnl.nicki.core.util.Classes;
+import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.context.NotSupportedException;
@@ -35,10 +36,6 @@ import org.mgnl.nicki.vaadin.base.application.NickiApplication;
 import org.mgnl.nicki.vaadin.base.command.Command;
 import org.mgnl.nicki.vaadin.base.command.CommandException;
 import org.mgnl.nicki.vaadin.base.components.ConfirmDialog;
-import org.mgnl.nicki.vaadin.base.components.DialogBase;
-
-import com.vaadin.flow.component.notification.Notification;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -74,12 +71,22 @@ public class SurveyHelper {
 		return new ArrayList<>();
 	}
 	
+	public static SurveyConfig getSurvey(long id) {
+		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
+			SurveyConfig surveyConfig = new SurveyConfig();
+			surveyConfig.setId(id);
+			return dbContext.loadObject(surveyConfig, false);
+		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
+			log.error("Could not load surveys", e);
+		}
+		return null;
+	}
+	
 	private static String getActiveFilter(DBContext dbContext) {
 		Calendar today = Period.getTodayCalendar();
-		Calendar tomorrow = Period.getTomorrowCalendar();
 		StringBuilder sb = new StringBuilder();
-		sb.append("(START_TIME IS NULL OR START_TIME < ").append(dbContext.toTimestamp(today.getTime())).append(")");
-		sb.append(" AND (VISIBLE_TIME IS NULL OR VISIBLE_TIME >= ").append(dbContext.toTimestamp(tomorrow.getTime())).append(")");
+		sb.append("(START_TIME IS NULL OR START_TIME <= ").append(dbContext.toTimestamp(today.getTime())).append(")");
+		sb.append(" AND (VISIBLE_TIME IS NULL OR VISIBLE_TIME >= ").append(dbContext.toTimestamp(today.getTime())).append(")");
 		return sb.toString();
 	}
 
@@ -140,6 +147,19 @@ public class SurveyHelper {
 			return new ArrayList<>();
 		}
 	}
+
+	public static void updateNotifies(SurveyConfig survey, Person person) {
+		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
+			for (SurveyNotify notify : getNotifies(dbContext, survey)) {
+				if (!StringUtils.equals(person.getUserId(), notify.getUserId())) {
+					notify.setModified(new Date());
+					dbContext.update(notify, "modified");
+				}
+			}
+		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException | NotSupportedException e) {
+			log.error("Could not update notifies", e);
+		}
+	}
 	
 	public static List<SurveyNotify> getNotifies(SurveyConfig survey) {
 		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
@@ -149,6 +169,36 @@ public class SurveyHelper {
 		}
 
 		return new ArrayList<>();
+	}
+
+	public static void clearNotify(SurveyNotify notify) {
+		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
+			notify.setModified(null);
+			dbContext.update(notify, "modified");
+		} catch (SQLException | InitProfileException | NotSupportedException e) {
+			log.error("Could not load topics", e);
+		}
+	}
+	
+	public static List<SurveyNotify> getOpenNotifies() {
+		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
+			return getOpenNotifies(dbContext);
+		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
+			log.error("Could not load topics", e);
+		}
+
+		return new ArrayList<>();
+	}
+	
+	
+	public static List<SurveyNotify> getOpenNotifies(DBContext dbContext) throws InstantiationException, IllegalAccessException, SQLException, InitProfileException {
+		SurveyNotify surveyNotify = new SurveyNotify();
+		List<SurveyNotify> surveyNotifies = dbContext.loadObjects(surveyNotify, false, "NOT MODIFIED IS NULL", null);
+		if (surveyNotifies != null) {
+			return surveyNotifies;
+		} else {
+			return new ArrayList<>();
+		}
 	}
 	
 	
@@ -196,7 +246,6 @@ public class SurveyHelper {
 			List<SurveyTopic> surveyTopics = getTopics(dbContext, survey);
 			if (surveyTopics != null) {
 				for (SurveyTopic topic : surveyTopics) {
-					List<SurveyVote> surveyVotes = getSurveyVotes(dbContext, topic, person);
 					SurveyTopicWrapper surveyTopicWrapper = new SurveyTopicWrapper(survey, topic, person);
 					surveyTopicWrappers.add(surveyTopicWrapper);
 				}
@@ -210,7 +259,7 @@ public class SurveyHelper {
 		return new ArrayList<>();
 	}
 
-	private static List<SurveyVote> getSurveyVotes(DBContext dbContext, SurveyTopic topic, Person person) {
+	public static List<SurveyVote> getSurveyVotes(DBContext dbContext, SurveyTopic topic, Person person) {
 		SurveyVote surveyVote = new SurveyVote();
 		surveyVote.setSurveyTopicId(topic.getId());
 		try {
@@ -420,31 +469,164 @@ public class SurveyHelper {
 
 	public static void deleteTopics(SurveyConfig survey) {
 		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
-			for (SurveyTopic topic : getTopics(dbContext, survey)) {
-				dbContext.delete(topic);
-			}
-		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
+			deleteTopics(dbContext, survey);
+		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException | NotSupportedException e) {
 			log.error("Could not load topics", e);
+		}
+	}
+
+	public static void deleteTopics(DBContext dbContext, SurveyConfig survey) throws SQLException, InitProfileException, InstantiationException, IllegalAccessException, NotSupportedException {
+		for (SurveyTopic topic : getTopics(dbContext, survey)) {
+			deleteTopic(dbContext, topic);
 		}
 	}
 
 	public static void deleteChoices(SurveyConfig survey) {
 		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
-			for (SurveyChoice choice : getChoices(dbContext, survey)) {
-				dbContext.delete(choice);
-			}
+			deleteChoices(dbContext, survey);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			log.error("Could not load topics", e);
 		}
 	}
 
+	public static void deleteChoice(SurveyChoice choice) {
+		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
+			deleteChoice(dbContext, choice);
+		} catch (SQLException | NotSupportedException | InitProfileException | InstantiationException | IllegalAccessException e) {
+			log.error("Could not delete choice", e);
+		}
+	}
+
+	public static void deleteChoice(DBContext dbContext, SurveyChoice choice) throws SQLException, InitProfileException, NotSupportedException, InstantiationException, IllegalAccessException {
+		SurveyVote surveyVote = new SurveyVote();
+		surveyVote.setSurveyChoiceId(choice.getId());
+		List<SurveyVote> votes = dbContext.loadObjects(surveyVote, false);
+		if (votes != null) {
+			for (SurveyVote vote : votes) {
+				vote.setSurveyChoiceId(null);
+				dbContext.update(vote, "surveyChoiceId");
+			}
+		}
+		dbContext.delete(choice);
+	}
+
+	public static void deleteTopic(DBContext dbContext, SurveyTopic topic) throws SQLException, InitProfileException, NotSupportedException, InstantiationException, IllegalAccessException {
+		SurveyVote surveyVote = new SurveyVote();
+		surveyVote.setSurveyTopicId(topic.getId());
+		List<SurveyVote> votes = dbContext.loadObjects(surveyVote, false);
+		if (votes != null) {
+			for (SurveyVote vote : votes) {
+				vote.setSurveyChoiceId(null);
+				dbContext.update(vote, "surveyChoiceId");
+			}
+		}
+		dbContext.delete(topic);
+	}
+
+	public static void deleteChoices(DBContext dbContext, SurveyConfig survey) throws SQLException, InitProfileException, InstantiationException, IllegalAccessException {
+		for (SurveyChoice choice : getChoices(dbContext, survey)) {
+			dbContext.delete(choice);
+		}
+	}
+
 	public static void deleteNotifies(SurveyConfig survey) {
 		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
-			for (SurveyNotify surveyNotify : getNotifies(dbContext, survey)) {
-				dbContext.delete(surveyNotify);
-			}
+			deleteNotifies(dbContext, survey);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			log.error("Could not load topics", e);
+		}
+	}
+
+	public static void deleteNotifies(DBContext dbContext, SurveyConfig survey) throws SQLException, InitProfileException, InstantiationException, IllegalAccessException {
+		for (SurveyNotify surveyNotify : getNotifies(dbContext, survey)) {
+			dbContext.delete(surveyNotify);
+		}
+	}
+
+	public static void deleteSurvey(SurveyConfig survey) {
+		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
+			deleteTopics(dbContext, survey);
+			deleteNotifies(dbContext, survey);
+			deleteChoices(dbContext, survey);
+			
+		} catch ( InitProfileException | InstantiationException | IllegalAccessException | SQLException | NotSupportedException e) {
+			log.error("Could not load topics", e);
+		}
+	}
+
+	public static void cloneSurvey(SurveyConfig survey, Person person) {
+		SurveyConfig copy = new SurveyConfig();
+		copy.setAddComment(survey.getAddComment());
+		copy.setAddTopic(survey.getAddTopic());
+		copy.setDescription(survey.getDescription());
+		copy.setName("Kopie von " + survey.getName());
+		copy.setOwner(person.getUserId());
+		try {
+			copy.setStart(DataHelper.dateFromDisplayDay("31.12.2099"));
+		} catch (ParseException e) {
+			log.error("Error parsing date", e);
+		}
+		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
+			PrimaryKey primaryKey = dbContext.create(copy);
+			long surveyId = primaryKey.getLong("ID");
+			for (SurveyTopic topic : getTopics(dbContext, survey)) {
+				topic.setId(null);
+				topic.setSurveyId(surveyId);
+				topic.setOwner(person.getUserId());
+				dbContext.create(topic);
+			}
+			for (SurveyChoice choice : getChoices(dbContext, survey)) {
+				choice.setId(null);
+				choice.setSurveyId(surveyId);
+				dbContext.create(choice);
+			}
+			
+		} catch ( InitProfileException | InstantiationException | IllegalAccessException | SQLException | NotSupportedException e) {
+			log.error("Could not copy survey", e);
+		}
+	}
+
+	public static void deleteVotes(SurveyConfig survey) {
+		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
+			for (SurveyChoice choice : getChoices(dbContext, survey.getId())) {
+				deleteVotes(dbContext, choice);
+			}
+			for (SurveyTopic topic: getTopics(dbContext, survey)) {
+				deleteVotes(dbContext, topic);
+			}
+			
+		} catch ( InitProfileException | InstantiationException | IllegalAccessException | SQLException e) {
+			log.error("Could not load topics", e);
+		}
+	}
+
+	public static void deleteVotes(DBContext dbContext, SurveyChoice choice) {
+		SurveyVote surveyVote = new SurveyVote();
+		surveyVote.setSurveyChoiceId(choice.getId());
+		try {
+			List<SurveyVote> surveyVotes = dbContext.loadObjects(surveyVote, false);
+			if (surveyVotes != null) {
+				for (SurveyVote vote : surveyVotes) {
+					dbContext.delete(vote);
+				}
+			}
+		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
+			log.error("Could not delete votes topics", e);
+		}
+	}
+
+	public static void deleteVotes(DBContext dbContext, SurveyTopic topic) {
+		SurveyVote surveyVote = new SurveyVote();
+		surveyVote.setSurveyTopicId(topic.getId());
+		try {
+			List<SurveyVote> surveyVotes = dbContext.loadObjects(surveyVote, false);
+			if (surveyVotes != null) {
+				for (SurveyVote vote : surveyVotes) {
+					dbContext.delete(vote);
+				}
+			}
+		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
+			log.error("Could not delete votes topics", e);
 		}
 	}
 
@@ -497,6 +679,12 @@ public class SurveyHelper {
 			}
 		}
 		return comments;
+	}
+
+	public static boolean isExist(Object bean) throws SQLException, InitProfileException {
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			return dbContext.exists(bean);
+		}
 	}
 	
 	public static <T> void confirm(String title, T bean, Consumer<T> action) {

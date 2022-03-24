@@ -2,12 +2,12 @@ package org.mgnl.nicki.consulting.survey.views;
 
 import java.util.function.Consumer;
 
+import org.apache.commons.lang.StringUtils;
 import org.mgnl.nicki.consulting.survey.model.SurveyChoice;
 import org.mgnl.nicki.vaadin.base.editor.ValidationException;
 import org.mgnl.nicki.vaadin.base.notification.Notification;
 import org.mgnl.nicki.vaadin.base.validation.Validation;
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;

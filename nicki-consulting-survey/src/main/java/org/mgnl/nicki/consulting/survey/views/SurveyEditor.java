@@ -5,21 +5,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang.StringUtils;
+import org.mgnl.nicki.consulting.core.helper.Constants;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.survey.helper.GridHelper;
 import org.mgnl.nicki.consulting.survey.helper.SurveyHelper;
 import org.mgnl.nicki.consulting.survey.model.SurveyChoice;
 import org.mgnl.nicki.consulting.survey.model.SurveyConfig;
 import org.mgnl.nicki.consulting.survey.model.SurveyTopic;
+import org.mgnl.nicki.consulting.survey.model.SurveyVote;
 import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.core.helper.NameValue;
+import org.mgnl.nicki.db.context.DBContext;
+import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.components.DialogBase;
 import org.mgnl.nicki.vaadin.base.editor.ValidationException;
 import org.mgnl.nicki.vaadin.base.validation.Validation;
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -30,8 +34,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.renderer.TextRenderer;
-
 import lombok.extern.slf4j.Slf4j;
 
 @SuppressWarnings("serial")
@@ -62,12 +64,14 @@ public class SurveyEditor extends HorizontalLayout {
 	private HorizontalLayout topicsButtonLayout;
 	private Button addTopicButton;
 	private Button editTopicButton;
+	private Button deleteTopicButton;
 	
 	private VerticalLayout choicesLayout;
 	private Grid<SurveyChoice> choicesTable;
 	private HorizontalLayout choicesButtonLayout;
 	private Button addChoiceButton;
 	private Button editChoiceButton;
+	private Button deleteChoiceButton;
 
 	private VerticalLayout canvas;
 	
@@ -91,8 +95,13 @@ public class SurveyEditor extends HorizontalLayout {
 			create = true;
 		}
 
-		this.topics = SurveyHelper.getTopics(surveyConfig);
-		this.choices = SurveyHelper.getChoices(surveyConfig);
+		if (surveyConfig.getId() != null) {
+			this.topics = SurveyHelper.getTopics(surveyConfig);
+			this.choices = SurveyHelper.getChoices(surveyConfig);
+		} else {
+			this.topics = new ArrayList<>();
+			this.choices = new ArrayList<SurveyChoice>();
+		}
 		buildMainLayout();
 		setSizeFull();
 		setMargin(false);
@@ -134,6 +143,7 @@ public class SurveyEditor extends HorizontalLayout {
 		}
 		startDatePicker.setValue(DataHelper.getLocalDate(surveyConfig.getStart()));
 		endDatePicker.setValue(DataHelper.getLocalDate(surveyConfig.getEnd()));
+		visibleDatePicker.setValue(DataHelper.getLocalDate(surveyConfig.getVisible()));
 		enableAddTopicCheckbox.setValue(surveyConfig.getAddTopic());
 		if (surveyConfig.getAddComment() != null) {
 			enableAddCommentCheckbox.setValue(surveyConfig.getAddComment());
@@ -147,7 +157,9 @@ public class SurveyEditor extends HorizontalLayout {
 		addTopicButton = new Button("Neues Thema");
 		editTopicButton = new Button("Thema ändern");
 		editTopicButton.setVisible(false);
-		topicsButtonLayout.add(addTopicButton, editTopicButton);
+		deleteTopicButton = new Button("Thema löschen");
+		deleteTopicButton.setVisible(false);
+		topicsButtonLayout.add(addTopicButton, editTopicButton, deleteTopicButton);
 		addTopicButton.addClickListener(event -> {
 			SurveyTopic topic = new SurveyTopic();
 			topic.setSurveyId(surveyConfig.getId());
@@ -158,6 +170,10 @@ public class SurveyEditor extends HorizontalLayout {
 			SurveyTopic topic = topicsTable.getSelectedItems().iterator().next();
 			showTopicEditor(topic);
 		});
+		deleteTopicButton.addClickListener(event -> {
+			SurveyTopic topic = topicsTable.getSelectedItems().iterator().next();
+			deleteTopic(topic);
+		});
 		topicsTable = new Grid<>();
 		topicsLayout.add(topicsButtonLayout, topicsTable);
 		topicsTable.addColumn(SurveyTopic::getName);
@@ -167,10 +183,46 @@ public class SurveyEditor extends HorizontalLayout {
 			Optional<SurveyTopic> itemOptional = event.getFirstSelectedItem();
 			if (itemOptional.isPresent()) {
 				editTopicButton.setVisible(true);
+				deleteTopicButton.setVisible(true);
 			} else {
 				editTopicButton.setVisible(false);
+				deleteTopicButton.setVisible(false);
 			}
 		});
+	}
+
+	private void deleteTopic(SurveyTopic topic) {
+		try {
+			if (hasVotes(topic)) {
+				Notification.show("Dieses Thema wurde schon bewertet");
+			}
+			SurveyHelper.confirm("Thema löschen", topic, s -> {
+				try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+					SurveyHelper.deleteTopic(dbContext, topic);
+				} catch (SQLException | InitProfileException | InstantiationException | IllegalAccessException | NotSupportedException e) {
+					log.error("Error accessing db", e);
+					Notification.show("Die Umfrage konnte nicht gelöscht werden");
+				}
+
+				this.topics = SurveyHelper.getTopics(surveyConfig);
+				showTopics();
+			});
+		} catch (SQLException | InitProfileException e) {
+			log.error("Error accessing db", e);
+			Notification.show("Die Umfrage konnte nicht gelöscht werden");
+		}
+	}
+
+	private boolean hasVotes(SurveyTopic topic) throws SQLException, InitProfileException {
+		SurveyVote vote = new SurveyVote();
+		vote.setSurveyTopicId(topic.getId());
+		return SurveyHelper.isExist(vote);
+	}
+
+	private boolean hasVotes(SurveyChoice choice) throws SQLException, InitProfileException {
+		SurveyVote vote = new SurveyVote();
+		vote.setSurveyChoiceId(choice.getId());
+		return SurveyHelper.isExist(vote);
 	}
 	
 	private void initChoices() {
@@ -178,7 +230,9 @@ public class SurveyEditor extends HorizontalLayout {
 		addChoiceButton = new Button("Neue Auswahl");
 		editChoiceButton = new Button("Auswahl ändern");
 		editChoiceButton.setVisible(false);
-		choicesButtonLayout.add(addChoiceButton, editChoiceButton);
+		deleteChoiceButton = new Button("Auswahl löschen");
+		deleteChoiceButton.setVisible(false);
+		choicesButtonLayout.add(addChoiceButton, editChoiceButton, deleteChoiceButton);
 		addChoiceButton.addClickListener(event -> {
 			SurveyChoice choice = new SurveyChoice();
 			choice.setSurveyId(surveyConfig.getId());
@@ -187,6 +241,10 @@ public class SurveyEditor extends HorizontalLayout {
 		editChoiceButton.addClickListener(event -> {
 			SurveyChoice choice = choicesTable.getSelectedItems().iterator().next();
 			showChoiceEditor(choice);
+		});
+		deleteChoiceButton.addClickListener(event -> {
+			SurveyChoice choice = choicesTable.getSelectedItems().iterator().next();
+			deleteChoice(choice);
 		});
 		choicesTable = new Grid<>();
 		choicesLayout.add(choicesButtonLayout, choicesTable);
@@ -197,10 +255,34 @@ public class SurveyEditor extends HorizontalLayout {
 			Optional<SurveyChoice> itemOptional = event.getFirstSelectedItem();
 			if (itemOptional.isPresent()) {
 				editChoiceButton.setVisible(true);
+				deleteChoiceButton.setVisible(true);
 			} else {
 				editChoiceButton.setVisible(false);
+				deleteChoiceButton.setVisible(false);
 			}
 		});
+	}
+
+	private void deleteChoice(SurveyChoice choice) {
+		try {
+			if (hasVotes(choice)) {
+				Notification.show("Dieses AUswahl wurde schon benutzt");
+			}
+			SurveyHelper.confirm("AUswahl löschen", choice, s -> {
+				try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+					SurveyHelper.deleteChoice(dbContext, choice);
+				} catch (SQLException | InitProfileException | InstantiationException | IllegalAccessException | NotSupportedException e) {
+					log.error("Error accessing db", e);
+					Notification.show("Die Umfrage konnte nicht gelöscht werden");
+				}
+
+				this.topics = SurveyHelper.getTopics(surveyConfig);
+				showTopics();
+			});
+		} catch (SQLException | InitProfileException e) {
+			log.error("Error accessing db", e);
+			Notification.show("Die Umfrage konnte nicht gelöscht werden");
+		}
 	}
 	
 	private Grid<NameValue> getDetails(SurveyChoice survey) {
@@ -252,19 +334,20 @@ public class SurveyEditor extends HorizontalLayout {
 		} else {
 			windowTitle = "Thema ändern";
 		}
-		TopicEditor topicEditor = new TopicEditor(surveyTopic, s -> {
+		TopicEditor topicEditor = new TopicEditor(surveyTopic, topic -> {
 			try {
-				if (s.getId() == null) {
-					SurveyHelper.create(s);
+				if (topic.getId() == null) {
+					SurveyHelper.create(topic);
+					SurveyHelper.updateNotifies(surveyConfig, person);
 					editWindow.close();
 				} else {
-					SurveyHelper.update(s);
+					SurveyHelper.update(topic);
 					editWindow.close();
 				}
 				this.topics = SurveyHelper.getTopics(surveyConfig);
 				topicsTable.setItems(topics);
 			} catch (SQLException | InitProfileException | NotSupportedException e) {
-				Notification.show("Could not save or update topic: " + s);
+				Notification.show("Could not save or update topic: " + topic);
 			}
 		});
 		editWindow = new DialogBase(windowTitle, topicEditor);
