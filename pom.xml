@@ -4,7 +4,7 @@
 
 	<groupId>org.mgnl.nicki.consulting</groupId>
 	<artifactId>nicki-consulting</artifactId>
-	<version>22.11-SNAPSHOT</version>
+	<version>22.12-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>nicki-consulting</name>
