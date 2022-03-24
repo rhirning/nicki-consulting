@@ -15,6 +15,7 @@ import org.mgnl.nicki.consulting.core.helper.PersonHelper;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.survey.helper.SurveyHelper;
 import org.mgnl.nicki.consulting.survey.model.SurveyNotify;
+import org.mgnl.nicki.core.config.Config;
 import org.mgnl.nicki.core.helper.DataHelper;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -26,6 +27,10 @@ public class NotifyJob implements Job {
     public void execute(JobExecutionContext context)
         throws JobExecutionException {
     	JobKey jobKey = context.getJobDetail().getKey();
+    	if (!Config.getBoolean("nicki.survey.notify.enable", true)) {
+    		log.info(getClass().getSimpleName() + ": Notification disabled");
+    		return;
+    	}
     	
     	List<SurveyNotify> openNotifies = SurveyHelper.getOpenNotifies();
     	if (openNotifies.size() > 0) {

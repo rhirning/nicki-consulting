@@ -34,6 +34,7 @@ public class Mailer {
 	private static final String MAIL_PASSWORD		= "nicki.survey.notify.mail.server.password";
 	private static final String MAIL_HOST			= "nicki.survey.notify.mail.server.host";
 	private static final String MAIL_PORT			= "nicki.survey.notify.mail.server.port";
+	private static final String START_TLS			= "nicki.survey.notify.mail.server.starttls";	
 	private static final String TEMPLATE			= "nicki.survey.notify.mail.template";
 	private static final String CHARSET				= "UTF-8";
 
@@ -67,10 +68,13 @@ public class Mailer {
 		String password = Config.getString(MAIL_PASSWORD, null);
 		String host = Config.getString(MAIL_HOST, null);
 		String port = Config.getString(MAIL_PORT, null);
+		boolean starttls = Config.getBoolean(START_TLS, false);
 
 		Properties props = new Properties();
-		// props.put("mail.smtp.auth", "true");
-		// props.put("mail.smtp.starttls.enable", "true");
+		//props.put("mail.smtp.auth", "true");
+		if (starttls) {
+			props.put("mail.smtp.starttls.enable", "true");
+		}
 		props.put("mail.smtp.host", host);
 		if (StringUtils.isNotBlank(port)) {
 			props.put("mail.smtp.port", port);
