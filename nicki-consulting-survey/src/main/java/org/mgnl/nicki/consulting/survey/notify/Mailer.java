@@ -4,7 +4,6 @@ import org.mgnl.nicki.template.engine.TemplateEngine;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Properties;
 

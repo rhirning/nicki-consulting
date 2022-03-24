@@ -85,7 +85,6 @@ public class CustomersView extends BaseView implements View {
 	private boolean isInit;
 
 	private DialogBase editWindow;
-	private DialogBase newProjectWindow;
 	private DialogBase newMemberWindow;
 	private DialogBase selectPersonWindow;
 
@@ -203,25 +202,6 @@ public class CustomersView extends BaseView implements View {
 		}
 	}
 
-	private void showEditCustomer(Customer customer) {
-		showProjectsLayout(false);
-		showMembersLayout(false);
-		DbBeanViewer beanViewer = new DbBeanViewer(new DbBeanCloseListener() {
-			
-			@Override
-			public void close(Component component) {
-				loadCustomers();
-			}
-		});
-		beanViewer.setDbContextName("projects");
-		beanViewer.setWidth("400px");
-		beanViewer.setHeightFull();
-		beanViewer.setDbBean(customer);
-		customerLayout.removeAll();
-		customerLayout.add(beanViewer);
-		showProjects(customer);
-	}
-
 	private void showProjects(Customer customer) {
 		if (customer != null) {
 			showProjectsLayout(true);
@@ -277,63 +257,9 @@ public class CustomersView extends BaseView implements View {
 		editWindow.open();
 	}
 
-	private void hideProject() {
-		projectLayout.removeAll();
-		showProjectsLayout(true);
-		showMembersLayout(false);
-	}
-
-	private void showEditProject(Project project) {
-		DbBeanViewer beanViewer = new DbBeanViewer(new DbBeanCloseListener() {
-			
-			@Override
-			public void close(Component component) {
-				hideProject();
-				if (getSelectedItem(customersTable).isPresent())
-				loadProjects(getSelectedItem(customersTable).get());
-			}
-		});
-		beanViewer.setDbContextName("projects");
-		beanViewer.setWidth("400px");
-		beanViewer.setHeightFull();
-		beanViewer.setDbBean(project);
-		
-		projectLayout.removeAll();
-		projectLayout.add(beanViewer);
-		showMembers(project);
-	}
-
 	private void showMembers(Project project) {
 		showMembersLayout(true);
 		loadMembers(project);
-	}
-
-	private void showNewProjectView() {
-		Optional<Customer> customer = getSelectedItem(customersTable);
-		if (customer.isPresent()) {
-			DbBeanViewer beanViewer = new DbBeanViewer(new DbBeanCloseListener() {
-				
-				@Override
-				public void close(Component component) {
-					newProjectWindow.close();
-					hideProject();
-					if (getSelectedItem(customersTable).isPresent()) {
-						loadProjects(getSelectedItem(customersTable).get());
-					}
-				}
-			});
-			beanViewer.setDbContextName("projects");
-			beanViewer.setWidth("400px");
-			try {
-				beanViewer.init(Project.class, customer.get());
-			} catch (InstantiationException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			newProjectWindow = new DialogBase("Neues Projekt", beanViewer);
-			newProjectWindow.setModal(true);
-			newProjectWindow.open();
-		}
 	}
 
 	private void showNewMemberView() {
@@ -377,28 +303,6 @@ public class CustomersView extends BaseView implements View {
 		memberLayout.removeAll();
 	}
 
-	private void showEditMember(Optional<MemberWrapper> memberWrapper) {
-		if (memberWrapper.isPresent()) {
-			DbBeanViewer beanViewer = new DbBeanViewer(new DbBeanCloseListener() {
-				
-				@Override
-				public void close(Component component) {
-					hideMember();
-					if (getSelectedItem(projectsTable).isPresent()) {
-						loadMembers(getSelectedItem(projectsTable).get());
-					}
-				}
-			});
-			beanViewer.setDbContextName("projects");
-			beanViewer.setWidth("400px");
-			beanViewer.setHeightFull();
-			beanViewer.setDbBean(memberWrapper.get().getMember());
-			
-			memberLayout.removeAll();
-			memberLayout.add(beanViewer);
-		}
-	}
-
 	@Override
 	public void init() {
 		if (!isInit) {
@@ -435,7 +339,7 @@ public class CustomersView extends BaseView implements View {
 		try (DBContext dbContext = DBContextManager.getContext("projects")) {
 			List<Customer> customers = dbContext.loadObjects(customer, false);
 			customersTable.setItems(customers);
-			customersTable.setHeightByRows(true);
+			customersTable.setAllRowsVisible(true);
 
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			LOG.error("Could not load customers", e);
@@ -449,7 +353,7 @@ public class CustomersView extends BaseView implements View {
 		try (DBContext dbContext = DBContextManager.getContext("projects")) {
 			List<Project> projects = dbContext.loadObjects(project, false);
 			projectsTable.setItems(projects);
-			projectsTable.setHeightByRows(true);
+			projectsTable.setAllRowsVisible(true);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			LOG.error("Could not load projects", e);
 		}
@@ -465,7 +369,7 @@ public class CustomersView extends BaseView implements View {
 				memberWrappers.add(new MemberWrapper(m));
 			}
 			membersTable.setItems(memberWrappers);
-			membersTable.setHeightByRows(true);
+			membersTable.setAllRowsVisible(true);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
 			LOG.error("Could not load members", e);
 		}		

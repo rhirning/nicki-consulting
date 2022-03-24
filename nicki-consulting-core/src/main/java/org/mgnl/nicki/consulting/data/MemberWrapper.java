@@ -9,6 +9,7 @@ import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.core.data.TreeObject;
 
 public class MemberWrapper implements Serializable, TreeObject {
+	private static final long serialVersionUID = 2228557310909997L;
 	private Member member;
 	private Person person;
 	private Project project;

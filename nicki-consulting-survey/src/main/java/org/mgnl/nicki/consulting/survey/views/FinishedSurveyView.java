@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.mgnl.nicki.consulting.core.helper.InvoiceHelper;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.survey.helper.GridHelper;
 import org.mgnl.nicki.consulting.survey.helper.SurveyHelper;
@@ -20,7 +19,6 @@ import org.mgnl.nicki.consulting.survey.model.SurveyTopicWrapper;
 import org.mgnl.nicki.core.auth.InvalidPrincipalException;
 import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.template.engine.ConfigurationFactory.TYPE;
-import org.mgnl.nicki.template.engine.TemplateEngine;
 import org.mgnl.nicki.template.report.helper.XlsDocuHelper;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
