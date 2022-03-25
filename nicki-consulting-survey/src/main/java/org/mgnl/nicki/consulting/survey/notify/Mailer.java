@@ -4,6 +4,11 @@ import org.mgnl.nicki.template.engine.TemplateEngine;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.Properties;
 
@@ -19,6 +24,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -71,9 +80,18 @@ public class Mailer {
 		boolean starttls = Config.getBoolean(START_TLS, false);
 
 		Properties props = new Properties();
-		//props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.auth", "true");
 		if (starttls) {
 			props.put("mail.smtp.starttls.enable", "true");
+	        try {
+				// configure the SSLContext with a TrustManager
+				SSLContext ctx = SSLContext.getInstance("TLS");
+				ctx.init(new KeyManager[0], new TrustManager[] {new DefaultTrustManager()}, new SecureRandom());
+				SSLContext.setDefault(ctx);
+			} catch (KeyManagementException | NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		props.put("mail.smtp.host", host);
 		if (StringUtils.isNotBlank(port)) {
@@ -133,5 +151,17 @@ public class Mailer {
 
 
 	}
+    private static class DefaultTrustManager implements X509TrustManager {
 
+        @Override
+        public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+    }
 }
