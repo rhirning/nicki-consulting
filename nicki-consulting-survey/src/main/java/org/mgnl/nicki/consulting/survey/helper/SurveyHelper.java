@@ -561,11 +561,7 @@ public class SurveyHelper {
 		copy.setDescription(survey.getDescription());
 		copy.setName("Kopie von " + survey.getName());
 		copy.setOwner(person.getUserId());
-		try {
-			copy.setStart(DataHelper.dateFromDisplayDay("31.12.2099"));
-		} catch (ParseException e) {
-			log.error("Error parsing date", e);
-		}
+			copy.setStart(survey.getStart());
 		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
 			PrimaryKey primaryKey = dbContext.create(copy);
 			long surveyId = primaryKey.getLong("ID");
