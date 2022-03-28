@@ -27,6 +27,7 @@ import org.xml.sax.SAXException;
 import com.itextpdf.text.DocumentException;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -146,6 +147,7 @@ public class FinishedSurveyView extends VerticalLayout implements View {
 		downloadAnchor.setText("download");
 		
 		table = new Grid<>();
+		table.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
 		add(title, description, downloadAnchor, table);
 	}
 

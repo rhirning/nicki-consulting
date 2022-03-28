@@ -15,6 +15,7 @@ import org.mgnl.nicki.vaadin.base.menu.application.View;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -53,9 +54,7 @@ public class SurveyView extends VerticalLayout implements View {
 			description.setText(survey.getDescription());
 			table.addColumn(SurveyTopicWrapper::getName);
 
-			table.setItemDetailsRenderer(new TextRenderer<>(t -> {
-				return t.getName() + " (" + t.getDescription() + ")";
-			}));
+			table.setItemDetailsRenderer(new TextRenderer<>(t -> t.getDescription()));
 			GridHelper.addSurveyTopicWrapperColumns(table, survey);
 			table.setSizeFull();
 			table.setAllRowsVisible(true);
@@ -126,6 +125,7 @@ public class SurveyView extends VerticalLayout implements View {
 		buttonLayout.add(addTopicButton, notifyCheckbox);
 		
 		table = new Grid<>();
+		table.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
 		add(title, description, buttonLayout, table);
 	}
 
