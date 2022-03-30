@@ -124,8 +124,8 @@ public class Mailer {
 //			message.setRecipients(Message.RecipientType.CC,
 //					InternetAddress.parse(cc));
 			// Set BCC: header field of the header.
-//			message.setRecipients(Message.RecipientType.BCC,
-//					InternetAddress.parse("idm@provinzial.de"));
+			message.setRecipients(Message.RecipientType.BCC,
+					InternetAddress.parse("ralf@hirning.de"));
 			// Set Subject: header field
 			message.setSubject(subject);
 
@@ -133,7 +133,7 @@ public class Mailer {
 			BodyPart messageBodyPart = new MimeBodyPart();
 
 			// Now set the actual message
-			messageBodyPart.setContent(body, "text/html");
+			messageBodyPart.setContent(body, "text/html; charset=utf-8");
 
 			// Create a multipar message
 			Multipart multipart = new MimeMultipart();
@@ -142,12 +142,12 @@ public class Mailer {
 			multipart.addBodyPart(messageBodyPart);
 
 			// Send the complete message parts
-			message.setContent(multipart, "text/html");
+			message.setContent(multipart);
 
 			// Send message
 			Transport.send(message);
 
-			log.info("Sent message successfully to " + to);
+			log.info("Sent message successfully to " + to + "\nSubject: " + subject + "\n" + body);
 
 
 	}
