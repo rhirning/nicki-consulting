@@ -110,48 +110,91 @@ public class Mailer {
 			session = Session.getInstance(props,null);
 		}
 
-
-			// Create a default MimeMessage object.
-			Message message = new MimeMessage(session);
-
-			// Set From: header field of the header.
-			message.setFrom(new InternetAddress(from));
-
-			// Set To: header field of the header.
-			message.setRecipients(Message.RecipientType.TO,
-					InternetAddress.parse(to));
-			// Set CC: header field of the header.
-//			message.setRecipients(Message.RecipientType.CC,
-//					InternetAddress.parse(cc));
-			// Set BCC: header field of the header.
-			message.setRecipients(Message.RecipientType.BCC,
-					InternetAddress.parse("ralf@hirning.de"));
-			// Set Subject: header field
-			message.setSubject(subject);
-
-			// Create the message part
-			BodyPart messageBodyPart = new MimeBodyPart();
-
-			// Now set the actual message
-			messageBodyPart.setContent(body, "text/html; charset=utf-8");
-
-			// Create a multipar message
-			Multipart multipart = new MimeMultipart();
-
-			// Set text message part
-			multipart.addBodyPart(messageBodyPart);
-
-			// Send the complete message parts
-			message.setContent(multipart);
-
-			// Send message
-			Transport.send(message);
-
-			log.info("Sent message successfully to " + to + "\nSubject: " + subject + "\n" + body);
+//		sendAsMultiPart(session, from, to, subject, body);
+		sendAsPlainText(session, from, to, subject, body);
 
 
 	}
-    private static class DefaultTrustManager implements X509TrustManager {
+	
+
+	
+	
+    private static void sendAsMultiPart(Session session, String from, String to, String subject, String body) throws AddressException, MessagingException {
+
+		// Create a default MimeMessage object.
+		Message message = new MimeMessage(session);
+
+		// Set From: header field of the header.
+		message.setFrom(new InternetAddress(from));
+
+		// Set To: header field of the header.
+		message.setRecipients(Message.RecipientType.TO,
+				InternetAddress.parse(to));
+		// Set CC: header field of the header.
+//		message.setRecipients(Message.RecipientType.CC,
+//				InternetAddress.parse(cc));
+		// Set BCC: header field of the header.
+		message.setRecipients(Message.RecipientType.BCC,
+				InternetAddress.parse("ralf@hirning.de"));
+		// Set Subject: header field
+		message.setSubject(subject);
+
+		// Create the message part
+		BodyPart messageBodyPart = new MimeBodyPart();
+
+		// Now set the actual message
+		messageBodyPart.setContent(body, "text/html; charset=utf-8");
+
+		// Create a multipar message
+		Multipart multipart = new MimeMultipart();
+
+		// Set text message part
+		multipart.addBodyPart(messageBodyPart);
+
+		// Send the complete message parts
+		message.setContent(multipart);
+
+		// Send message
+		Transport.send(message);
+
+		log.info("Sent message successfully to " + to + "\nSubject: " + subject + "\n" + body);
+
+	}
+	
+	
+    private static void sendAsPlainText(Session session, String from, String to, String subject, String body) throws AddressException, MessagingException {
+
+		// Create a default MimeMessage object.
+		Message message = new MimeMessage(session);
+
+		// Set From: header field of the header.
+		message.setFrom(new InternetAddress(from));
+
+		// Set To: header field of the header.
+		message.setRecipients(Message.RecipientType.TO,
+				InternetAddress.parse(to));
+		// Set CC: header field of the header.
+//		message.setRecipients(Message.RecipientType.CC,
+//				InternetAddress.parse(cc));
+		// Set BCC: header field of the header.
+		message.setRecipients(Message.RecipientType.BCC,
+				InternetAddress.parse("ralf@hirning.de"));
+		// Set Subject: header field
+		message.setSubject(subject);
+		
+		message.setText(body);
+
+		// Send message
+		Transport.send(message);
+
+		log.info("Sent message successfully to " + to + "\nSubject: " + subject + "\n" + body);
+
+	}
+
+
+
+
+	private static class DefaultTrustManager implements X509TrustManager {
 
         @Override
         public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
