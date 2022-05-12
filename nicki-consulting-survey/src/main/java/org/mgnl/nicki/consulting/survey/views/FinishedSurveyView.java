@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang.StringUtils;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.survey.helper.GridHelper;
 import org.mgnl.nicki.consulting.survey.helper.SurveyHelper;
@@ -102,7 +103,7 @@ public class FinishedSurveyView extends VerticalLayout implements View {
 	}
 
 	private StreamResource createXlsxStream() {
-		return new StreamResource("Umfrage_" + survey.getName() + "_" + DataHelper.getMilli(new Date()) + ".xlsx",
+		return new StreamResource("Umfrage_" + correct(survey.getName()) + "_" + DataHelper.getMilli(new Date()) + ".xlsx",
 					() -> {
 						try {
 							return renderSurvey();
@@ -116,6 +117,13 @@ public class FinishedSurveyView extends VerticalLayout implements View {
 
 
 	
+	private String correct(String name) {
+		name = StringUtils.replace(name, "/", "_");
+		name = StringUtils.replace(name, "\\", "_");
+		name = StringUtils.replace(name, ":", "_");
+		return name;
+	}
+
 	public InputStream renderSurvey() throws IOException, TemplateException, InvalidPrincipalException, ParserConfigurationException, SAXException, DocumentException {
 		Map<String, Object> dataModel = new HashMap<>();
 		dataModel.put("survey", survey.getSurveyConfig());
