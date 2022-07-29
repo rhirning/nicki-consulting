@@ -12,13 +12,14 @@
 
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-		<nicki.version>8.55</nicki.version>
-		<nicki-vaadin.version>14.32</nicki-vaadin.version>
+		<nicki.version>8.58</nicki.version>
+		<nicki-vaadin.version>14.37</nicki-vaadin.version>
 		<project.scm.id>github</project.scm.id>
 	</properties>
 	<modules>
 		<module>nicki-consulting-app</module>
 		<module>nicki-consulting-core</module>
+		<module>nicki-consulting-forecast</module>
 		<module>nicki-consulting-survey</module>
 	</modules>
 	<distributionManagement>
@@ -78,6 +79,11 @@
 	</build>
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+			    <groupId>com.github.appreciated</groupId>
+			    <artifactId>apexcharts</artifactId>
+			    <version>2.0.0-beta12</version>
+			</dependency>
 			<dependency>
 				<groupId>com.sun.mail</groupId>
 				<artifactId>javax.mail</artifactId>
