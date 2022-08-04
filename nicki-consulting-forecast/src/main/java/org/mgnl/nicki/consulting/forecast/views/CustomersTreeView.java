@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.mgnl.nicki.consulting.core.helper.Constants;
 import org.mgnl.nicki.consulting.forecast.helper.ForecastHelper;
+import org.mgnl.nicki.consulting.forecast.helper.ForecastViewHelper;
 import org.mgnl.nicki.consulting.forecast.model.ForecastCustomer;
 import org.mgnl.nicki.consulting.forecast.model.ForecastDeal;
 import org.mgnl.nicki.core.data.TreeObject;
@@ -82,7 +83,7 @@ public class CustomersTreeView extends VerticalLayout implements View {
 			Optional<TreeObject> itemOptional = event.getFirstSelectedItem();
 			if (itemOptional.isPresent()) {
 				TreeObject target = itemOptional.get().getObject();
-				showEditView(canvas, target);
+				ForecastViewHelper.showEditView(canvas, target, c -> init());
 			}
 		});
 		tree.addExpandListener(event -> {
@@ -128,23 +129,6 @@ public class CustomersTreeView extends VerticalLayout implements View {
             }
         });
 		
-	}
-
-	private <T> void showEditView(VerticalLayout layout, T object) {
-		DbBeanViewer beanViewer = new DbBeanViewer(new DbBeanCloseListener() {
-			
-			@Override
-			public void close(Component component) {
-				init();
-			}
-		});
-		beanViewer.setDbContextName("projects");
-		beanViewer.setHeightFull();
-		beanViewer.setWidthFull();
-		if (object != null) {
-			beanViewer.setDbBean(object);
-			layout.add(beanViewer);
-		}
 	}
 
 	private void deleteCustomer(Optional<ForecastCustomer> customerOptional ) {

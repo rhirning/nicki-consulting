@@ -83,7 +83,7 @@ public class ForecastDealCollector {
 		endCalendar.setTime(endDate);
 		Period.setToBeginOfDay(endCalendar);
 		
-		while (startCalendar.before(endCalendar)) {
+		while (!startCalendar.after(endCalendar)) {
 			dates.add(DataHelper.getLocalDate(startCalendar.getTime()));
 			startCalendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
@@ -134,10 +134,11 @@ public class ForecastDealCollector {
 			}
 			
 			if (start != null) {
-				sb.append(" AND START_DATE >= ").append(ForecastHelper.toDate(start));
+				sb.append(" AND END_DATE >= ").append(ForecastHelper.toDate(start));
 			}
 			if (end != null) {
-				sb.append(" AND END_DATE > ").append(ForecastHelper.toDate(end));
+
+				sb.append(" AND START_DATE <= ").append(ForecastHelper.toDate(end));
 			}
 		} catch (SQLException e) {
 		}

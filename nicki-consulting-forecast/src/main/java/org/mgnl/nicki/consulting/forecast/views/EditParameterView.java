@@ -3,6 +3,7 @@ package org.mgnl.nicki.consulting.forecast.views;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.mgnl.nicki.consulting.forecast.helper.ForecastViewHelper;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
 import org.mgnl.nicki.vaadin.base.components.DialogBase;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
@@ -47,7 +48,7 @@ public abstract class EditParameterView<T> extends VerticalLayout implements Vie
 				Optional<T> itemOptional = event.getFirstSelectedItem();
 				if (itemOptional.isPresent()) {
 					T target = itemOptional.get();
-					showEditView(canvas, target);
+					ForecastViewHelper.showEditView(canvas, target, c -> init());
 				}
 			});
 			Button newStageButton = new Button();
@@ -91,24 +92,7 @@ public abstract class EditParameterView<T> extends VerticalLayout implements Vie
 
 	protected abstract void addColumns(Grid<T> grid);
 
-	private void showEditView(VerticalLayout layout, T object) {
-		DbBeanCloseListener closeListener = new DbBeanCloseListener() {			
-			@Override
-			public void close(Component component) {
-				init();
-			}
-		};
-		DbBeanViewer beanViewer = new DbBeanViewer(closeListener);
 
-		beanViewer.setDbContextName("projects");
-		beanViewer.setHeightFull();
-		beanViewer.setWidthFull();
-		if (object != null) {
-			beanViewer.setDbBean(object);
-			layout.add(beanViewer);
-		}
-	}
-	
 	private void showEditView(Class<T> clazz, Optional<T> object, String newCaption, String editCaption, Object... foreignObjects) {
 		DbBeanCloseListener closeListener = new DbBeanCloseListener() {			
 			@Override

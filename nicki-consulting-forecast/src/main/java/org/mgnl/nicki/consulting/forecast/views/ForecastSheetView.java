@@ -16,6 +16,7 @@ import org.mgnl.nicki.vaadin.db.editor.DbBeanCloseListener;
 import org.mgnl.nicki.vaadin.db.editor.DbBeanViewer;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
@@ -25,7 +26,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 @SuppressWarnings("serial")
 public class ForecastSheetView extends VerticalLayout implements View {
 	
-	
+	private Button newDealButton;
 	private Grid<ForecastDeal> grid;
 	private boolean isInit;
 	
@@ -39,6 +40,10 @@ public class ForecastSheetView extends VerticalLayout implements View {
 	public void init() {
 		if (!isInit) {
 			
+			newDealButton = new Button("Neuer Deal");
+			newDealButton.addClickListener(b -> showEditView(ForecastDeal.class, Optional.empty(), "Neuer Deal", "Deal bearbeiten"));
+
+			
 			grid = new Grid<>();
 			grid.addColumn(d -> d.getCustomer().getName()).setHeader("Kunde");
 			grid.addColumn(ForecastDeal::getName).setHeader("Deal");
@@ -46,13 +51,13 @@ public class ForecastSheetView extends VerticalLayout implements View {
 			grid.addColumn(ForecastDeal::getProbability).setHeader("Wahrscheinlichkeit(%)");
 			grid.addColumn(ForecastDeal::getTeamSize).setHeader("Teamgröße");
 			grid.addColumn(d -> DataHelper.getDisplayDay(d.getStartDate())).setHeader("Start");
-			grid.addColumn(d -> DataHelper.getDisplayDay(d.getStartDate())).setHeader("Ende");
+			grid.addColumn(d -> DataHelper.getDisplayDay(d.getEndDate())).setHeader("Ende");
 			grid.setSizeFull();
 			grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
 
 			grid.setItemDetailsRenderer(new ComponentRenderer<>(d -> getDetails(d)));
 			
-			add(grid);
+			add(newDealButton, grid);
 
 	        GridContextMenu<ForecastDeal> contextMenu = new GridContextMenu<>(grid);
 	        // handle item right-click
