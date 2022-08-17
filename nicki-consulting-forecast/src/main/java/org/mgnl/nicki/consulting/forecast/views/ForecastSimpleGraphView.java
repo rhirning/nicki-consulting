@@ -1,9 +1,6 @@
 package org.mgnl.nicki.consulting.forecast.views;
 
-import java.util.Date;
-
 import org.mgnl.nicki.consulting.forecast.helper.ForecastDealCollector;
-import org.mgnl.nicki.consulting.forecast.helper.ForecastDealCollector.UNIT;
 import org.mgnl.nicki.consulting.forecast.helper.ForecastDealGraphWrapper;
 import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.core.helper.DataHelper;
@@ -16,7 +13,6 @@ import com.github.appreciated.apexcharts.config.chart.Type;
 import com.github.appreciated.apexcharts.config.chart.builder.ToolbarBuilder;
 import com.github.appreciated.apexcharts.config.chart.builder.ZoomBuilder;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -49,14 +45,13 @@ public class ForecastSimpleGraphView extends VerticalLayout implements View {
 			periodStartDatePicker.addValueChangeListener(event -> redraw());
 			periodEndDatePicker.addValueChangeListener(event -> redraw());
 			ignoreProbabilityCheckbox.addValueChangeListener(event -> redraw());
-			
 
 	        setWidth("100%");
-
-	        redraw();
 			
 			isInit = true;
 		}
+
+        redraw();
 		
 
 	}

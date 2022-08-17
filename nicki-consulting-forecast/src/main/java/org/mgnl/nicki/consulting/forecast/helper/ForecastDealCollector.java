@@ -3,6 +3,7 @@ package org.mgnl.nicki.consulting.forecast.helper;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,7 +26,8 @@ public class ForecastDealCollector {
 	private LocalDate end;
 	private UNIT unit = UNIT.Personen;
 	private boolean ignoreProbability;
-	private LocalDate time;
+	private boolean ordersOnly;
+	private LocalDateTime time;
 
 	public static ForecastDealCollector get() {
 		return new ForecastDealCollector();
@@ -43,12 +45,18 @@ public class ForecastDealCollector {
 	}
 
 	public ForecastDealCollector withTime(LocalDate time) {
-		this.time = time;
+		LocalDateTime.now().withYear(time.getYear()).withMonth(time.getMonthValue()).withDayOfMonth(time.getDayOfMonth());
+		this.time = LocalDateTime.now().withYear(time.getYear()).withMonth(time.getMonthValue()).withDayOfMonth(time.getDayOfMonth());
 		return this;
 	}
 
 	public ForecastDealCollector withIgnoreProbability(boolean ignoreProbability) {
 		this.ignoreProbability = ignoreProbability;
+		return this;
+	}
+
+	public ForecastDealCollector withOrdersOnly(boolean ordersOnly) {
+		this.ordersOnly = ordersOnly;
 		return this;
 	}
 
@@ -139,6 +147,9 @@ public class ForecastDealCollector {
 			if (end != null) {
 
 				sb.append(" AND START_DATE <= ").append(ForecastHelper.toDate(end));
+			}
+			if (ordersOnly) {
+				sb.append(" AND PROBABILITY > 99");
 			}
 		} catch (SQLException e) {
 		}

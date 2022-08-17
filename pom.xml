@@ -12,8 +12,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-		<nicki.version>8.58</nicki.version>
-		<nicki-vaadin.version>14.37</nicki-vaadin.version>
+		<nicki.version>8.59</nicki.version>
+		<nicki-vaadin.version>14.38</nicki-vaadin.version>
 		<project.scm.id>github</project.scm.id>
 	</properties>
 	<modules>

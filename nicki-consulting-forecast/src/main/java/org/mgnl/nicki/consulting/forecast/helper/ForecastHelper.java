@@ -3,6 +3,7 @@ package org.mgnl.nicki.consulting.forecast.helper;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -118,6 +119,15 @@ public class ForecastHelper {
 	public static String toTimestamp(LocalDate date) {
 		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			return dbContext.toTimestamp(DataHelper.getDate(date));
+		} catch (SQLException e) {
+			log.error("Error generating toDate function", e);
+		}
+		return null;
+	}
+	
+	public static String toTimestamp(LocalDateTime dateTime) {
+		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
+			return dbContext.toTimestamp(DataHelper.getDate(dateTime));
 		} catch (SQLException e) {
 			log.error("Error generating toDate function", e);
 		}

@@ -1,9 +1,6 @@
 package org.mgnl.nicki.consulting.forecast.views;
 
-import java.util.Date;
-
 import org.mgnl.nicki.consulting.forecast.helper.ForecastDealCollector;
-import org.mgnl.nicki.consulting.forecast.helper.ForecastDealCollector.UNIT;
 import org.mgnl.nicki.consulting.forecast.helper.ForecastDealGraphWrapper;
 import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.core.helper.DataHelper;
@@ -16,22 +13,17 @@ import com.github.appreciated.apexcharts.config.chart.Type;
 import com.github.appreciated.apexcharts.config.chart.builder.ToolbarBuilder;
 import com.github.appreciated.apexcharts.config.chart.builder.ZoomBuilder;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 @SuppressWarnings("serial")
-public class ForecastGraphView extends VerticalLayout implements View {
+public class ForecastOrdersGraphView extends VerticalLayout implements View {
 
 	private HorizontalLayout periodLayout;
-	private HorizontalLayout filterLayout;
 	private VerticalLayout chartLayout;
 	private DatePicker periodStartDatePicker;
 	private DatePicker periodEndDatePicker;
-	private ComboBox<UNIT> unitComboBox;
-	private Checkbox ignoreProbabilityCheckbox;
-	private DatePicker timeDatePicker;
 	private ApexCharts areaChart;
 	
 	
@@ -39,7 +31,7 @@ public class ForecastGraphView extends VerticalLayout implements View {
 	
 
 
-	public ForecastGraphView() {
+	public ForecastOrdersGraphView() {
 		buildMainLayout();
 	}
 
@@ -47,17 +39,12 @@ public class ForecastGraphView extends VerticalLayout implements View {
 		if (!isInit) {
 			periodStartDatePicker.setValue(DataHelper.getLocalDate(Period.getFirstDayOfMonth().getTime()));
 			periodEndDatePicker.setValue(DataHelper.getLocalDate(Period.getLastDayOfMonth().getTime()));
-			timeDatePicker.setValue(DataHelper.getLocalDate(new Date()));
-			unitComboBox.setValue(UNIT.Personen);
 
 			periodStartDatePicker.addValueChangeListener(event -> redraw());
 			periodEndDatePicker.addValueChangeListener(event -> redraw());
-			timeDatePicker.addValueChangeListener(event -> redraw());
-			unitComboBox.addValueChangeListener(event -> redraw());
-			ignoreProbabilityCheckbox.addValueChangeListener(event -> redraw());
-
+			
 	        setWidth("100%");
-
+			
 			isInit = true;
 		}
         redraw();
@@ -69,9 +56,7 @@ public class ForecastGraphView extends VerticalLayout implements View {
 		ForecastDealGraphWrapper dealGraphWrapper = ForecastDealCollector.get()
 		.withStart(periodStartDatePicker.getValue())
 		.withEnd(periodEndDatePicker.getValue())
-		.withUnit(unitComboBox.getValue())
-		.withIgnoreProbability(ignoreProbabilityCheckbox.getValue())
-		.withTime(timeDatePicker.getValue())
+		.withOrdersOnly(true)
 		.getDealGraphWrapper();
 		
 		if (areaChart != null) {
@@ -126,21 +111,15 @@ public class ForecastGraphView extends VerticalLayout implements View {
 		periodLayout.setPadding(false);
 		periodStartDatePicker = new DatePicker("Start");
 		periodEndDatePicker = new DatePicker("Ende");
-		timeDatePicker = new DatePicker("Zeitpunkt");
-		unitComboBox = new ComboBox<>("Anzeige", UNIT.values());
 		
-		periodLayout.add(periodStartDatePicker, periodEndDatePicker, unitComboBox, timeDatePicker);
-		
-		filterLayout = new HorizontalLayout();
-		filterLayout.setPadding(false);
-		ignoreProbabilityCheckbox = new Checkbox("ohne Wahrscheinlichkeit");
-		filterLayout.add(ignoreProbabilityCheckbox);
+		periodLayout.add(periodStartDatePicker, periodEndDatePicker);
+
 		
 		chartLayout = new VerticalLayout();
 		chartLayout.setHeightFull();
 		chartLayout.setMargin(false);
 		chartLayout.setPadding(false);
-		add(periodLayout, filterLayout, chartLayout);
+		add(periodLayout, chartLayout);
 	}
 
 	@Override
