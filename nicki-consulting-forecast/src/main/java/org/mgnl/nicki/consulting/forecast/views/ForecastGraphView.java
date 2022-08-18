@@ -45,8 +45,6 @@ public class ForecastGraphView extends VerticalLayout implements View {
 
 	public void init() {
 		if (!isInit) {
-			periodStartDatePicker.setValue(DataHelper.getLocalDate(Period.getFirstDayOfMonth().getTime()));
-			periodEndDatePicker.setValue(DataHelper.getLocalDate(Period.getLastDayOfMonth().getTime()));
 			timeDatePicker.setValue(DataHelper.getLocalDate(new Date()));
 			unitComboBox.setValue(UNIT.Personen);
 
@@ -60,6 +58,10 @@ public class ForecastGraphView extends VerticalLayout implements View {
 
 			isInit = true;
 		}
+
+		periodStartDatePicker.setValue(DataHelper.getLocalDate(Period.getFirstDayOfMonth().getTime()));
+		periodEndDatePicker.setValue(DataHelper.getLocalDate(Period.getLastDayOfMonth().getTime()));
+		
         redraw();
 		
 
