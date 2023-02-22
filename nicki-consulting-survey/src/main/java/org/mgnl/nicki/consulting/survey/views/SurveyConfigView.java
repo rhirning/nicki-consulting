@@ -19,6 +19,7 @@ import org.mgnl.nicki.core.helper.NameValue;
 import org.mgnl.nicki.core.util.Classes;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
+import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
@@ -154,7 +155,7 @@ public class SurveyConfigView extends VerticalLayout implements View {
 			SurveyHelper.confirm("Bewertungen löschen", survey, s -> {
 				try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 					SurveyHelper.deleteVotes(s);
-				} catch (SQLException e) {
+				} catch (SQLException | NotSupportedException e) {
 					log.error("Error accessing db", e);
 					Notification.show("Die Bewertungen konnten nicht gelöscht werden");
 				}
@@ -189,7 +190,7 @@ public class SurveyConfigView extends VerticalLayout implements View {
 					SurveyHelper.deleteChoices(s);
 					SurveyHelper.deleteNotifies(s);
 					dbContext.delete(s);
-				} catch (SQLException | InitProfileException e) {
+				} catch (SQLException | InitProfileException | NotSupportedException e) {
 					log.error("Error accessing db", e);
 					Notification.show("Die Umfrage konnte nicht gelöscht werden");
 				}

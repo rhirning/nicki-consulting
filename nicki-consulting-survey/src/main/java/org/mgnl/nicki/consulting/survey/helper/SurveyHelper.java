@@ -36,6 +36,9 @@ import org.mgnl.nicki.vaadin.base.application.NickiApplication;
 import org.mgnl.nicki.vaadin.base.command.Command;
 import org.mgnl.nicki.vaadin.base.command.CommandException;
 import org.mgnl.nicki.vaadin.base.components.ConfirmDialog;
+import org.mgnl.nicki.vaadin.base.notification.Notification;
+import org.mgnl.nicki.vaadin.base.notification.Notification.Type;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -459,8 +462,12 @@ public class SurveyHelper {
 			surveyNotify.setSurveyId(survey.getId());
 			surveyNotify.setUserId(person.getUserId());
 			if (dbContext.exists(surveyNotify)) {
-				surveyNotify = dbContext.loadObject(surveyNotify, false);
-				dbContext.delete(surveyNotify);
+				try {
+					surveyNotify = dbContext.loadObject(surveyNotify, false);
+					dbContext.delete(surveyNotify);
+				} catch (NotSupportedException e) {
+					Notification.show("Löschen wird nicht unterstützt", Type.HUMANIZED_MESSAGE);
+				}
 			}
 		} catch (SQLException | InitProfileException | InstantiationException | IllegalAccessException e) {
 			log.error("Could not load surveyVotes", e);
@@ -481,7 +488,7 @@ public class SurveyHelper {
 		}
 	}
 
-	public static void deleteChoices(SurveyConfig survey) {
+	public static void deleteChoices(SurveyConfig survey) throws NotSupportedException {
 		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
 			deleteChoices(dbContext, survey);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
@@ -523,13 +530,13 @@ public class SurveyHelper {
 		dbContext.delete(topic);
 	}
 
-	public static void deleteChoices(DBContext dbContext, SurveyConfig survey) throws SQLException, InitProfileException, InstantiationException, IllegalAccessException {
+	public static void deleteChoices(DBContext dbContext, SurveyConfig survey) throws SQLException, InitProfileException, InstantiationException, IllegalAccessException, NotSupportedException {
 		for (SurveyChoice choice : getChoices(dbContext, survey)) {
 			dbContext.delete(choice);
 		}
 	}
 
-	public static void deleteNotifies(SurveyConfig survey) {
+	public static void deleteNotifies(SurveyConfig survey) throws NotSupportedException {
 		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
 			deleteNotifies(dbContext, survey);
 		} catch (InstantiationException | IllegalAccessException | SQLException | InitProfileException e) {
@@ -537,7 +544,7 @@ public class SurveyHelper {
 		}
 	}
 
-	public static void deleteNotifies(DBContext dbContext, SurveyConfig survey) throws SQLException, InitProfileException, InstantiationException, IllegalAccessException {
+	public static void deleteNotifies(DBContext dbContext, SurveyConfig survey) throws SQLException, InitProfileException, InstantiationException, IllegalAccessException, NotSupportedException {
 		for (SurveyNotify surveyNotify : getNotifies(dbContext, survey)) {
 			dbContext.delete(surveyNotify);
 		}
@@ -582,7 +589,7 @@ public class SurveyHelper {
 		}
 	}
 
-	public static void deleteVotes(SurveyConfig survey) {
+	public static void deleteVotes(SurveyConfig survey) throws NotSupportedException {
 		try (DBContext dbContext = DBContextManager.getContext(DB_CONTEXT_NAME)) {
 			for (SurveyChoice choice : getChoices(dbContext, survey.getId())) {
 				deleteVotes(dbContext, choice);
@@ -596,7 +603,7 @@ public class SurveyHelper {
 		}
 	}
 
-	public static void deleteVotes(DBContext dbContext, SurveyChoice choice) {
+	public static void deleteVotes(DBContext dbContext, SurveyChoice choice) throws NotSupportedException {
 		SurveyVote surveyVote = new SurveyVote();
 		surveyVote.setSurveyChoiceId(choice.getId());
 		try {
@@ -611,7 +618,7 @@ public class SurveyHelper {
 		}
 	}
 
-	public static void deleteVotes(DBContext dbContext, SurveyTopic topic) {
+	public static void deleteVotes(DBContext dbContext, SurveyTopic topic) throws NotSupportedException {
 		SurveyVote surveyVote = new SurveyVote();
 		surveyVote.setSurveyTopicId(topic.getId());
 		try {

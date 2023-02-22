@@ -16,6 +16,7 @@ import org.mgnl.nicki.core.data.TreeObject;
 import org.mgnl.nicki.core.data.TreeObjectWrapper;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
+import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
 import org.mgnl.nicki.vaadin.base.components.DialogBase;
@@ -58,7 +59,7 @@ public class CustomersTreeView extends VerticalLayout implements View {
 	public CustomersTreeView() {
 		buildMainLayout();
 		
-		init();
+//		init();
 
 	}
 
@@ -162,8 +163,12 @@ public class CustomersTreeView extends VerticalLayout implements View {
 				if (TimeHelper.hasProjects(customer)) {
 					Notification.show("Der Kunde besitzt noch Projekte", Type.HUMANIZED_MESSAGE);
 				} else {
-					TimeHelper.delete(customer);
-					init();
+					try {
+						TimeHelper.delete(customer);
+						init();
+					} catch (NotSupportedException e) {
+						Notification.show("Löschen wird nicht unterstützt", Type.HUMANIZED_MESSAGE);
+					}
 				}
 			} catch (SQLException | InitProfileException e) {
 				log.error("Error accessing db", e);
@@ -181,8 +186,12 @@ public class CustomersTreeView extends VerticalLayout implements View {
 				if (TimeHelper.hasMembers(project)) {
 					Notification.show("Das Projekt hat noch Projektmitglieder", Type.HUMANIZED_MESSAGE);
 				} else {
-					TimeHelper.delete(project);
-					init();
+					try {
+						TimeHelper.delete(project);
+						init();
+					} catch (NotSupportedException e) {
+						Notification.show("Löschen wird nicht unterstützt", Type.HUMANIZED_MESSAGE);
+					}
 				}
 			} catch (SQLException | InitProfileException e) {
 				log.error("Error accessing db", e);
@@ -199,8 +208,12 @@ public class CustomersTreeView extends VerticalLayout implements View {
 				if (TimeHelper.hasTimeEntries(memberWrapperOptional.get().getMember())) {
 					Notification.show("Es gibt Buchungen für diese Projektmitglied", Type.HUMANIZED_MESSAGE);
 				} else {
-					TimeHelper.delete(memberWrapperOptional.get().getMember());
-					init();
+					try {
+						TimeHelper.delete(memberWrapperOptional.get().getMember());
+						init();
+					} catch (NotSupportedException e) {
+						Notification.show("Löschen wird nicht unterstützt", Type.HUMANIZED_MESSAGE);
+					}
 				}
 			} catch (SQLException | InitProfileException e) {
 				log.error("Error accessing db", e);

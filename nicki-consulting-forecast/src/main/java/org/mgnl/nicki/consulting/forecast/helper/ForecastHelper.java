@@ -25,6 +25,7 @@ import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.core.helper.NameValue;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
+import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 
 import com.vaadin.flow.component.grid.Grid;
@@ -285,7 +286,7 @@ public class ForecastHelper {
 		}
 	}
 
-	public static void delete(Object bean) throws SQLException, InitProfileException {
+	public static void delete(Object bean) throws SQLException, InitProfileException, NotSupportedException {
 		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			dbContext.delete(bean);
 		}

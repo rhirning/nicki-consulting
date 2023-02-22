@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.mgnl.nicki.consulting.forecast.helper.ForecastHelper;
 import org.mgnl.nicki.consulting.forecast.model.ForecastSales;
+import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.mgnl.nicki.vaadin.base.notification.Notification;
@@ -29,8 +30,12 @@ public class SalesView extends EditParameterView<ForecastSales> implements View 
 				if (ForecastHelper.hasDealsWithSales(stage)) {
 					Notification.show("Die Stufe wurde benutzt", Type.HUMANIZED_MESSAGE);
 				} else {
-					ForecastHelper.delete(stage);
-					init();
+					try {
+						ForecastHelper.delete(stage);
+						init();
+					} catch (NotSupportedException e) {
+						Notification.show("Löschen wird nicht unterstützt", Type.HUMANIZED_MESSAGE);
+					}
 				}
 			} catch (SQLException | InitProfileException e) {
 				log.error("Error accessing db", e);

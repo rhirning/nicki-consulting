@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.mgnl.nicki.consulting.forecast.helper.ForecastHelper;
 import org.mgnl.nicki.consulting.forecast.model.ForecastCategory;
+import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.mgnl.nicki.vaadin.base.notification.Notification;
@@ -29,8 +30,12 @@ public class CategoriesView extends EditParameterView<ForecastCategory> implemen
 				if (ForecastHelper.hasDealsWithCategory(category)) {
 					Notification.show("Die Kategorie wurde benutzt", Type.HUMANIZED_MESSAGE);
 				} else {
-					ForecastHelper.delete(category);
-					init();
+					try {
+						ForecastHelper.delete(category);
+						init();
+					} catch (NotSupportedException e) {
+						Notification.show("Löschen wird nicht unterstützt", Type.HUMANIZED_MESSAGE);
+					}
 				}
 			} catch (SQLException | InitProfileException e) {
 				log.error("Error accessing db", e);

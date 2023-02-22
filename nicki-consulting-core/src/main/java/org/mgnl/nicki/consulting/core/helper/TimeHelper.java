@@ -24,6 +24,7 @@ import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
+import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -388,7 +389,7 @@ public class TimeHelper {
 		}
 	}
 
-	public static void delete(Object bean) throws SQLException, InitProfileException {
+	public static void delete(Object bean) throws SQLException, InitProfileException, NotSupportedException {
 		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			dbContext.delete(bean);
 		}

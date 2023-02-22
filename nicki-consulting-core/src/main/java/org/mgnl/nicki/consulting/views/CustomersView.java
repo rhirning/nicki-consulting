@@ -13,6 +13,7 @@ import org.mgnl.nicki.consulting.core.model.Project;
 import org.mgnl.nicki.consulting.data.MemberWrapper;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
+import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.components.DialogBase;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
@@ -145,10 +146,14 @@ public class CustomersView extends BaseView implements View {
 				if (TimeHelper.hasTimeEntries(memberWrapperOptional.get().getMember())) {
 					Notification.show("Es gibt Buchungen für diese Projektmitglied", Type.HUMANIZED_MESSAGE);
 				} else {
-					TimeHelper.delete(memberWrapperOptional.get().getMember());
-					showMembersLayout(false);
-					showProjectsLayout(false);
-					loadCustomers();
+					try {
+						TimeHelper.delete(memberWrapperOptional.get().getMember());
+						showMembersLayout(false);
+						showProjectsLayout(false);
+						loadCustomers();
+					} catch (NotSupportedException e) {
+						Notification.show("Löschen wird nicht unterstützt", Type.HUMANIZED_MESSAGE);
+					}
 				}
 			} catch (SQLException | InitProfileException e) {
 				LOG.error("Error accessing db", e);
@@ -167,10 +172,14 @@ public class CustomersView extends BaseView implements View {
 				if (TimeHelper.hasMembers(project)) {
 					Notification.show("Das Projekt hat noch Projektmitglieder", Type.HUMANIZED_MESSAGE);
 				} else {
-					TimeHelper.delete(project);
-					showMembersLayout(false);
-					showProjectsLayout(false);
-					loadCustomers();
+					try {
+						TimeHelper.delete(project);
+						showMembersLayout(false);
+						showProjectsLayout(false);
+						loadCustomers();
+					} catch (NotSupportedException e) {
+						Notification.show("Löschen wird nicht unterstützt", Type.HUMANIZED_MESSAGE);
+					}
 
 				}
 			} catch (SQLException | InitProfileException e) {
@@ -190,10 +199,14 @@ public class CustomersView extends BaseView implements View {
 				if (TimeHelper.hasProjects(customer)) {
 					Notification.show("Der Kunde besitzt noch Projekte", Type.HUMANIZED_MESSAGE);
 				} else {
-					TimeHelper.delete(customer);
-					showMembersLayout(false);
-					showProjectsLayout(false);
-					loadCustomers();
+					try {
+						TimeHelper.delete(customer);
+						showMembersLayout(false);
+						showProjectsLayout(false);
+						loadCustomers();
+					} catch (NotSupportedException e) {
+						Notification.show("Löschen wird nicht unterstützt", Type.HUMANIZED_MESSAGE);
+					}
 				}
 			} catch (SQLException | InitProfileException e) {
 				LOG.error("Error accessing db", e);

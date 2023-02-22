@@ -140,8 +140,12 @@ public class CustomersTreeView extends VerticalLayout implements View {
 				if (ForecastHelper.hasDeals(customer)) {
 					Notification.show("Der Kunde besitzt noch Deals", Type.HUMANIZED_MESSAGE);
 				} else {
-					ForecastHelper.delete(customer);
-					init();
+					try {
+						ForecastHelper.delete(customer);
+						init();
+					} catch (NotSupportedException e) {
+						Notification.show("Löschen wird nicht unterstützt", Type.HUMANIZED_MESSAGE);
+					}
 				}
 			} catch (SQLException | InitProfileException e) {
 				log.error("Error accessing db", e);
