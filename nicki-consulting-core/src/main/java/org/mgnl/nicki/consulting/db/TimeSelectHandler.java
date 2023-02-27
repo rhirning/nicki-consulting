@@ -1,5 +1,7 @@
 package org.mgnl.nicki.consulting.db;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,11 +17,13 @@ import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.handler.NonLoggingSelectHandler;
-import org.mgnl.nicki.db.handler.SelectHandler;
+import org.mgnl.nicki.db.handler.PreparedStatementSelectHandler;
+import org.mgnl.nicki.db.helper.Type;
+import org.mgnl.nicki.db.helper.TypedValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TimeSelectHandler extends NonLoggingSelectHandler implements SelectHandler {
+public class TimeSelectHandler extends NonLoggingSelectHandler implements PreparedStatementSelectHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(TimeSelectHandler.class);
 
 	private enum TYPE {PERSON};
@@ -61,6 +65,62 @@ public class TimeSelectHandler extends NonLoggingSelectHandler implements Select
 			}
 		}
 		return null;
+	}
+	
+	public 
+	PreparedStatement getPreparedStatement(Connection connection) throws SQLException {
+		if (type != TYPE.PERSON) {
+			return null;
+		}
+		List<TypedValue> typedValues = new ArrayList<TypedValue>();
+		int count = 0;
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT * FROM ").append(timeTableName).append(" WHERE MEMBER_ID IN ( ");
+		if (this.project != null) {
+			sb.append("SELECT ID FROM ").append(memberTableName);
+			sb.append(" WHERE ");
+			if (person.getId() > 0) {
+				sb.append("PERSON_ID = ? AND ");
+				typedValues.add(new TypedValue(Type.LONG, ++count, person.getId()));
+			}
+			sb.append("PROJECT_ID = ?");
+			typedValues.add(new TypedValue(Type.LONG, ++count, project.getId()));
+		} else if (this.customer != null) {
+			sb.append("SELECT ID FROM ").append(memberTableName);
+			sb.append(" WHERE ");
+			if (person.getId() > 0) {
+				sb.append("PERSON_ID = ? AND ");
+				typedValues.add(new TypedValue(Type.LONG, ++count, person.getId()));
+			}
+			sb.append("PROJECT_ID IN (");
+			sb.append("SELECT ID FROM ").append(projectTableName);
+			sb.append(" WHERE CUSTOMER_ID = ?");
+			typedValues.add(new TypedValue(Type.LONG, ++count, customer.getId()));
+			sb.append(" )");
+			
+		} else {
+			sb.append("SELECT ID FROM ").append(memberTableName);
+			if (person.getId() > 0) {
+				sb.append(" WHERE PERSON_ID = ?");
+				typedValues.add(new TypedValue(Type.LONG, ++count, person.getId()));
+			}
+		}
+		sb.append(" )");
+		if (this.period != null) {
+			sb.append(" AND START_TIME >= ?");
+			typedValues.add(new TypedValue(Type.TIMESTAMP, ++count, period.getStart().getTime()));
+			
+			sb.append(" AND END_TIME < ?");
+			typedValues.add(new TypedValue(Type.TIMESTAMP, ++count, period.getEnd().getTime()));
+		}
+		sb.append(" ORDER BY START_TIME ASC");
+		LOG.debug(sb.toString());
+		
+		PreparedStatement pstmt = connection.prepareStatement(sb.toString());
+		for (TypedValue typedValue : typedValues) {
+			typedValue.fillPreparedStatement(pstmt);
+		}
+		return pstmt;
 	}
 
 	public String getSearchStatement(Person person) throws TimeSelectException {
