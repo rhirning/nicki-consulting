@@ -20,6 +20,7 @@ public interface LdapPerson extends DynamicObject {
 	void setUserPassword(String userpassword);
 	void setTelephoneNumber(String telephoneNumber);
 	void setOu(String ou);
+	void setUnicodePwd(String password);
 
 	boolean isMemberOf(String groupName);
 }

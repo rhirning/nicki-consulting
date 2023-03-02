@@ -3,6 +3,9 @@ package org.mgnl.nicki.consulting.objects;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.mgnl.nicki.core.annotation.AdditionalObjectClass;
 import org.mgnl.nicki.core.annotation.DynamicAttribute;
@@ -32,6 +35,7 @@ public class LdapPersonImpl extends Person implements LdapPerson {
 	public static final String ATTRIBUTE_TELEPHONE_NUMBER = "telephoneNumber";
 	public static final String ATTRIBUTE_SURNAME = "surname";
 	public static final String ATTRIBUTE_UNICODE_PWD = "unicodePwd";
+	public static final String ATTRIBUTE_USER_PASSWORD = "userPassword";
 	public static final String ATTRIBUTE_CARLICENSE = "carLicense";
 	public static final String ATTRIBUTE_OU = "ou";
 
@@ -97,6 +101,29 @@ public class LdapPersonImpl extends Person implements LdapPerson {
 			LOG.error("error coding password", e);
 		}
 	}
+	
+	public static enum METHOD {SHA,	MD5}
+	
+	@DynamicAttribute(externalName = "userPassword")
+	public String getUserPassword() {
+		return getAttribute(ATTRIBUTE_USER_PASSWORD);
+	}
+	
+	@Override
+	public void setUserPassword(String userpassword) {
+		String encryptedPassword = getEncryptedString(METHOD.MD5, userpassword);
+		put(ATTRIBUTE_USER_PASSWORD, encryptedPassword);
+	}
+
+	private static String getEncryptedString(METHOD method, String obj) {
+		byte[] md5byte = DigestUtils.md5(obj);
+		byte[] md5hex = Base64.encodeBase64(md5byte);
+		String md5String = new String(md5hex);
+		String retVal = "{" + method.toString() + "}" + md5String;
+		return retVal;
+	}
+
+
 
 	@DynamicAttribute(externalName = "sn")
 	public String getSurname() {
@@ -164,12 +191,6 @@ public class LdapPersonImpl extends Person implements LdapPerson {
 
 	@Override
 	public void setSurName(String surName) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setUserPassword(String userpassword) {
 		// TODO Auto-generated method stub
 		
 	}
