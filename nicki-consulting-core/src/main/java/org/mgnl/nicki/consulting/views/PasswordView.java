@@ -73,6 +73,7 @@ public class PasswordView extends BaseView implements View {
 		
 		title = new Span("Passwortwechsel");
 		oldPassword = new PasswordField("altes Passwort");
+		oldPassword.setRevealButtonVisible(false);
 		newPassword = new PasswordField("neues Passwort");
 		newPassword2 = new PasswordField("Neues Passwort wiederholen");
 		saveButton = new Button("Passwort wechseln");

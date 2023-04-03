@@ -33,8 +33,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout.Orientation;
 import com.vaadin.flow.component.treegrid.TreeGrid;
+import com.vaadin.flow.data.provider.hierarchy.HierarchicalDataProvider;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
+import com.vaadin.flow.function.SerializablePredicate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,7 +47,7 @@ public class CustomersTreeView extends VerticalLayout implements View {
 	private SplitLayout horizontalSplitPanel;
 	
 	private TreeGrid<TreeObject> tree;
-	private TreeDataProvider<TreeObject> treeDataProvider;
+	private HierarchicalDataProvider<TreeObject,SerializablePredicate<TreeObject>> treeDataProvider;
 	private VerticalLayout treeCanvas;
 	private VerticalLayout canvas;
 	private boolean isInit;

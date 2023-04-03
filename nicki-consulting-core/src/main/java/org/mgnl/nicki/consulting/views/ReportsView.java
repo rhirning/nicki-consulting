@@ -265,7 +265,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 			if (period != null) {
 
 				timeDataProvider = new ListDataProvider<TimeWrapper>(getTimeWrappers(getPersonComboBoxValue(), period.getPeriod(), customerComboBox.getValue(), projectComboBox.getValue(), READONLY.TRUE, 0));
-				timeTable.setDataProvider(timeDataProvider);
+				timeTable.setItems(timeDataProvider);
 			}
 		} catch (IllegalStateException | IllegalArgumentException | TimeSelectException e) {
 			log.error("Error reading timd data", e);

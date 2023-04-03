@@ -119,7 +119,7 @@ public class Mailer {
 
 	
 	
-    private static void sendAsMultiPart(Session session, String from, String to, String subject, String body) throws AddressException, MessagingException {
+    protected static void sendAsMultiPart(Session session, String from, String to, String subject, String body) throws AddressException, MessagingException {
 
 		// Create a default MimeMessage object.
 		Message message = new MimeMessage(session);

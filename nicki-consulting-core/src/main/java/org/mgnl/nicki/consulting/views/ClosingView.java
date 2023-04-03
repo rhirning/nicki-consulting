@@ -110,7 +110,7 @@ public class ClosingView extends BaseView implements ConfigurableView  {
 	private void loadProjects() {
 		
 		ListDataProvider<OpenProject> dataProvider = new ListDataProvider<>(TimeHelper.getOpenProjects(null));
-		projectsTable.setDataProvider(dataProvider);
+		projectsTable.setItems(dataProvider);
 	}
 
 

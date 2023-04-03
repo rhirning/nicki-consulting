@@ -1,7 +1,6 @@
 package org.mgnl.nicki.consulting.survey.helper;
 
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,7 +25,6 @@ import org.mgnl.nicki.consulting.survey.model.SurveyVote;
 import org.mgnl.nicki.consulting.views.NoApplicationContextException;
 import org.mgnl.nicki.consulting.views.NoValidPersonException;
 import org.mgnl.nicki.core.data.Period;
-import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.context.NotSupportedException;
