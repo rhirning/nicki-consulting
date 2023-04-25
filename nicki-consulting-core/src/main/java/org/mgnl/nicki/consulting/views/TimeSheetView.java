@@ -193,9 +193,11 @@ public class TimeSheetView extends BaseView implements View {
 	
 	private Calendar getFirstDayInMonth(Date date) {
 		Calendar first= Calendar.getInstance();
-		first.setTime(date);
-		
-		first.add(Calendar.DAY_OF_MONTH, -1 * (first.get(Calendar.DAY_OF_MONTH) - 1));
+		if (date != null) {
+			first.setTime(date);
+			
+			first.add(Calendar.DAY_OF_MONTH, -1 * (first.get(Calendar.DAY_OF_MONTH) - 1));
+		}
 		return first;
 	}
 	
@@ -212,6 +214,7 @@ public class TimeSheetView extends BaseView implements View {
 		time.getDay().setValue(DataHelper.getLocalDate(day.getTime()));
 		time.getStart().setValue(from.getStart().getValue());
 		time.getEnd().setValue(from.getEnd().getValue());
+		time.getPause().setValue(from.getPause().getValue());
 		time.getText().setValue(from.getText().getValue());
 	}
 
