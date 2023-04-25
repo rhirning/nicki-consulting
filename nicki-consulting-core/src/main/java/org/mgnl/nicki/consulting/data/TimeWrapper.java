@@ -227,16 +227,16 @@ public class TimeWrapper implements Serializable {
 	}
 	
 	protected void timeChanged() throws DateFormatException {
-		if (dayDateField.getValue() != null) {
-			if (StringUtils.isNotBlank(startTextField.getValue())) {
-				String startEntry = StringUtils.stripToEmpty(startTextField.getValue());
-				time.setStart(TimeHelper.getDate(DataHelper.getDate(dayDateField.getValue()), Clock.parse(startEntry)));
+		if (getDay().getValue() != null) {
+			if (StringUtils.isNotBlank(getStart().getValue())) {
+				String startEntry = StringUtils.stripToEmpty(getStart().getValue());
+				time.setStart(TimeHelper.getDate(DataHelper.getDate(getDay().getValue()), Clock.parse(startEntry)));
 			} else {
 				time.setStart(null);
 			}
-			if (StringUtils.isNotBlank(endTextField.getValue())) {
-				String endEntry = StringUtils.stripToEmpty(endTextField.getValue());
-				time.setEnd(TimeHelper.getDate(DataHelper.getDate(dayDateField.getValue()), Clock.parse(endEntry)));
+			if (StringUtils.isNotBlank(getEnd().getValue())) {
+				String endEntry = StringUtils.stripToEmpty(getEnd().getValue());
+				time.setEnd(TimeHelper.getDate(DataHelper.getDate(getDay().getValue()), Clock.parse(endEntry)));
 			} else {
 				time.setEnd(null);
 			}

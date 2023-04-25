@@ -1,7 +1,10 @@
 package org.mgnl.nicki.consulting.views;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -13,6 +16,7 @@ import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.data.TimeWrapper;
 import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.consulting.views.SaveOrIgnoreDialog.DECISION;
+import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.core.i18n.I18n;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
@@ -24,12 +28,18 @@ import org.mgnl.nicki.vaadin.base.notification.Notification.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 public class TimeSheetView extends BaseView implements View {
 	
@@ -79,21 +89,148 @@ public class TimeSheetView extends BaseView implements View {
 				addLines((10));
 			});
 			
-			timeTable.addComponentColumn(TimeWrapper::getDelete).setHeader(createIcon(VaadinIcon.TRASH, "Löschen")).setFlexGrow(0).setWidth("50px");
+			Icon deleteIcon = createIcon(VaadinIcon.TRASH, "Löschen");
+			deleteIcon.addClickListener(event -> setDeleteFlags());
+			
+			Icon customerReportIcon = createIcon(VaadinIcon.FILE, "Bei Kunde erfasst");
+			customerReportIcon.addClickListener(event -> setCustomerReportFlags());
+			
+			timeTable.addComponentColumn(TimeWrapper::getDelete).setHeader(deleteIcon).setFlexGrow(0).setWidth("50px");
 			timeTable.addComponentColumn(TimeWrapper::getMember).setHeader("Projekt").setWidth("300px").setFlexGrow(1);
 			timeTable.addComponentColumn(TimeWrapper::getDay).setHeader("Datum").setFlexGrow(0).setWidth("210px");
 			timeTable.addComponentColumn(TimeWrapper::getStart).setHeader("von").setFlexGrow(0);//.setWidth("40px");
 			timeTable.addComponentColumn(TimeWrapper::getEnd).setHeader("bis").setFlexGrow(0);//.setWidth("40px");
 			timeTable.addComponentColumn(TimeWrapper::getPause).setHeader("Pause").setFlexGrow(0).setWidth("180px");
 			timeTable.addColumn(TimeWrapper::getHours).setHeader("Stunden").setFlexGrow(0);//.setWidth("50px");
-			timeTable.addComponentColumn(TimeWrapper::getCustomerReport).setHeader(createIcon(VaadinIcon.FILE, "Bei Kunde erfasst")).setFlexGrow(0).setWidth("50px");
+			timeTable.addComponentColumn(TimeWrapper::getCustomerReport).setHeader(customerReportIcon).setFlexGrow(0).setWidth("50px");
 			timeTable.addComponentColumn(TimeWrapper::getText).setHeader("Tätigkeit").setWidth("200px").setFlexGrow(1);
 			//timeTable.setHeightByRows(true);
 			timeTable.setHeight("100%");
+			timeTable.setItemDetailsRenderer(new ComponentRenderer<>(t -> getDetails(t)));
 			setFlexGrow(1, timeTable);
 			isInit = true;
 		}
 		loadTimes();
+	}
+	
+	private void setCustomerReportFlags() {
+		for (TimeWrapper entry : times) {
+			Time time = entry.getTime();
+			if (time.getStart() != null &&!entry.isReadOnly() &&  entry.getCustomerReport() instanceof Checkbox) {
+				Checkbox checkbox = (Checkbox) entry.getCustomerReport();
+				checkbox.setValue(!checkbox.getValue());
+			}
+		}
+	}
+	
+	private void setDeleteFlags() {
+		for (TimeWrapper entry : times) {
+			Time time = entry.getTime();
+			if (time.getStart() != null && !entry.isReadOnly()) {
+				entry.getDelete().setValue(!entry.getDelete().getValue());
+			}
+		}
+	}
+
+	private Component getDetails(TimeWrapper timeWrapper) {
+		if (!timeWrapper.isReadOnly()) {
+			HorizontalLayout layout = new HorizontalLayout();
+			DatePicker fromDatePicker = new DatePicker("von");
+			fromDatePicker.setValue(DataHelper.getLocalDate(getFirstDayInMonth(timeWrapper.getTime().getStart()).getTime()));
+			DatePicker toDatePicker = new DatePicker("bis");
+			toDatePicker.setValue(DataHelper.getLocalDate(getLastDayInMonth(timeWrapper.getTime().getStart()).getTime()));
+			Button button = new Button("kopieren");
+			button.addClickListener(event -> {
+				fillMonth(timeWrapper, fromDatePicker.getValue(), toDatePicker.getValue());
+			});
+			layout.add(fromDatePicker, toDatePicker, button);
+			layout.setAlignItems(Alignment.END);
+			return layout;
+		} else {
+			return new Span("");
+		}
+	}
+
+	private void fillMonth(TimeWrapper timeWrapper, LocalDate from, LocalDate to) {
+		try {
+			verify(timeWrapper);
+		} catch (VerifyException e) {
+			timeWrapper.setMessages(e.getMessages());
+			Notification.show("Es gibt noch Fehler in den markierten Zeilen. Mehr Information bei Mouse-Over", Type.ERROR_MESSAGE);
+			return;
+		}
+		
+		if (StringUtils.isBlank(timeWrapper.getTime().getText())) {
+			Notification.show("Bitte einen ausgefüllten Eintrag als Vorlage nehmen");
+			return;
+		}
+		
+		addLines(30);
+
+		
+		// alle Wochentage des Monats
+		Calendar first= Calendar.getInstance();
+		first.setTime(DataHelper.getDate(from));
+		
+		Calendar nextFirst= Calendar.getInstance();
+		nextFirst.setTime(DataHelper.getDate(to));
+		nextFirst.add(Calendar.DAY_OF_MONTH, 1);
+		
+		while (first.before(nextFirst)) {
+			if (!weekend(first) && !existsEntry(first)) {
+				for (TimeWrapper entry : times) {
+					Time time = entry.getTime();
+					if (time.getStart() == null) {
+						fillEntry(entry, timeWrapper, first);
+						break;
+					}
+				}
+			}
+			first.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		Notification.show("So jetzt würde ich den Monat ausfüllen");
+	}
+	
+	private Calendar getFirstDayInMonth(Date date) {
+		Calendar first= Calendar.getInstance();
+		first.setTime(date);
+		
+		first.add(Calendar.DAY_OF_MONTH, -1 * (first.get(Calendar.DAY_OF_MONTH) - 1));
+		return first;
+	}
+	
+	private Calendar getLastDayInMonth(Date date) {
+		Calendar last= getFirstDayInMonth(date);
+		
+		last.add(Calendar.MONTH, 1);
+		last.add(Calendar.DAY_OF_MONTH, -1);
+		return last;
+	}
+
+	private void fillEntry(TimeWrapper time, TimeWrapper from, Calendar day) {
+		time.getMember().setValue(from.getMember().getValue());
+		time.getDay().setValue(DataHelper.getLocalDate(day.getTime()));
+		time.getStart().setValue(from.getStart().getValue());
+		time.getEnd().setValue(from.getEnd().getValue());
+		time.getText().setValue(from.getText().getValue());
+	}
+
+	private boolean weekend(Calendar cal) {
+		return cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY;
+	}
+
+	private boolean existsEntry(Calendar first) {
+		for (TimeWrapper timeWrapper : times) {
+			Time time = timeWrapper.getTime();
+			if (time.getStart() != null && isSameDay(first.getTime(), time.getStart())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isSameDay(Date date1, Date date2) {
+		return StringUtils.equals(DataHelper.getDay(date1), DataHelper.getDay(date2));
 	}
 
 	private void timeValueChanged() {
