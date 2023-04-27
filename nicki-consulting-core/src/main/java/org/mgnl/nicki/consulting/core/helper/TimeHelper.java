@@ -407,4 +407,8 @@ public class TimeHelper {
 		return isExist(project);
 	}
 
+	public static String formatWeekDay(Date date) {
+		return new SimpleDateFormat("EEE").format(date);
+	}
+
 }

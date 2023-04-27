@@ -281,6 +281,14 @@ public class TimeWrapper implements Serializable {
 			return "";
 		}
 	}
+	
+	public String getWeekDay() {
+		if (time.getStart() != null) {
+			return TimeHelper.formatWeekDay(time.getStart());
+		} else {
+			return "";
+		}
+	}
 
 	public ComboBox<Pause> getPause() {
 		if (this.pauseComboBox == null) {

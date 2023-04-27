@@ -97,6 +97,7 @@ public class TimeSheetView extends BaseView implements View {
 			
 			timeTable.addComponentColumn(TimeWrapper::getDelete).setHeader(deleteIcon).setFlexGrow(0).setWidth("50px");
 			timeTable.addComponentColumn(TimeWrapper::getMember).setHeader("Projekt").setWidth("300px").setFlexGrow(1);
+			timeTable.addColumn(TimeWrapper::getWeekDay).setFlexGrow(0).setWidth("50px");
 			timeTable.addComponentColumn(TimeWrapper::getDay).setHeader("Datum").setFlexGrow(0).setWidth("210px");
 			timeTable.addComponentColumn(TimeWrapper::getStart).setHeader("von").setFlexGrow(0);//.setWidth("40px");
 			timeTable.addComponentColumn(TimeWrapper::getEnd).setHeader("bis").setFlexGrow(0);//.setWidth("40px");
