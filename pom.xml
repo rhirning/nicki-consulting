@@ -12,8 +12,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-		<nicki.version>8.80</nicki.version>
-		<nicki-vaadin.version>22.06</nicki-vaadin.version>
+		<nicki.version>8.81</nicki.version>
+		<nicki-vaadin.version>22.07</nicki-vaadin.version>
 		<project.scm.id>github</project.scm.id>
 	</properties>
 	<modules>
@@ -86,6 +86,18 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.1.0</version>
+			</plugin>
+			<plugin>
+			   <groupId>org.owasp</groupId>
+			   <artifactId>dependency-check-maven</artifactId>
+			   <version>8.3.1</version>
+			   <executions>
+			      <execution>
+			         <goals>
+			            <goal>check</goal>
+			         </goals>
+			      </execution>
+			   </executions>
 			</plugin>
 		</plugins>
 	</build>
