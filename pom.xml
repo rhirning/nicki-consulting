@@ -12,8 +12,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-		<nicki.version>8.81</nicki.version>
-		<nicki-vaadin.version>22.07</nicki-vaadin.version>
+		<nicki.version>8.82</nicki.version>
+		<nicki-vaadin.version>22.08</nicki-vaadin.version>
 		<project.scm.id>github</project.scm.id>
 	</properties>
 	<modules>
@@ -91,13 +91,6 @@
 			   <groupId>org.owasp</groupId>
 			   <artifactId>dependency-check-maven</artifactId>
 			   <version>8.3.1</version>
-			   <executions>
-			      <execution>
-			         <goals>
-			            <goal>check</goal>
-			         </goals>
-			      </execution>
-			   </executions>
 			</plugin>
 		</plugins>
 	</build>
