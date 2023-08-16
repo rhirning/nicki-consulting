@@ -31,7 +31,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TimeWrapper implements Serializable {
+public class TimeWrapper implements Serializable, Comparable<TimeWrapper> {
 	private static final long serialVersionUID = -3445248806029063825L;
 	private Person person;
 	private Time time;
@@ -422,5 +422,33 @@ public class TimeWrapper implements Serializable {
 	public boolean isVacation() {
 		Project project = getProject();
 		return project != null && project.getVacation() != null && project.getVacation();
+	}
+
+	@Override
+	public int compareTo(TimeWrapper o) {
+		if (getTime().getStart() != null) {
+			if (o.time.getStart() != null) {
+				return getTime().getStart().compareTo(o.getTime().getStart());
+			} else {
+				return -1;
+			}
+		} else if (o.getTime().getStart() != null) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getMemberName());
+		sb.append("; ").append(TimeHelper.getTimeString(time.getStart()));
+		sb.append("; ").append(TimeHelper.getTimeString(time.getEnd()));
+		if (time.getPause() != null) {
+			sb.append("; ").append(Pause.getPause(time.getPause()));
+		}
+		sb.append("; ").append(TimeHelper.formatHours(time.getHours()));
+		sb.append("; ").append(time.getText());
+		return sb.toString();
 	}
 }

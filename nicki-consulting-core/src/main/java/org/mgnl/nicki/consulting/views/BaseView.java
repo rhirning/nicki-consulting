@@ -2,6 +2,7 @@ package org.mgnl.nicki.consulting.views;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +35,6 @@ import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -230,6 +230,10 @@ public abstract class BaseView extends VerticalLayout implements View {
 	}
 	
 	public enum READONLY {TRUE, FALSE};
+	public static boolean isWeekend(Calendar cal) {
+		return cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY;
+	}
+
 
 	protected List<TimeWrapper> getTimeWrappers(Person person, Period period, Customer customer, Project project, READONLY readonly, int emptyCount) throws TimeSelectException {
 		List<TimeWrapper> timeWrappers = new ArrayList<>();

@@ -178,7 +178,7 @@ public class TimeSheetView extends BaseView implements View {
 		nextFirst.add(Calendar.DAY_OF_MONTH, 1);
 		
 		while (first.before(nextFirst)) {
-			if (!weekend(first) && !existsEntry(first)) {
+			if (!isWeekend(first) && !existsEntry(first)) {
 				for (TimeWrapper entry : times) {
 					Time time = entry.getTime();
 					if (time.getStart() == null) {
@@ -219,7 +219,7 @@ public class TimeSheetView extends BaseView implements View {
 		time.getText().setValue(from.getText().getValue());
 	}
 
-	private boolean weekend(Calendar cal) {
+	public static boolean isWeekend(Calendar cal) {
 		return cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY;
 	}
 
