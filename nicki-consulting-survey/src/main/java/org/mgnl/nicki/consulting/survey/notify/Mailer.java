@@ -43,8 +43,9 @@ public class Mailer {
 	private static final String MAIL_PASSWORD		= "nicki.survey.notify.mail.server.password";
 	private static final String MAIL_HOST			= "nicki.survey.notify.mail.server.host";
 	private static final String MAIL_PORT			= "nicki.survey.notify.mail.server.port";
-	private static final String START_TLS			= "nicki.survey.notify.mail.server.starttls";	
+	private static final String START_TLS			= "nicki.survey.notify.mail.server.starttls";
 	private static final String TEMPLATE			= "nicki.survey.notify.mail.template";
+	private static final String BCC					= "nicki.survey.notify.mail.bcc";
 	private static final String CHARSET				= "UTF-8";
 
 
@@ -134,8 +135,10 @@ public class Mailer {
 //		message.setRecipients(Message.RecipientType.CC,
 //				InternetAddress.parse(cc));
 		// Set BCC: header field of the header.
-		message.setRecipients(Message.RecipientType.BCC,
-				InternetAddress.parse("ralf@hirning.de"));
+		if (Config.exists(BCC)) {
+			message.setRecipients(Message.RecipientType.BCC,
+					InternetAddress.parse(Config.getString(BCC)));
+		}
 		// Set Subject: header field
 		message.setSubject(subject);
 

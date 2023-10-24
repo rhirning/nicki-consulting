@@ -38,7 +38,7 @@ public class PersonsView extends BaseView implements View {
 	private static final long serialVersionUID = 1751419839762448157L;
 	private static final Logger LOG = LoggerFactory.getLogger(PersonsView.class);
 	private boolean isInit;
-	private Dialog newPersonWindow;
+	private DialogBase newPersonWindow;
 
 	public PersonsView() {
 		buildMainLayout();
