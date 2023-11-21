@@ -26,6 +26,8 @@ import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.xml.sax.SAXException;
 
 import com.itextpdf.text.DocumentException;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -78,12 +80,7 @@ public class FinishedSurveyView extends VerticalLayout implements View {
 				if (comments.size() == 0) {
 					return new Span("Keine Kommentare");
 				} else {
-					Grid<String> commentsGrid = new Grid<>();
-					commentsGrid.addColumn(s -> s.toString());
-					commentsGrid.setItems(comments);
-					commentsGrid.setAllRowsVisible(true);
-					
-					return commentsGrid;
+					return getDetails(comments);
 				}
 			}));
 			GridHelper.addSummarySurveyTopicWrapperColumns(table, survey);
@@ -100,6 +97,17 @@ public class FinishedSurveyView extends VerticalLayout implements View {
 		if (surveyTopicWrappers != null) {
 			table.setItems(surveyTopicWrappers);
 		}
+	}
+
+
+	private Component getDetails(List<String> comments) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<table>");
+		for (String comment : comments) {
+			sb.append("<tr><td>").append(comment).append("</td>");
+		}
+		sb.append("</table>");
+		return new Html(sb.toString());
 	}
 
 	private StreamResource createXlsxStream() {
