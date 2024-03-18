@@ -115,6 +115,14 @@ public class TimeWrapper implements Serializable, Comparable<TimeWrapper> {
 
 	}
 	
+	public String getCustomerReportFlag() {
+		if (!disableCustomerReport()) {
+			return time.getCustomerReport() ? "X" : "";
+		} else {
+			return "";
+		}
+	}
+	
 	public boolean disableCustomerReport() {
 		Project project = getProject();
 		if (project == null) {
@@ -171,6 +179,17 @@ public class TimeWrapper implements Serializable, Comparable<TimeWrapper> {
 			memberComboBox.setReadOnly(readOnly);
 		}
 		return memberComboBox;
+	}
+	
+	public String getMemberDisplayName() {
+		if (time.getMemberId() != null) {
+			for (Member member : members) {
+				if (time.getMemberId().longValue() == member.getId().longValue()) {
+					return member.getDisplayName();
+				}
+			}
+		}
+		return "";
 	}
 	
 	public String getMemberName() {
@@ -279,6 +298,14 @@ public class TimeWrapper implements Serializable, Comparable<TimeWrapper> {
 			return TimeHelper.formatHours(time.getHours());
 		} else {
 			return "";
+		}
+	}
+	
+	public Float getHoursAsFloat() {
+		if (time.getHours() != null) {
+			return time.getHours();
+		} else {
+			return 0.0f;
 		}
 	}
 	

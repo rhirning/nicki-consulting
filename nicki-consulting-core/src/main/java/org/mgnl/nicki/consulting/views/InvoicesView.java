@@ -11,13 +11,13 @@ import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.core.config.Config;
 import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.core.helper.DataHelper;
+import org.mgnl.nicki.vaadin.base.components.PeriodSelect;
 import org.mgnl.nicki.vaadin.base.menu.application.ConfigurableView;
 
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.select.Select;
 
 public class InvoicesView extends BaseView implements ConfigurableView  {
 	
@@ -31,7 +31,7 @@ public class InvoicesView extends BaseView implements ConfigurableView  {
 	
 	private ComboBox<Customer> customerComboBox;
 	
-	private Select<PERIOD> timeComboBox;
+	private PeriodSelect periodSelect;
 
 
 	private static final long serialVersionUID = -2330776406366438437L;
@@ -52,7 +52,7 @@ public class InvoicesView extends BaseView implements ConfigurableView  {
 	@Override
 	public void init() {
 		if (!isInit) {
-			initTimeComboBox(this.timeComboBox);
+			initPeriodSelect(this.periodSelect);
 			customerComboBox.setEnabled(true);
 			projectComboBox.setEnabled(true);
 			
@@ -66,7 +66,7 @@ public class InvoicesView extends BaseView implements ConfigurableView  {
 			timeTable.addComponentColumn(InvoiceWrapper::getTimeSheetDocument).setHeader("Zeitnachweis");
 			timeTable.addComponentColumn(InvoiceWrapper::getUndoButton).setHeader("Storno");
 			
-			timeComboBox.addValueChangeListener(event -> {timeComboBoxChanged();});
+			periodSelect.setConsumer(event -> timeComboBoxChanged());
 			customerComboBox.addValueChangeListener(event -> {customerComboBoxChanged();});
 			projectComboBox.addValueChangeListener(event -> {projectComboBoxChanged();});
 			timeComboBoxChanged();
@@ -103,10 +103,8 @@ public class InvoicesView extends BaseView implements ConfigurableView  {
 
 	private void loadInvoices() {
 		try {
-			PERIOD p = (PERIOD) timeComboBox.getValue();
-			Period period = null;
-			if (p != null) {
-				period = p.getPeriod();
+			Period period = periodSelect.getValue();
+			if (period != null) {
 				timeTable.setItems(getInvoiceWrappers(period, (Customer) customerComboBox.getValue(), (Project) projectComboBox.getValue()));
 			}
 		} catch (IllegalStateException | IllegalArgumentException | TimeSelectException e) {
@@ -206,12 +204,9 @@ public class InvoicesView extends BaseView implements ConfigurableView  {
 		filterLayout.setMargin(false);
 		filterLayout.setSpacing(true);
 		
-		// timeComboBox
-		timeComboBox = new Select<>();
-		timeComboBox.setLabel("Zeitraum");
-		timeComboBox.setWidth("-1px");
-		timeComboBox.setHeight("-1px");
-		filterLayout.add(timeComboBox);
+		// periodSelect
+		periodSelect = new PeriodSelect();
+		filterLayout.add(periodSelect);
 		
 		// customerComboBox
 		customerComboBox = new ComboBox<>();

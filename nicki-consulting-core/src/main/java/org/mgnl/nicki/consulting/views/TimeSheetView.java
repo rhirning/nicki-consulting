@@ -16,12 +16,14 @@ import org.mgnl.nicki.consulting.core.model.Time;
 import org.mgnl.nicki.consulting.data.TimeWrapper;
 import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.consulting.views.SaveOrIgnoreDialog.DECISION;
+import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.core.i18n.I18n;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
+import org.mgnl.nicki.vaadin.base.components.PeriodSelect;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.mgnl.nicki.vaadin.base.notification.Notification;
 import org.mgnl.nicki.vaadin.base.notification.Notification.Type;
@@ -49,7 +51,7 @@ public class TimeSheetView extends BaseView implements View {
 	
 	private Select<Person> personComboBox;
 	
-	private Select<PERIOD> timeComboBox;
+	private PeriodSelect periodSelect;
 	
 	private Button reloadButton;
 	
@@ -74,14 +76,14 @@ public class TimeSheetView extends BaseView implements View {
 	public void init() {
 		if (!isInit) {
 //			timeTable.setStyleName("mygridwithcomponents");
-			initTimeComboBox(this.timeComboBox);
-			timeComboBox.addValueChangeListener(event -> { timeValueChanged(); });
+			initPeriodSelect(this.periodSelect);
+			periodSelect.setConsumer(event -> timeValueChanged());
 			try {
 				initPersonComboBox(this.personComboBox, ALL.FALSE);
 			} catch (NoValidPersonException | NoApplicationContextException e) {
 				LOG.error("Error init personComboBox", e);
 			}
-			personComboBox.addValueChangeListener(event -> { timeValueChanged(); });
+			personComboBox.addValueChangeListener(event -> timeValueChanged());
 			
 			saveButton.addClickListener(event-> {save();});
 			reloadButton.addClickListener(event -> {loadTimes();});
@@ -248,7 +250,6 @@ public class TimeSheetView extends BaseView implements View {
 		if (isModified()) {
 			showSaveOrIgnore();
 		} else {
-			setTimeComboBoxValue((PERIOD) timeComboBox.getValue());
 			setPersonComboBoxValue((Person) this.personComboBox.getValue());
 			loadTimes();
 		}
@@ -262,7 +263,6 @@ public class TimeSheetView extends BaseView implements View {
 				save();
 			} else {
 				LOG.debug("saveOrIgnore: decision ignore");
-				setTimeComboBoxValue((PERIOD) timeComboBox.getValue());
 				loadTimes();
 			}
 			if (decisionWindow != null) {
@@ -280,7 +280,6 @@ public class TimeSheetView extends BaseView implements View {
 	private void save() {
 		if (!verify()) {
 			Notification.show("Es gibt noch Fehler in den markierten Zeilen. Mehr Information bei Mouse-Over", Type.ERROR_MESSAGE);
-			timeComboBox.setValue(getTimeComboBoxValue());
 			return;
 		}
 
@@ -294,7 +293,6 @@ public class TimeSheetView extends BaseView implements View {
 					}
 				}
 			}
-			setTimeComboBoxValue((PERIOD) timeComboBox.getValue());
 			loadTimes();
 			Notification.show("Die Daten wurden gespeichert", Type.HUMANIZED_MESSAGE);
 		} catch (SQLException | InitProfileException | NotSupportedException e) {
@@ -402,10 +400,10 @@ public class TimeSheetView extends BaseView implements View {
 	}
 	
 	private void addLines(int emptyCount) {
-		PERIOD period = (PERIOD) timeComboBox.getValue();
+		Period period = periodSelect.getValue();
 		if (period != null) {
 			try {
-				addEmptyTimeWrappers(times, getPersonComboBoxValue(), period.getPeriod(), READONLY.FALSE, emptyCount);
+				addEmptyTimeWrappers(times, getPersonComboBoxValue(), period, READONLY.FALSE, emptyCount);
 				timeTable.setItems(times);
 			} catch (TimeSelectException e) {
 				// TODO Auto-generated catch block
@@ -416,9 +414,9 @@ public class TimeSheetView extends BaseView implements View {
 
 	private void loadTimes() {
 		try {
-			PERIOD period = (PERIOD) timeComboBox.getValue();
+			Period period = periodSelect.getValue();
 			if (period != null) {
-				times = getTimeWrappers(getPersonComboBoxValue(), period.getPeriod(), null, null, READONLY.FALSE, 10);
+				times = getTimeWrappers(getPersonComboBoxValue(), period, null, null, READONLY.FALSE, 10);
 				timeTable.setItems(times);
 			}
 		} catch (IllegalStateException | IllegalArgumentException | TimeSelectException e) {
@@ -491,12 +489,10 @@ public class TimeSheetView extends BaseView implements View {
 		moreLinesButton.setWidth("-1px");
 		moreLinesButton.setHeight("-1px");
 		filterLayout.add(moreLinesButton);
-		
-		// timeComboBox
-		timeComboBox = new Select<PERIOD>();
-		timeComboBox.setWidth("-1px");
-		timeComboBox.setHeight("-1px");
-		filterLayout.add(timeComboBox);
+
+		// periodSelect
+		periodSelect = new PeriodSelect();
+		filterLayout.add(periodSelect);
 		
 		// personComboBox
 		personComboBox = new Select<Person>();

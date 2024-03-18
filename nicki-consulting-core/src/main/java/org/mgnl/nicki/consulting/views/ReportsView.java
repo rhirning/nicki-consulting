@@ -22,11 +22,15 @@ import org.mgnl.nicki.consulting.db.TimeSelectException;
 import org.mgnl.nicki.core.auth.InvalidPrincipalException;
 import org.mgnl.nicki.core.config.Config;
 import org.mgnl.nicki.core.context.AppContext;
+import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.dynamic.objects.objects.Template;
+import org.mgnl.nicki.editor.templates.export.GridExport;
 import org.mgnl.nicki.template.report.helper.XlsDocuHelper;
 import org.mgnl.nicki.template.engine.ConfigurationFactory.TYPE;
 import org.mgnl.nicki.template.engine.TemplateEngine;
+import org.mgnl.nicki.vaadin.base.components.Downloader;
+import org.mgnl.nicki.vaadin.base.components.PeriodSelect;
 import org.mgnl.nicki.vaadin.base.menu.application.ConfigurableView;
 import org.mgnl.nicki.vaadin.base.notification.Notification;
 import org.mgnl.nicki.vaadin.base.notification.Notification.Type;
@@ -35,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.itextpdf.text.DocumentException;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
@@ -53,8 +58,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ReportsView extends BaseView implements ConfigurableView  {
-	
+
 	private Grid<TimeWrapper> timeTable;
+	private GridExport<TimeWrapper> gridExport;
 	
 	private HorizontalLayout summaryLayout;
 	
@@ -68,7 +74,9 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	
 	private Anchor downloadPdfAnchor;
 	
-	private Anchor downloadXlsAnchor;
+//	private Anchor downloadXlsAnchor;
+
+	private Button exportButton;
 	
 	private Select<Template> reportComboBox;
 	
@@ -77,8 +85,8 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	private ComboBox<Project> projectComboBox;
 	
 	private ComboBox<Customer> customerComboBox;
-	
-	private Select<PERIOD> timeComboBox;
+
+	private PeriodSelect periodSelect;
 	
 	private Select<Person> personComboBox;
 
@@ -112,7 +120,8 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 			}
 
 			reportComboBox.addValueChangeListener(event -> { timeComboBoxChanged(); });
-			initTimeComboBox(this.timeComboBox);
+			initPeriodSelect(periodSelect);
+			periodSelect.setLabel("Zeitraum");
 			try {
 				initPersonComboBox(this.personComboBox, ALL.TRUE);
 			} catch (NoValidPersonException | NoApplicationContextException e) {
@@ -123,7 +132,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 			projectComboBox.setEnabled(true);
 
 			downloadPdfAnchor.setEnabled(false);
-			downloadXlsAnchor.setEnabled(false);
+//			downloadXlsAnchor.setEnabled(false);
 			
 
 			timeTable.addColumn(TimeWrapper::getPersonName).setHeader("Person").setFlexGrow(0).setWidth("300px");;
@@ -136,7 +145,24 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 			timeTable.addComponentColumn(TimeWrapper::getCustomerReport).setHeader(createIcon(VaadinIcon.FILE, "Bei Kunde erfasst")).setFlexGrow(0);
 			timeTable.addColumn(TimeWrapper::getTextString).setHeader("Tätigkeit").setWidth("200px").setFlexGrow(1);
 			
-			timeComboBox.addValueChangeListener(event -> {timeComboBoxChanged();});
+			gridExport = new GridExport<TimeWrapper>();
+			gridExport.addColumn(TimeWrapper::getPersonName).setHeader("Person").setFlexGrow(0).setWidth("300px");;
+			gridExport.addColumn(TimeWrapper::getMemberDisplayName).setHeader("Projekt").setWidth("300px").setFlexGrow(1);
+			gridExport.addColumn(TimeWrapper::getDisplayDay).setHeader("Datum").setFlexGrow(0).setWidth("120px");
+			gridExport.addColumn(TimeWrapper::getDisplayStart).setHeader("von").setFlexGrow(0).setWidth("100px");
+			gridExport.addColumn(TimeWrapper::getDisplayEnd).setHeader("bis").setFlexGrow(0).setWidth("100px");
+			gridExport.addColumn(TimeWrapper::getDisplayPause).setHeader("Pause").setFlexGrow(0).setWidth("120px");
+			gridExport.addColumn(TimeWrapper::getHoursAsFloat).setHeader("Stunden").setFlexGrow(0).setWidth("100px");
+			gridExport.addColumn(TimeWrapper::getCustomerReportFlag).setHeader("Bei Kunde erfasst").setFlexGrow(0);
+			gridExport.addColumn(TimeWrapper::getTextString).setHeader("Tätigkeit").setWidth("200px").setFlexGrow(1);
+			exportButton.addClickListener(e -> {
+				Downloader.showDownload("Export",
+						gridExport.getXlsStreamResource("Report", timeDataProvider.getItems()));
+			});
+			
+			
+			
+			periodSelect.setConsumer(event -> {timeComboBoxChanged();});
 			customerComboBox.addValueChangeListener(event -> {customerComboBoxChanged();});
 			projectComboBox.addValueChangeListener(event -> {projectComboBoxChanged();});
 			projectComboBox.setItemLabelGenerator(Project::getName);
@@ -245,26 +271,27 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 	}
 	
 	private void generate() {
-		StreamResource pdfSource = createPDFStream();
-		downloadPdfAnchor.setEnabled(true);
-		downloadPdfAnchor.setHref(pdfSource);
-		downloadPdfAnchor.setText("Download PDF");
-		downloadPdfAnchor.setTarget("_blank");
-
-		StreamResource xlsSource = createXlsStream();
-		downloadXlsAnchor.setHref(xlsSource);
-		downloadXlsAnchor.setEnabled(true);
-		downloadXlsAnchor.setText("Download XLS");
-		downloadXlsAnchor.setTarget("_blank");
-		
+		if (timeDataProvider.getItems() != null && !timeDataProvider.getItems().isEmpty()) {
+			StreamResource pdfSource = createPDFStream();
+			downloadPdfAnchor.setEnabled(true);
+			downloadPdfAnchor.setHref(pdfSource);
+			downloadPdfAnchor.setText("Download PDF");
+			downloadPdfAnchor.setTarget("_blank");
+	
+//			StreamResource xlsSource = createXlsStream();
+//			downloadXlsAnchor.setHref(xlsSource);
+//			downloadXlsAnchor.setEnabled(true);
+//			downloadXlsAnchor.setText("Download XLS");
+//			downloadXlsAnchor.setTarget("_blank");
+		}		
 	}
 
 	private void loadTimes() {
 		try {
-			PERIOD period = (PERIOD) timeComboBox.getValue();
+			Period period = periodSelect.getValue();
 			if (period != null) {
 
-				timeDataProvider = new ListDataProvider<TimeWrapper>(getTimeWrappers(getPersonComboBoxValue(), period.getPeriod(), customerComboBox.getValue(), projectComboBox.getValue(), READONLY.TRUE, 0));
+				timeDataProvider = new ListDataProvider<TimeWrapper>(getTimeWrappers(getPersonComboBoxValue(), period, customerComboBox.getValue(), projectComboBox.getValue(), READONLY.TRUE, 0));
 				timeTable.setItems(timeDataProvider);
 			}
 		} catch (IllegalStateException | IllegalArgumentException | TimeSelectException e) {
@@ -305,7 +332,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 
 	private void initPersonData() throws NoValidPersonException, NoApplicationContextException {
 		
-		members = getMembers(getPersonComboBoxValue(), ((PERIOD) timeComboBox.getValue()).getPeriod());
+		members = getMembers(getPersonComboBoxValue(), periodSelect.getValue());
 		
 	}
 
@@ -457,13 +484,10 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		personComboBox.setWidthFull();
 		personComboBox.setHeight("-1px");
 		filterLayout.add(personComboBox);
-		
-		// timeComboBox
-		timeComboBox = new Select<>();
-		timeComboBox.setLabel("Zeitraum");
-		timeComboBox.setWidthFull();
-		timeComboBox.setHeight("-1px");
-		filterLayout.add(timeComboBox);
+
+		// periodSelect
+		periodSelect = new PeriodSelect();
+		filterLayout.add(periodSelect);
 		
 		// customerComboBox
 		customerComboBox = new ComboBox<>();
@@ -510,13 +534,16 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 		downloadPdfAnchor.setHeight("-1px");
 		reportsLayout.add(downloadPdfAnchor);
 		
-		// downloadXlsAnchor
-		downloadXlsAnchor = new Anchor();
-		downloadXlsAnchor.setText("Excel");
-		downloadXlsAnchor.setWidth("-1px");
-		downloadXlsAnchor.setHeight("-1px");
-		reportsLayout.add(downloadXlsAnchor);
+//		// downloadXlsAnchor
+//		downloadXlsAnchor = new Anchor();
+//		downloadXlsAnchor.setText("Excel");
+//		downloadXlsAnchor.setWidth("-1px");
+//		downloadXlsAnchor.setHeight("-1px");
+//		reportsLayout.add(downloadXlsAnchor);
 		
+
+		exportButton = new Button("Export");
+		reportsLayout.add(exportButton);
 		return reportsLayout;
 	}
 

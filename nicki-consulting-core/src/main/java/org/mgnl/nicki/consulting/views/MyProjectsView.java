@@ -6,6 +6,7 @@ import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.model.Customer;
 import org.mgnl.nicki.consulting.core.model.Member;
 import org.mgnl.nicki.consulting.core.model.Project;
+import org.mgnl.nicki.vaadin.base.components.PeriodSelect;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.mgnl.nicki.vaadin.db.editor.DbBeanCloseListener;
 import org.mgnl.nicki.vaadin.db.editor.DbBeanViewer;
@@ -24,7 +25,7 @@ public class MyProjectsView extends BaseView implements View {
 	
 	private HorizontalLayout buttonsLayout;
 	
-	private Select<PERIOD> timeComboBox;
+	private PeriodSelect periodSelect;
 	
 	private Select<Member> memberComboBox;
 	
@@ -40,7 +41,8 @@ public class MyProjectsView extends BaseView implements View {
 	@Override
 	public void init() {
 		if (!isInit) {
-			initTimeComboBox(this.timeComboBox);
+			initPeriodSelect(periodSelect);
+			periodSelect.setLabel("Zeitraum");
 		}
 		try {
 			loadMember();
@@ -54,7 +56,7 @@ public class MyProjectsView extends BaseView implements View {
 				showMember(m);
 			});
 			//memberComboBox.setReadOnly(true);
-			timeComboBox.addValueChangeListener(event -> {try {
+			periodSelect.setConsumer(event -> {try {
 				loadMember();
 			} catch (NoValidPersonException | NoApplicationContextException e) {
 				// TODO Auto-generated catch block
@@ -107,7 +109,7 @@ public class MyProjectsView extends BaseView implements View {
 	}
 
 	private void loadMember() throws NoValidPersonException, NoApplicationContextException {
-		List<Member> members = getMembers(getPerson(), ((PERIOD) timeComboBox.getValue()).getPeriod());
+		List<Member> members = getMembers(getPerson(), periodSelect.getValue());
 		memberComboBox.setItems(members);
 		memberComboBox.setItemLabelGenerator(Member::getDisplayName);
 	}
@@ -148,13 +150,11 @@ public class MyProjectsView extends BaseView implements View {
 		buttonsLayout.setHeight("-1px");
 		buttonsLayout.setMargin(true);
 		buttonsLayout.setSpacing(true);
+
 		
-		// timeComboBox
-		timeComboBox = new Select<PERIOD>();
-		timeComboBox.setLabel("Zeitraum");
-		timeComboBox.setWidth("-1px");
-		timeComboBox.setHeight("-1px");
-		buttonsLayout.add(timeComboBox);
+		// periodSelect
+		periodSelect = new PeriodSelect();
+		buttonsLayout.add(periodSelect);
 		
 		// memberComboBox
 		memberComboBox = new Select<Member>();

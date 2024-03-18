@@ -26,11 +26,13 @@ import org.mgnl.nicki.consulting.db.TimeSelectHandler;
 import org.mgnl.nicki.consulting.objects.LdapPerson;
 import org.mgnl.nicki.core.config.Config;
 import org.mgnl.nicki.core.data.Period;
+import org.mgnl.nicki.core.helper.PERIOD;
 import org.mgnl.nicki.db.context.DBContext;
 import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
+import org.mgnl.nicki.vaadin.base.components.PeriodSelect;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +49,6 @@ public abstract class BaseView extends VerticalLayout implements View {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseView.class);
 	private NickiApplication application;
 	private Person person;
-	private PERIOD timeComboBoxValue;
 	private Person personComboBoxValue;
 	
 	public BaseView() {
@@ -268,12 +269,8 @@ public abstract class BaseView extends VerticalLayout implements View {
 	protected void reload() {
 	}
 
-	protected void initTimeComboBox(Select<PERIOD> timeComboBox) {
-		timeComboBox.setItems(PERIOD.values());
-		timeComboBox.setRenderer(new TextRenderer<>(PERIOD::getName));
-		timeComboBox.setValue(PERIOD.THIS_MONTH);
-		setTimeComboBoxValue(PERIOD.THIS_MONTH);
-		timeComboBox.setEmptySelectionAllowed(false);
+	protected void initPeriodSelect(PeriodSelect periodSelect) {
+		periodSelect.setValue(PERIOD.THIS_MONTH);
 	}
 
 	protected enum ALL {TRUE, FALSE}
@@ -305,14 +302,6 @@ public abstract class BaseView extends VerticalLayout implements View {
 			personComboBox.setEnabled(false);
 		}
 		personComboBox.setEmptySelectionAllowed(false);
-	}
-
-	public PERIOD getTimeComboBoxValue() {
-		return timeComboBoxValue;
-	}
-
-	public void setTimeComboBoxValue(PERIOD timeComboBoxValue) {
-		this.timeComboBoxValue = timeComboBoxValue;
 	}
 
 	public Person getPersonComboBoxValue() {
