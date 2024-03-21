@@ -318,16 +318,19 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 
 
 	private void initCustomerComboBox() {
-	
-
+		Customer customer = customerComboBox.getValue();
+		Long customerId = customer != null ? customer.getId() : null;
+		customerComboBox.setValue(null);
 		customerComboBox.setItemLabelGenerator(Customer::getName);
 		Collection<Customer> customers = getCustomers(members);
 		if (customers != null && customers.size() > 0) {
 			customerComboBox.setItems(customers);
+			if (customerId != null) {
+				customers.stream().forEach(c -> {if (c.getId().equals(customerId)) {customerComboBox.setValue(c);}});
+			}
 		} else {
 			customerComboBox.setItems();
 		}
-		customerComboBox.setValue(null);
 	}
 
 	private void initPersonData() throws NoValidPersonException, NoApplicationContextException {
@@ -338,14 +341,18 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 
 
 	private void initProjectComboBox() {
-
+		Project project = projectComboBox.getValue();
+		Long projectId = project != null ? project.getId() : null;
+		projectComboBox.setValue(null);
 		Collection<Project> projects = getProjects((Customer) customerComboBox.getValue(), members);
 		if (projects != null && projects.size() > 0) {
 			projectComboBox.setItems(projects);
+			if (projectId != null) {
+				projects.stream().forEach(p -> {if (p.getId().equals(projectId)) {projectComboBox.setValue(p);}});
+			}
 		} else {
 			projectComboBox.setItems();
 		}
-		projectComboBox.setValue(null);
 	}
 
 
