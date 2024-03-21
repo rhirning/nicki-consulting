@@ -13,7 +13,7 @@
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
 		<nicki.version>11.13</nicki.version>
-		<nicki-vaadin.version>23.11</nicki-vaadin.version>
+		<nicki-vaadin.version>23.12</nicki-vaadin.version>
 		<project.scm.id>github</project.scm.id>
 	</properties>
 	<modules>
