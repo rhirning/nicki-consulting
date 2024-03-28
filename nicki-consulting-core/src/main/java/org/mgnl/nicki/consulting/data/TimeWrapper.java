@@ -347,7 +347,7 @@ public class TimeWrapper implements Serializable, Comparable<TimeWrapper> {
 	}
 	
 	public String getDisplayPause() {
-		if (time.getPause() == null) {
+		if (time.getPause() == null || Pause.getPause(time.getPause()) == null) {
 			return "";
 		} else {
 			return Pause.getPause(time.getPause()).getDisplayName();
