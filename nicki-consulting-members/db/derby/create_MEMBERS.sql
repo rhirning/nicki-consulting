@@ -1,0 +1,17 @@
+DROP TABLE APP.MEMBERS;
+
+CREATE TABLE APP.MEMBERS (
+  ID bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
+  PERSONAL_TITLE varchar(100),
+  SURNAME varchar(100),
+  GIVENNAME varchar(100),
+  POST_CODE varchar(100),
+  CITY varchar(100),
+  STREET varchar(100),
+  MAIL varchar(100),
+  PHONE varchar(100),
+  MOBILE varchar(100),
+  IBAN varchar(100),
+  ENTRY_DATE date,
+  CONSTRAINT MEMBERS_PK PRIMARY KEY (ID)
+);

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
@@ -31,9 +30,6 @@ import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.context.PrimaryKey;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
-import org.mgnl.nicki.vaadin.base.command.Command;
-import org.mgnl.nicki.vaadin.base.command.CommandException;
-import org.mgnl.nicki.vaadin.base.components.ConfirmDialog;
 import org.mgnl.nicki.vaadin.base.notification.Notification;
 import org.mgnl.nicki.vaadin.base.notification.Notification.Type;
 
@@ -686,58 +682,5 @@ public class SurveyHelper {
 		try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 			return dbContext.exists(bean);
 		}
-	}
-	
-	public static <T> void confirm(String title, T bean, Consumer<T> action) {
-		showConfirmDialog(title, bean, action);
-	}
-
-	
-	private static <T> void showConfirmDialog(String windowTitle, T bean, Consumer<T> action) {
-		ConfirmDialog editWindow = new ConfirmDialog();
-		editWindow.setCommand(getCommand(windowTitle, bean, b -> {
-			action.accept(b);
-			editWindow.close();
-		}));
-
-		editWindow.setModal(true);
-		editWindow.setWidth("600px");
-		editWindow.setHeight("600px");
-		editWindow.open();
-	}
-
-	private static <T> Command getCommand(String windowTitle, T bean, Consumer<T> action) {
-		return new Command() {
-			
-			@Override
-			public String getTitle() {
-				return windowTitle;
-			}
-			
-			@Override
-			public String getHeadline() {
-				return "Sind Sie sicher";
-			}
-			
-			@Override
-			public String getErrorText() {
-				return "";
-			}
-			
-			@Override
-			public String getConfirmCaption() {
-				return "Ja";
-			}
-			
-			@Override
-			public String getCancelCaption() {
-				return "Abbrechen";
-			}
-			
-			@Override
-			public void execute() throws CommandException {
-				action.accept(bean);				
-			}
-		};
 	}
 }

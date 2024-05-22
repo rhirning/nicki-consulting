@@ -22,6 +22,7 @@ import org.mgnl.nicki.db.context.DBContextManager;
 import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.application.NickiApplication;
+import org.mgnl.nicki.vaadin.base.helper.ConfirmHelper;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -152,7 +153,7 @@ public class SurveyConfigView extends VerticalLayout implements View {
 			if (hasTopics(survey)) {
 				Notification.show("Die Umfrage hat schon begonnen");
 			}
-			SurveyHelper.confirm("Bewertungen löschen", survey, s -> {
+			ConfirmHelper.confirm("Bewertungen löschen", survey, s -> {
 				try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 					SurveyHelper.deleteVotes(s);
 				} catch (SQLException | NotSupportedException e) {
@@ -168,7 +169,7 @@ public class SurveyConfigView extends VerticalLayout implements View {
 	}
 
 	private void cloneSurvey(SurveyConfig survey ) {
-		SurveyHelper.confirm("Umfrage kopieren", survey, s -> {
+		ConfirmHelper.confirm("Umfrage kopieren", survey, s -> {
 			try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 				SurveyHelper.cloneSurvey(s, getPerson());
 			} catch (SQLException | NoValidPersonException | NoApplicationContextException e) {
@@ -184,7 +185,7 @@ public class SurveyConfigView extends VerticalLayout implements View {
 			if (hasTopics(survey)) {
 				Notification.show("Die Umfrage hat schon begonnen");
 			}
-			SurveyHelper.confirm("Umfrage löschen", survey, s -> {
+			ConfirmHelper.confirm("Umfrage löschen", survey, s -> {
 				try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 					SurveyHelper.deleteTopics(s);
 					SurveyHelper.deleteChoices(s);

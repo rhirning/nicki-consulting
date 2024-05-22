@@ -22,6 +22,7 @@ import org.mgnl.nicki.db.context.NotSupportedException;
 import org.mgnl.nicki.db.profile.InitProfileException;
 import org.mgnl.nicki.vaadin.base.components.DialogBase;
 import org.mgnl.nicki.vaadin.base.editor.ValidationException;
+import org.mgnl.nicki.vaadin.base.helper.ConfirmHelper;
 import org.mgnl.nicki.vaadin.base.validation.Validation;
 
 import com.vaadin.flow.component.button.Button;
@@ -196,7 +197,7 @@ public class SurveyEditor extends HorizontalLayout {
 			if (hasVotes(topic)) {
 				Notification.show("Dieses Thema wurde schon bewertet");
 			}
-			SurveyHelper.confirm("Thema löschen", topic, s -> {
+			ConfirmHelper.confirm("Thema löschen", topic, s -> {
 				try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 					SurveyHelper.deleteTopic(dbContext, topic);
 				} catch (SQLException | InitProfileException | InstantiationException | IllegalAccessException | NotSupportedException e) {
@@ -268,7 +269,7 @@ public class SurveyEditor extends HorizontalLayout {
 			if (hasVotes(choice)) {
 				Notification.show("Dieses AUswahl wurde schon benutzt");
 			}
-			SurveyHelper.confirm("AUswahl löschen", choice, s -> {
+			ConfirmHelper.confirm("AUswahl löschen", choice, s -> {
 				try (DBContext dbContext = DBContextManager.getContext(Constants.DB_CONTEXT_NAME)) {
 					SurveyHelper.deleteChoice(dbContext, choice);
 				} catch (SQLException | InitProfileException | InstantiationException | IllegalAccessException | NotSupportedException e) {
