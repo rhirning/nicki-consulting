@@ -7,21 +7,17 @@ public class NonClosingWindow extends Dialog {
 	private static final long serialVersionUID = -7104786950768212140L;
 	
 	public NonClosingWindow() {
+		setCloseOnEsc(false);
+		setCloseOnOutsideClick(false);
 	}
 	
-		// TODO: headline
 	public NonClosingWindow(String caption) {
-		//super(caption);
+		this();
+		setHeaderTitle(caption);
 	}
 	
-	public NonClosingWindow(String caption, Component component) {
-		super(component);
-//		super(caption, component);
+	public NonClosingWindow(String caption, Component ... components ) {
+		this(caption);
+		add(components);
 	}
-
-	@Override
-	public void close() {
-	}
-
-
 }

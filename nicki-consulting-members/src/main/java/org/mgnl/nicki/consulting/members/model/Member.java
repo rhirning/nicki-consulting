@@ -9,7 +9,7 @@ import org.mgnl.nicki.db.data.DataType;
 import lombok.Data;
 
 @Data
-@Table(name = "MEMBERS")
+@Table(name = "PERSONS")
 public class Member implements Serializable {
 	private static final long serialVersionUID = 2587714583373894281L;
 

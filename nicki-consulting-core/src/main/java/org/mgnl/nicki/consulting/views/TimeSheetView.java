@@ -270,7 +270,6 @@ public class TimeSheetView extends BaseView implements View {
 				decisionWindow.close();
 				decisionWindow = null;
 			}
-			decisionWindow.close();
 		});
 		LOG.debug("saveOrIgnore: addWindow");
 		decisionWindow = new NonClosingWindow("Daten haben sich geändert", dialog);
