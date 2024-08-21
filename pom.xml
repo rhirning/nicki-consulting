@@ -12,8 +12,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-		<nicki.version>11.14</nicki.version>
-		<nicki-vaadin.version>23.14</nicki-vaadin.version>
+		<nicki.version>11.15</nicki.version>
+		<nicki-vaadin.version>23.15</nicki-vaadin.version>
 		<project.scm.id>github</project.scm.id>
 	</properties>
 	<modules>
@@ -90,7 +90,7 @@
 			<plugin>
 			   <groupId>org.owasp</groupId>
 			   <artifactId>dependency-check-maven</artifactId>
-			   <version>8.3.1</version>
+			   <version>10.0.3</version>
 			   <configuration>
 			   		<pnpmAuditAnalyzerEnabled>false</pnpmAuditAnalyzerEnabled>
 			   </configuration>
@@ -119,11 +119,14 @@
 				<artifactId>javax.servlet-api</artifactId>
 				<version>3.1.0</version>
 			</dependency>
+			<!--
 			<dependency>
 				<groupId>org.apache.derby</groupId>
 				<artifactId>derbyclient</artifactId>
-				<version>10.12.1.1</version>
-			</dependency>
+				<version>10.15.2.0</version>
+				<scope>provided</scope>
+			</dependency
+			-->
 			<dependency>
 				<groupId>org.mgnl.nicki</groupId>
 				<artifactId>nicki-scheduler</artifactId>

@@ -25,7 +25,6 @@ import org.mgnl.nicki.vaadin.base.application.NickiApplication;
 import org.mgnl.nicki.vaadin.base.menu.application.View;
 import org.xml.sax.SAXException;
 
-import com.itextpdf.text.DocumentException;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
@@ -116,7 +115,7 @@ public class FinishedSurveyView extends VerticalLayout implements View {
 						try {
 							return renderSurvey();
 						} catch (IOException | TemplateException | InvalidPrincipalException
-								| ParserConfigurationException | SAXException | DocumentException e) {
+								| ParserConfigurationException | SAXException e) {
 							log.error("Error rendering survey", e);
 						}
 						return null;
@@ -132,7 +131,7 @@ public class FinishedSurveyView extends VerticalLayout implements View {
 		return name;
 	}
 
-	public InputStream renderSurvey() throws IOException, TemplateException, InvalidPrincipalException, ParserConfigurationException, SAXException, DocumentException {
+	public InputStream renderSurvey() throws IOException, TemplateException, InvalidPrincipalException, ParserConfigurationException, SAXException {
 		Map<String, Object> dataModel = new HashMap<>();
 		dataModel.put("survey", survey.getSurveyConfig());
 		dataModel.put("helper", new SurveyHelper());

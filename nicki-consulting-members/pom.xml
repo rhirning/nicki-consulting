@@ -32,10 +32,12 @@
 			<artifactId>nicki-vaadin-db</artifactId>
 				<version>${nicki-vaadin.version}</version>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derbyclient</artifactId>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>org.mgnl.nicki.consulting</groupId>
 			<artifactId>nicki-consulting-core</artifactId>

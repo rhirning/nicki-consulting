@@ -15,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import com.itextpdf.text.DocumentException;
-
 import freemarker.template.TemplateException;
 
 public class InvoiceHelper {
@@ -45,7 +43,7 @@ public class InvoiceHelper {
 		TemplateEngine engine = TemplateEngine.getInstance(TYPE.JNDI);
 		try {
 			return engine.executeTemplateAsPdf2(getInvoiceTemplate(project) + ".ftl", params);
-		} catch ( IOException | TemplateException | InvalidPrincipalException | ParserConfigurationException | SAXException | DocumentException  e) {
+		} catch ( IOException | TemplateException | InvalidPrincipalException | ParserConfigurationException | SAXException  e) {
 			LOG.error("Error generating Report", e);
 		}
 		return null;
@@ -66,7 +64,7 @@ public class InvoiceHelper {
 		TemplateEngine engine = TemplateEngine.getInstance(TYPE.JNDI);
 		try {
 			return engine.executeTemplateAsPdf2(getTimeSheetTemplate(project) + ".ftl", params);
-		} catch ( IOException | TemplateException | InvalidPrincipalException | ParserConfigurationException | SAXException | DocumentException  e) {
+		} catch ( IOException | TemplateException | InvalidPrincipalException | ParserConfigurationException | SAXException  e) {
 			LOG.error("Error generating Report", e);
 		}
 		return null;

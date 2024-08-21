@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang.StringUtils;
@@ -17,16 +18,15 @@ import org.mgnl.nicki.consulting.survey.helper.SurveyHelper;
 import org.mgnl.nicki.consulting.survey.model.SurveyNotify;
 import org.mgnl.nicki.core.config.Config;
 import org.mgnl.nicki.core.helper.DataHelper;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.JobKey;
+import org.mgnl.nicki.scheduler.Job;
+import org.mgnl.nicki.scheduler.JobConfig;
 
 @Slf4j
+@Data
 public class NotifyJob implements Job {
-    public void execute(JobExecutionContext context)
-        throws JobExecutionException {
-    	JobKey jobKey = context.getJobDetail().getKey();
+	private JobConfig jobConfig;
+    public void run() {
+    	String jobKey = jobConfig.getName();
     	if (!Config.getBoolean("nicki.survey.notify.enable", true)) {
     		log.info(getClass().getSimpleName() + ": Notification disabled");
     		return;

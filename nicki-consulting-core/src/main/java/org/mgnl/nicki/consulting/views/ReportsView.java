@@ -38,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import com.itextpdf.text.DocumentException;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
@@ -375,7 +374,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 				try {
 //					return engine.executeTemplate(template + ".ftl", params, "UTF-8");
 					return engine.executeTemplateAsPdf2(getTemplatePath(template) + ".ftl", params);
-				} catch ( IOException | TemplateException | InvalidPrincipalException | ParserConfigurationException | SAXException | DocumentException  e) {
+				} catch ( IOException | TemplateException | InvalidPrincipalException | ParserConfigurationException | SAXException  e) {
 					LOG.error("Error generating Report", e);
 				}
 				return null;
@@ -401,7 +400,7 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 				params.put("today", DataHelper.getDisplayDay(new Date()));
 				try {
 					return XlsDocuHelper.generate(TYPE.JNDI, getTemplatePath(template) + ".xls", params);
-				} catch ( IOException | TemplateException | InvalidPrincipalException | ParserConfigurationException | SAXException | DocumentException  e) {
+				} catch ( IOException | TemplateException | InvalidPrincipalException | ParserConfigurationException | SAXException  e) {
 					LOG.error("Error generating Report", e);
 				}
 				return null;
