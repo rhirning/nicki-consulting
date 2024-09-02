@@ -2,7 +2,7 @@ package org.mgnl.nicki.consulting.data;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.core.model.Member;
 
 import com.vaadin.flow.component.checkbox.Checkbox;

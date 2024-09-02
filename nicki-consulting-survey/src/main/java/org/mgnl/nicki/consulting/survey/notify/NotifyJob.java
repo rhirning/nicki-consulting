@@ -11,7 +11,7 @@ import java.util.Set;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.PersonHelper;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.survey.helper.SurveyHelper;

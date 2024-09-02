@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.survey.helper.GridHelper;
 import org.mgnl.nicki.consulting.survey.helper.SurveyHelper;

@@ -1,6 +1,6 @@
 package org.mgnl.nicki.consulting.core.helper;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class Clock {
 	private int hours;

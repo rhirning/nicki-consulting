@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.core.data.TreeObject;
 import org.mgnl.nicki.db.annotation.Attribute;

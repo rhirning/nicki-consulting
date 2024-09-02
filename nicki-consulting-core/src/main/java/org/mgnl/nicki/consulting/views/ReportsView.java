@@ -10,7 +10,7 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.model.Customer;
 import org.mgnl.nicki.consulting.core.model.Member;
@@ -26,7 +26,6 @@ import org.mgnl.nicki.core.data.Period;
 import org.mgnl.nicki.core.helper.DataHelper;
 import org.mgnl.nicki.dynamic.objects.objects.Template;
 import org.mgnl.nicki.editor.templates.export.GridExport;
-import org.mgnl.nicki.template.report.helper.XlsDocuHelper;
 import org.mgnl.nicki.template.engine.ConfigurationFactory.TYPE;
 import org.mgnl.nicki.template.engine.TemplateEngine;
 import org.mgnl.nicki.vaadin.base.components.Downloader;
@@ -381,34 +380,6 @@ public class ReportsView extends BaseView implements ConfigurableView  {
 			
 		});
 	}
-
-
-	@SuppressWarnings("deprecation")
-	private StreamResource createXlsStream() {
-		return new StreamResource("TimeReport_" + DataHelper.getMilli(new Date()) + ".xls", () ->
-			{
-				if (reportComboBox.getValue() == null) {
-					Notification.show("Bitte Report wählen", Type.ERROR_MESSAGE);
-				}
-				Template template = reportComboBox.getValue();
-
-				Map<String, Object> params = new HashMap<String, Object>();
-				params.put("data", getReportData());
-				params.put("times", getTimes());
-				params.put("timeHelper", new TimeHelper());
-				params.put("dataHelper", new DataHelper());
-				params.put("today", DataHelper.getDisplayDay(new Date()));
-				try {
-					return XlsDocuHelper.generate(TYPE.JNDI, getTemplatePath(template) + ".xls", params);
-				} catch ( IOException | TemplateException | InvalidPrincipalException | ParserConfigurationException | SAXException  e) {
-					LOG.error("Error generating Report", e);
-				}
-				return null;
-			
-		});
-	}
-
-
 	
 	protected TEMPLATE_TYPE getTemplateType() {
 		if (getConfiguration() != null) {

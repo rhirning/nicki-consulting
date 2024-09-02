@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.Clock;
 import org.mgnl.nicki.consulting.core.helper.DateFormatException;
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;

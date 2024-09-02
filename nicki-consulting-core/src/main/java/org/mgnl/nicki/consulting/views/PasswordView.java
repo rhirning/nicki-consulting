@@ -1,6 +1,6 @@
 package org.mgnl.nicki.consulting.views;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.PasswordHelper;
 import org.mgnl.nicki.consulting.objects.LdapPerson;
 import org.mgnl.nicki.core.objects.DynamicObjectException;

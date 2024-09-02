@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.Constants;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.objects.LdapPerson;

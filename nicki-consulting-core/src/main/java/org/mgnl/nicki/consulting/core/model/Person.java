@@ -3,7 +3,7 @@ package org.mgnl.nicki.consulting.core.model;
 import java.io.Serializable;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.objects.LdapPerson;
 import org.mgnl.nicki.core.auth.InvalidPrincipalException;
 import org.mgnl.nicki.core.context.AppContext;

@@ -2,7 +2,7 @@ package org.mgnl.nicki.consulting.survey.views;
 
 import java.util.function.Consumer;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.survey.model.SurveyChoice;
 import org.mgnl.nicki.vaadin.base.editor.ValidationException;
 import org.mgnl.nicki.vaadin.base.notification.Notification;

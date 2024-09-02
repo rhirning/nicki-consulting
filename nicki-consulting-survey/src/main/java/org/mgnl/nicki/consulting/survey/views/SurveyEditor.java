@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.Constants;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.survey.helper.GridHelper;

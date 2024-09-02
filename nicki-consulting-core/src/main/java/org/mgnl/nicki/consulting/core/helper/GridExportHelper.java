@@ -11,7 +11,6 @@ import org.mgnl.nicki.editor.templates.export.GridExport;
 import org.mgnl.nicki.editor.templates.export.GridExportColumn;
 
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.function.ValueProvider;
 
 public class GridExportHelper {
 	

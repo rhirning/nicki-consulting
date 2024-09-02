@@ -2,7 +2,7 @@ package org.mgnl.nicki.consulting.views;
 
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.core.helper.TimeHelper;
 import org.mgnl.nicki.consulting.core.model.Customer;
 import org.mgnl.nicki.consulting.core.model.Project;

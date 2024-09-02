@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.consulting.core.model.Person;
 import org.mgnl.nicki.consulting.survey.helper.SurveyHelper;
 

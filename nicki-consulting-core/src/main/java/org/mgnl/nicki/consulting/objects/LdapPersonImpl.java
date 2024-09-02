@@ -6,7 +6,7 @@ import java.util.Date;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mgnl.nicki.core.annotation.AdditionalObjectClass;
 import org.mgnl.nicki.core.annotation.DynamicAttribute;
 import org.mgnl.nicki.core.annotation.DynamicObject;
