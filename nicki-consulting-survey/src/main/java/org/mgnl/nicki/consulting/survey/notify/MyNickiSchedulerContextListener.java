@@ -1,8 +1,8 @@
 package org.mgnl.nicki.consulting.survey.notify;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.annotation.WebListener;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.annotation.WebListener;
 
 import org.mgnl.nicki.scheduler.NickiSchedulerContextListener;
 
